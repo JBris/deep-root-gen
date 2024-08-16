@@ -1,0 +1,132 @@
+services:
+
+  mlflow:
+    image: ghcr.io/jbris/deep-root-gen:${APP_VERSION}
+    build:
+      context: .
+      dockerfile: ./dockerfiles/python/Dockerfile.${APP_VERSION}  
+      args:
+        BUILD_DATE: date -u +'%Y-%m-%dT%H:%M:%SZ'
+    restart: always
+    stop_grace_period: 10s
+    environment:
+      MLFLOW_BACKEND_STORE_URI: $MLFLOW_BACKEND_STORE_URI
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+    ports:
+      - 5000:5000
+    command: >
+      mlflow server --serve-artifacts --host 0.0.0.0 --port 5000 
+      --backend-store-uri "${MLFLOW_BACKEND_STORE_URI}" --default-artifact-root s3://mlflow/
+      --expose-prometheus /prometheus
+      
+  prefect-server:
+    image: ghcr.io/jbris/deep-root-gen:${APP_VERSION}
+    build:
+      context: .
+      dockerfile: ./dockerfiles/python/Dockerfile.${APP_VERSION}  
+      args:
+        BUILD_DATE: date -u +'%Y-%m-%dT%H:%M:%SZ'
+    restart: always
+    stop_grace_period: 10s
+    environment:
+      PREFECT_UI_URL: http://127.0.0.1:4200/api
+      PREFECT_API_URL: http://127.0.0.1:4200/api
+      PREFECT_SERVER_API_HOST: 0.0.0.0
+      PREFECT_API_DATABASE_CONNECTION_URL: $PREFECT_API_DATABASE_CONNECTION_URL
+    ports:
+      - 4200:4200
+    entrypoint: >
+      prefect server start
+
+  postgres:
+    image: ${COMPOSE_PROJECT_NAME}-postgres:${APP_VERSION}
+    build:
+      context: .
+      dockerfile: ./dockerfiles/postgres/Dockerfile.${APP_VERSION}  
+      args:
+        BUILD_DATE: date -u +'%Y-%m-%dT%H:%M:%SZ'
+    restart: always
+    stop_grace_period: 10s
+    environment:
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:RELEASE.2023-05-27T05-56-19Z
+    restart: always
+    stop_grace_period: 10s
+    working_dir: /data
+    volumes:
+      - minio-data:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ACCESS_KEY: $MINIO_ACCESS_KEY
+      MINIO_SECRET_KEY: $MINIO_SECRET_KEY
+      MINIO_ROOT_USER: $MINIO_ROOT_USER
+      MINIO_ROOT_PASSWORD: $MINIO_ROOT_PASSWORD
+      MINIO_STORAGE_USE_HTTPS: False
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+    command: server --console-address :9001 --address :9000 /data
+
+  mc:
+    image: minio/mc:RELEASE.2023-05-30T22-41-38Z
+    environment:
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: $MINIO_ACCESS_KEY
+      MINIO_SECRET_KEY: $MINIO_SECRET_KEY
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c ' sleep 5; 
+      /usr/bin/mc config host add s3 http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY} --api S3v4;  
+      [[ ! -z "`/usr/bin/mc ls s3 | grep challenge`" ]] || /usr/bin/mc mb s3/mlflow;  /usr/bin/mc policy download s3/mlflow;  
+      [[ ! -z "`/usr/bin/mc ls s3 | grep challenge`" ]] || /usr/bin/mc mb s3/data;  /usr/bin/mc policy download s3/data; exit 0; '
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:23.3.1
+    restart: always
+    stop_grace_period: 10s
+    ports:
+      - 8978:8978
+    volumes:
+      - cloudbeaver-data:/opt/cloudbeaver/workspace
+
+  metabase:
+    image: metabase/metabase:v0.48.0
+    restart: unless-stopped
+    stop_grace_period: 10s
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: postgres
+      MB_DB_PORT: 5432
+      MB_DB_PASS: $DB_PASSWORD
+      MB_DB_DBNAME: $DB_NAME
+      MB_DB_USER: $DB_USER
+      MB_DB_FILE: /metabase-data/metabase.db
+      MB_PROMETHEUS_SERVER_PORT: 3001
+    ports:
+      - 3000:3000
+      - 3001:3001
+    volumes:
+      - metabase-data:/metabase-data
+
+networks:
+  default:
+    name: $COMPOSE_PROJECT_NAME
+    driver: bridge
+
+volumes:
+  minio-data: {}
+  postgres-data: {}
+  cloudbeaver-data: {}
+  metabase-data: {}
+  

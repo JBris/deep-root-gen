@@ -1,0 +1,9 @@
+FROM postgres:15.3-bullseye
+
+ARG BUILD_DATE
+
+LABEL maintainer=james.bristow@plantandfood.co.nz 
+
+LABEL org.label-schema.build-date=$BUILD_DATE
+
+COPY sql/init.sql /docker-entrypoint-initdb.d/init.sql

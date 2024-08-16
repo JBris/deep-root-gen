@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: ghcr.io/jbris/deep-root-gen:0.1.0
+
+%labels
+    Maintainer james.bristow@plantandfood.co.nz
+    Version 0.1.0
+
+%post
+    prefect config set PREFECT_API_ENABLE_HTTP2=false
+    prefect config set PREFECT_API_TLS_INSECURE_SKIP_VERIFY=true
+    prefect config set PREFECT_EXPERIMENTAL_ENABLE_TASK_SCHEDULING=true
+    
+%help
+    This is a container to run the DeepRootGen model.
+    
+%runscript
+  exec "$@"
