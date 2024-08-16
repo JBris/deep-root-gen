@@ -8,6 +8,8 @@
 [![Documentation](https://github.com/JBris/deep-root-gen/actions/workflows/docs.yaml/badge.svg?branch=main)](https://github.com/JBris/deep-root-gen/actions/workflows/docs.yaml)
 [![Build](https://github.com/JBris/deep-root-gen/actions/workflows/docker-build.yaml/badge.svg?branch=main)](https://github.com/JBris/deep-root-gen/actions/workflows/docker-build.yaml)
 
+Website: [DeepRootGen](https://jbris.github.io/deep-root-gen/)
+
 *A simulation model for the digital reconstruction of 3D root system architectures. Integrated with a simulation-based inference generative deep learning model.*
 
 # Table of contents

@@ -11,7 +11,7 @@ permissions:
   packages: write
   
 jobs:
-  build-server:
+  build-docker:
     runs-on: ubuntu-latest
 
     steps:
