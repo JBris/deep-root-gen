@@ -19,8 +19,14 @@ jobs:
       run: |
         sudo swapoff -a
         sudo rm -f /swapfile
-        sudo apt clean
+        sudo apt-get remove -y '^dotnet-.*'
+        sudo apt-get remove -y '^llvm-.*'
+        sudo apt-get remove -y 'php.*'
+        sudo apt-get remove -y azure-cli mono-devel
+        sudo apt-get autoremove -y
+        sudo apt-get clean
         docker rmi $(docker image ls -aq)
+        rm -rf /usr/share/dotnet/
         df -h
     - uses: actions/checkout@v3
     - name: Set up QEMU
