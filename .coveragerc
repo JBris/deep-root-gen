@@ -1,0 +1,7 @@
+[run]
+source=deeprootgen
+omit=tests/*
+
+[report]
+skip_empty = true
+fail_under = 0

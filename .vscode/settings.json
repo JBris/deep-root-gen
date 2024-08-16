@@ -1,0 +1,10 @@
+{
+    "editor.formatOnSave": false,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "python.linting.lintOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true
+    }
+}

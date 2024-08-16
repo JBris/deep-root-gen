@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "deeprootgen"
+version = "0.1.0"
+description = "A simulation model for the digital reconstruction of 3D root system architectures. Integrated with a simulation-based inference generative deep learning model."
+authors = ["James Bristow <james.bristow@plantandfood.co.nz>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/python-poetry/poetry"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
