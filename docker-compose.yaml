@@ -15,6 +15,7 @@ services:
       - ./app/app.py:/app/app.py
       - ./app/conf:/app/conf
       - ./app/pages:/app/pages
+      - ./app/outputs:/app/outputs
     command: >
       gunicorn -b 0.0.0.0:8000 -w 4 app:server
       

@@ -35,7 +35,7 @@ class FormModel(BaseModel):
             The Pydantic Base model class.
     """
 
-    components: Dict[str, list]
+    components: Dict[str, dict]
 
 
 class ObjectStorageModel(BaseModel):

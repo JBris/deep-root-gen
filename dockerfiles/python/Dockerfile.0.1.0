@@ -18,6 +18,8 @@ COPY app/conf conf
 
 COPY app/pages pages
 
+COPY app/outputs outputs
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential libpq-dev graphviz \
     && apt-get clean \

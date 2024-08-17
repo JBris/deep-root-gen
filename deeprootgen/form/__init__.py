@@ -1,1 +1,1 @@
-from .components import build_common_components, build_common_layout
+from .components import build_collapsible, build_common_components, build_common_layout

@@ -166,3 +166,4 @@ mlruns
 *.xml
 slurm-*.out
 .python-version
+*-page.yaml
