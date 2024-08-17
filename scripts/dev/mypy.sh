@@ -2,3 +2,4 @@
 
 mypy deeprootgen/
 mypy tests/
+mypy app/

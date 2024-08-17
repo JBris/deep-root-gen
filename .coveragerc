@@ -1,5 +1,5 @@
 [run]
-source=deeprootgen
+source=deeprootgen app
 omit=tests/*
 
 [report]

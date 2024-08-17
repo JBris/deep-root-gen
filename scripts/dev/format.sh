@@ -2,3 +2,4 @@
 
 black deeprootgen
 black tests
+black app
