@@ -7,10 +7,10 @@
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
-from dash import Dash, Input, Output, callback, dcc, html
+from dash import Dash, Input, Output, callback, dcc, html, page_container, page_registry
 from dash_bootstrap_templates import load_figure_template
 from hydra import compose, initialize
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import OmegaConf
 
 ######################################
 # Functions
@@ -25,11 +25,24 @@ def define_callbacks(app: Dash, df: pd.DataFrame) -> None:
 
 
 def define_ui(app: Dash, df: pd.DataFrame) -> None:
-    app.layout = [
-        html.H1(children="Title of Dash App", style={"textAlign": "center"}),
-        dcc.Dropdown(df.country.unique(), "Canada", id="dropdown-selection"),
-        dcc.Graph(id="graph-content"),
-    ]
+    app_navbar = dbc.Nav(
+        [
+            dbc.NavLink(page["name"], href=page["path"], active="exact")
+            for page in page_registry.values()
+        ],
+        vertical=False,
+        pills=True,
+    )
+
+    app.layout = dcc.Loading(
+        id="loading_page_content",
+        children=[
+            dcc.Store(id="store", storage_type="session", data=df.to_dict("records")),
+            html.Div([app_navbar, page_container]),
+        ],
+        color="primary",
+        fullscreen=True,
+    )
 
 
 ######################################
@@ -37,7 +50,12 @@ def define_ui(app: Dash, df: pd.DataFrame) -> None:
 ######################################
 
 load_figure_template("MINTY")
-app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
+app = Dash(
+    __name__,
+    external_stylesheets=[dbc.themes.MINTY],
+    use_pages=True,
+    title="DeepRootGen",
+)
 server = app.server
 
 df = pd.read_csv(
