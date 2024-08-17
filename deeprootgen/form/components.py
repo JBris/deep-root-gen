@@ -140,7 +140,11 @@ def build_collapsible(
 
 
 def build_common_layout(
-    title: str, page_id: str, input_components: list, output_components: list
+    title: str,
+    page_id: str,
+    input_components: list,
+    output_components: list,
+    layout_description: str,
 ) -> html.Div:
     """Build a common form layout for interacting with the root model.
 
@@ -153,6 +157,8 @@ def build_common_layout(
             The list of input form components.
         output_components (list):
             The list of modelling output components.
+        layout_description (str):
+            A description of the layout to add as page tooltip.
 
     Returns:
         html.Div:
@@ -190,7 +196,9 @@ def build_common_layout(
         html.H5(
             title,
             style={"margin-left": "1em", "margin-top": "0.2em", "text-align": "center"},
+            id=f"{page_id}-title",
         ),
+        dbc.Tooltip(layout_description, target=f"{page_id}-title", placement="right"),
         input_components,
         dcc.Download(id=f"{page_id}-download-content"),
         dbc.Toast(

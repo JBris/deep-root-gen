@@ -212,8 +212,11 @@ def layout() -> html.Div:
         ]
     )
 
+    page_description = """
+    Create synthetic root data by running the root system architecture simulation.
+    """
     layout = build_common_layout(
-        "Run Simulation", PAGE_ID, input_components, output_components
+        "Run Simulation", PAGE_ID, input_components, output_components, page_description
     )
 
     return layout
