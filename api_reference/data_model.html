@@ -55,6 +55,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.ExperimentModel.model_fields"><code class="docutils literal notranslate"><span class="pre">ExperimentModel.model_fields</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.FormModel"><code class="docutils literal notranslate"><span class="pre">FormModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.FormModel.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">FormModel.model_computed_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.FormModel.model_config"><code class="docutils literal notranslate"><span class="pre">FormModel.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.FormModel.model_fields"><code class="docutils literal notranslate"><span class="pre">FormModel.model_fields</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.ObjectStorageModel"><code class="docutils literal notranslate"><span class="pre">ObjectStorageModel</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.ObjectStorageModel.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">ObjectStorageModel.model_computed_fields</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.data_model.config_data_models.ObjectStorageModel.model_config"><code class="docutils literal notranslate"><span class="pre">ObjectStorageModel.model_config</span></code></a></li>
@@ -131,6 +137,39 @@ Core and OmegaConf.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="deeprootgen.data_model.config_data_models.ExperimentModel.model_fields">
 <span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'enabled':</span> <span class="pre">FieldInfo(annotation=bool,</span> <span class="pre">required=True),</span> <span class="pre">'insecure_tls':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True),</span> <span class="pre">'name_prefix':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True),</span> <span class="pre">'tracking_uri':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#deeprootgen.data_model.config_data_models.ExperimentModel.model_fields" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.data_model.config_data_models.FormModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.data_model.config_data_models.</span></span><span class="sig-name descname"><span class="pre">FormModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/data_model/config_data_models.html#FormModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.data_model.config_data_models.FormModel" title="Link to this definition"></a></dt>
+<dd><p>The form data model.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>BaseModel (BaseModel):</dt><dd><p>The Pydantic Base model class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deeprootgen.data_model.config_data_models.FormModel.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#deeprootgen.data_model.config_data_models.FormModel.model_computed_fields" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deeprootgen.data_model.config_data_models.FormModel.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#deeprootgen.data_model.config_data_models.FormModel.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deeprootgen.data_model.config_data_models.FormModel.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'components':</span> <span class="pre">FieldInfo(annotation=Dict[str,</span> <span class="pre">list],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#deeprootgen.data_model.config_data_models.FormModel.model_fields" title="Link to this definition"></a></dt>
 <dd><p>Metadata about the fields defined on the model,
 mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
 <p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
