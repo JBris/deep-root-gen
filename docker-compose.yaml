@@ -14,6 +14,7 @@ services:
     volumes:
       - ./app/app.py:/app/app.py
       - ./app/conf:/app/conf
+      - ./app/pages:/app/pages
     command: >
       gunicorn -b 0.0.0.0:8000 -w 4 app:server
       

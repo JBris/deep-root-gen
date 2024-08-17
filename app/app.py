@@ -66,7 +66,6 @@ with initialize(version_base=None, config_path="conf", job_name="deep_root_gen")
     cfg = compose(config_name="config")
     config = instantiate(cfg)
 
-print(config)
 define_ui(app, df)
 define_callbacks(app, df)
 
