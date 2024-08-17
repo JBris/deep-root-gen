@@ -1,0 +1,5 @@
+_target_: deeprootgen.data_model.ExperimentModel
+name_prefix: deeprootgen
+tracking_uri: http://mlflow:5000
+insecure_tls: "true"
+enabled: true

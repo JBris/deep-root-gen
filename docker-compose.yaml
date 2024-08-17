@@ -9,13 +9,6 @@ services:
         BUILD_DATE: date -u +'%Y-%m-%dT%H:%M:%SZ'
     restart: always
     stop_grace_period: 10s
-    environment:
-      MLFLOW_BACKEND_STORE_URI: $MLFLOW_BACKEND_STORE_URI
-      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
-      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-      PREFECT_URL: http://prefect-server:4200
-      PREFECT_API_DATABASE_CONNECTION_URL: $PREFECT_API_DATABASE_CONNECTION_URL
     ports:
       - 8000:8000
     volumes:

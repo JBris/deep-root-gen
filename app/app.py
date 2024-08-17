@@ -10,7 +10,7 @@ import plotly.express as px
 from dash import Dash, Input, Output, callback, dcc, html, page_container, page_registry
 from dash_bootstrap_templates import load_figure_template
 from hydra import compose, initialize
-from omegaconf import OmegaConf
+from hydra.utils import instantiate
 
 ######################################
 # Functions
@@ -64,8 +64,9 @@ df = pd.read_csv(
 
 with initialize(version_base=None, config_path="conf", job_name="deep_root_gen"):
     cfg = compose(config_name="config")
-    config = OmegaConf.to_container(cfg)
+    config = instantiate(cfg)
 
+print(config)
 define_ui(app, df)
 define_callbacks(app, df)
 
