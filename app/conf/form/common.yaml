@@ -218,7 +218,7 @@ components:
           max: 1
           step: 0.01
           value: 0.1
-  data_io:
+  data:
     collapsible: true
     children:
       - id: save-param-button
@@ -229,11 +229,10 @@ components:
           children: Save parameters
           color: primary
           className: me-1
-      - id: load-param-button
-        label: Load
+      - id: upload-param-file-button
+        label: Load  
         help: Load parameter configuration from file
-        class_name: dash_bootstrap_components.Button 
+        class_name: dash.dcc.Upload
+        handler: file_upload
         kwargs:
           children: Load parameters
-          color: primary
-          className: me-1

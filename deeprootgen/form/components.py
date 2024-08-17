@@ -9,7 +9,7 @@ components that are specific to a given page.
 from pydoc import locate
 
 import dash_bootstrap_components as dbc
-from dash import html
+from dash import dcc, html
 
 
 def build_common_components(
@@ -52,13 +52,26 @@ def build_common_components(
             placement="right",
         )
         component = locate(component_spec.class_name)
+        kwargs = component_spec.kwargs
+
         component_instance = component(
             id={
                 "index": f"{page_id}-{component_spec.id}",
                 "type": f"{page_id}-{component_type}",
             },
-            **component_spec.kwargs,
+            **kwargs,
         )  # type: ignore
+
+        if hasattr(component_spec, "handler"):
+            if component_spec.handler == "file_upload":
+                component_instance.style = {
+                    "width": "100%",
+                    "height": "60px",
+                    "lineHeight": "60px",
+                    "borderWidth": "1px",
+                    "borderStyle": "dashed",
+                    "textAlign": "center",
+                }
 
         row.append(dbc.Col([component_label, component_tooltip, component_instance]))
 
@@ -179,6 +192,17 @@ def build_common_layout(
             style={"margin-left": "1em", "margin-top": "0.2em", "text-align": "center"},
         ),
         input_components,
+        dcc.Download(id=f"{page_id}-download-content"),
+        dbc.Toast(
+            "",
+            id=f"{page_id}-load-toast",
+            header="Load Notification",
+            is_open=False,
+            dismissable=True,
+            icon="primary",
+            duration=5000,
+            style={"position": "fixed", "bottom": "0", "left": "0", "zIndex": "9999"},
+        ),
         external_links_collapsible,
     ]
     layout = html.Div(

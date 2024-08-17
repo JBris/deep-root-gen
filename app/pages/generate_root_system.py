@@ -93,8 +93,10 @@ def toggle_external_links_collapse(n: int, is_open: bool) -> bool:
 
 
 @callback(
+    Output(f"{PAGE_ID}-download-content", "data"),
     [Input({"index": f"{PAGE_ID}-save-param-button", "type": ALL}, "n_clicks")],
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
+    prevent_initial_call=True,
 )
 def save_param(n_clicks: int, param_inputs: list) -> None:
     """Save parameter form values.
@@ -105,49 +107,44 @@ def save_param(n_clicks: int, param_inputs: list) -> None:
         param_inputs (list):
             The parameter input data.
     """
-    if n_clicks:
-        inputs = {}
-        app = get_app()
-        form_model = app.settings["form"]
-        for i, input in enumerate(form_model.components["parameters"]["children"]):
-            k = input["param"]
-            inputs[k] = param_inputs[i]
+    inputs = {}
+    app = get_app()
+    form_model = app.settings["form"]
+    for i, input in enumerate(form_model.components["parameters"]["children"]):
+        k = input["param"]
+        inputs[k] = param_inputs[i]
 
-        from datetime import datetime
+    from datetime import datetime
 
-        import yaml
+    import yaml
 
-        outfile = osp.join(
-            "outputs", f"{datetime.today().strftime('%Y-%m-%d-%H-%M')}-{PAGE_ID}.yaml"
-        )
-        with open(outfile, "w") as f:
-            yaml.dump(inputs, f, default_flow_style=False)
+    outfile = osp.join(
+        "outputs", f"{datetime.today().strftime('%Y-%m-%d-%H-%M')}-{PAGE_ID}.yaml"
+    )
+    with open(outfile, "w") as f:
+        yaml.dump(inputs, f, default_flow_style=False, sort_keys=False)
+    return dcc.send_file(outfile)
 
 
 @callback(
     Output({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
-    [Input({"index": f"{PAGE_ID}-load-param-button", "type": ALL}, "n_clicks")],
-    State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
+    Output(f"{PAGE_ID}-load-toast", "is_open"),
+    Output(f"{PAGE_ID}-load-toast", "children"),
+    Input({"index": f"{PAGE_ID}-upload-param-file-button", "type": ALL}, "contents"),
+    State({"index": f"{PAGE_ID}-upload-param-file-button", "type": ALL}, "filename"),
+    prevent_initial_call=True,
 )
-def load_param(n_clicks: int, param_inputs: list) -> list:
-    """Load parameter form values.
+def update_output(list_of_contents: list, list_of_names: list) -> tuple:
+    import base64
 
-    Args:
-        n_clicks (int):
-            The number of times that the button has been clicked.
-        param_inputs (list):
-            The parameter input data.
-    """
-    if n_clicks:
-        outfile = osp.join("outputs", "2024-08-18-generate-root-system-page.yaml")
-        import yaml
+    import yaml
 
-        with open(outfile) as f:
-            input_dict = yaml.safe_load(f)
-        inputs = list(input_dict.values())
-        return inputs
-    else:
-        return param_inputs
+    _, content_string = list_of_contents[0].split(",")
+    decoded = base64.b64decode(content_string)
+    input_dict = yaml.safe_load(decoded.decode("utf-8"))
+    inputs = list(input_dict.values())
+    toast_message = f"Loading parameter specification from: {list_of_names[0]}"
+    return inputs, True, toast_message
 
 
 # @callback(
@@ -200,10 +197,10 @@ def layout() -> html.Div:
         )
 
     data_io_components = build_common_components(
-        form_model.components["data_io"]["children"], PAGE_ID, "data"
+        form_model.components["data"]["children"], PAGE_ID, "data"
     )
 
-    if form_model.components["data_io"]["collapsible"]:
+    if form_model.components["data"]["collapsible"]:
         data_io_components = build_collapsible(data_io_components, PAGE_ID, "Data")
 
     input_components = dbc.Col([parameter_components, data_io_components])
