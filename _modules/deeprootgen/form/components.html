@@ -223,7 +223,11 @@
 <div class="viewcode-block" id="build_common_layout">
 <a class="viewcode-back" href="../../../api_reference/form.html#deeprootgen.form.components.build_common_layout">[docs]</a>
 <span class="k">def</span> <span class="nf">build_common_layout</span><span class="p">(</span>
-    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">page_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">input_components</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">output_components</span><span class="p">:</span> <span class="nb">list</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">page_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">input_components</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">output_components</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">layout_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a common form layout for interacting with the root model.</span>
 
@@ -236,6 +240,8 @@
 <span class="sd">            The list of input form components.</span>
 <span class="sd">        output_components (list):</span>
 <span class="sd">            The list of modelling output components.</span>
+<span class="sd">        layout_description (str):</span>
+<span class="sd">            A description of the layout to add as page tooltip.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        html.Div:</span>
@@ -273,7 +279,9 @@
         <span class="n">html</span><span class="o">.</span><span class="n">H5</span><span class="p">(</span>
             <span class="n">title</span><span class="p">,</span>
             <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;margin-left&quot;</span><span class="p">:</span> <span class="s2">&quot;1em&quot;</span><span class="p">,</span> <span class="s2">&quot;margin-top&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2em&quot;</span><span class="p">,</span> <span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-title&quot;</span><span class="p">,</span>
         <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="n">layout_description</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-title&quot;</span><span class="p">,</span> <span class="n">placement</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">),</span>
         <span class="n">input_components</span><span class="p">,</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Download</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-download-content&quot;</span><span class="p">),</span>
         <span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">(</span>
