@@ -50,6 +50,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="data_model.html">Data Model</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Form</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deeprootgen.form.components.build_collapsible"><code class="docutils literal notranslate"><span class="pre">build_collapsible()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deeprootgen.form.components.build_common_components"><code class="docutils literal notranslate"><span class="pre">build_common_components()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deeprootgen.form.components.build_common_layout"><code class="docutils literal notranslate"><span class="pre">build_common_layout()</span></code></a></li>
 </ul>
@@ -91,14 +92,35 @@
 components. These include common components and
 components that are specific to a given page.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.form.components.build_collapsible">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.form.components.</span></span><span class="sig-name descname"><span class="pre">build_collapsible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Row</span></span></span><a class="reference internal" href="../_modules/deeprootgen/form/components.html#build_collapsible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.form.components.build_collapsible" title="Link to this definition"></a></dt>
+<dd><p>Build a collapsible form element.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>components (list):</dt><dd><p>A list of form components.</p>
+</dd>
+<dt>page_id (str):</dt><dd><p>The ID of the current page for grouping components.</p>
+</dd>
+<dt>label (str):</dt><dd><p>The label for the collapsible.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>dbc.Row: The collapsible.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="deeprootgen.form.components.build_common_components">
-<span class="sig-prename descclassname"><span class="pre">deeprootgen.form.components.</span></span><span class="sig-name descname"><span class="pre">build_common_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_specs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/deeprootgen/form/components.html#build_common_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.form.components.build_common_components" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.form.components.</span></span><span class="sig-name descname"><span class="pre">build_common_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_specs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/deeprootgen/form/components.html#build_common_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.form.components.build_common_components" title="Link to this definition"></a></dt>
 <dd><p>Build form components that are common across pages.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
 <dt>component_specs (list):</dt><dd><p>The list of form component specifications.</p>
 </dd>
 <dt>page_id (str):</dt><dd><p>The page ID.</p>
+</dd>
+<dt>component_type (str):</dt><dd><p>The type of component. Used for grouping common components.</p>
 </dd>
 </dl>
 </dd>
@@ -109,7 +131,7 @@ components that are specific to a given page.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="deeprootgen.form.components.build_common_layout">
-<span class="sig-prename descclassname"><span class="pre">deeprootgen.form.components.</span></span><span class="sig-name descname"><span class="pre">build_common_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Div</span></span></span><a class="reference internal" href="../_modules/deeprootgen/form/components.html#build_common_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.form.components.build_common_layout" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.form.components.</span></span><span class="sig-name descname"><span class="pre">build_common_layout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Div</span></span></span><a class="reference internal" href="../_modules/deeprootgen/form/components.html#build_common_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.form.components.build_common_layout" title="Link to this definition"></a></dt>
 <dd><p>Build a common form layout for interacting with the root model.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
@@ -117,7 +139,9 @@ components that are specific to a given page.</p>
 </dd>
 <dt>page_id (str):</dt><dd><p>The page ID.</p>
 </dd>
-<dt>components (list):</dt><dd><p>The list of form components.</p>
+<dt>input_components (list):</dt><dd><p>The list of input form components.</p>
+</dd>
+<dt>output_components (list):</dt><dd><p>The list of modelling output components.</p>
 </dd>
 </dl>
 </dd>
