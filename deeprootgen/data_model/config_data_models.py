@@ -6,6 +6,8 @@ Core and OmegaConf.
 
 """
 
+from typing import Dict
+
 from pydantic import BaseModel
 
 
@@ -22,6 +24,18 @@ class ExperimentModel(BaseModel):
     tracking_uri: str
     insecure_tls: str
     enabled: bool
+
+
+class FormModel(BaseModel):
+    """
+    The form data model.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    components: Dict[str, list]
 
 
 class ObjectStorageModel(BaseModel):
