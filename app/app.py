@@ -17,7 +17,7 @@ from hydra.utils import instantiate
 ######################################
 
 
-def define_ui(app: Dash, df: pd.DataFrame) -> None:
+def define_ui(app: Dash) -> None:
     nav_links = [
         dbc.NavLink(page["name"], href=page["path"], active="exact")
         for page in page_registry.values()
@@ -35,11 +35,14 @@ def define_ui(app: Dash, df: pd.DataFrame) -> None:
     app.layout = dcc.Loading(
         id="loading_page_content",
         children=[
-            dcc.Store(id="store", storage_type="session", data=df.to_dict("records")),
+            dcc.Store(id="store", storage_type="session", data=[{"name": "James"}]),
             html.Div(
                 dbc.Row(
                     [
-                        dbc.Card(app_navbar, style={"padding-bottom": "0.5em"}),
+                        dbc.Card(
+                            app_navbar,
+                            style={"padding-bottom": "0.5em", "borderRadius": "0"},
+                        ),
                         page_container,
                     ]
                 ),
@@ -64,16 +67,12 @@ app = Dash(
 )
 server = app.server
 
-df = pd.read_csv(
-    "https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv"
-)
-
 with initialize(version_base=None, config_path="conf", job_name="deep_root_gen"):
     cfg = compose(config_name="config")
     config = instantiate(cfg)
 app.settings = config
 
-define_ui(app, df)
+define_ui(app)
 
 if __name__ == "__main__":
     app.run_server(host="0.0.0.0", port="8000")

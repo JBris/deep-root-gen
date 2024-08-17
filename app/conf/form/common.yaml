@@ -10,6 +10,7 @@ components:
         max: 10
         value: 1
         step: 1
+        persistence: true
     - id: random-seed-input
       label: Random seed
       help: The simulation random seed to ensure replicability
@@ -26,6 +27,7 @@ components:
         max: 5
         value: 2
         step: 1
+        persistence: true
     - id: root-ratio-input
       label: Root ratio
       help: The ratio between structural and fine roots

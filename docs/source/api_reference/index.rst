@@ -5,3 +5,4 @@ API Reference
     :maxdepth: 1
 
     data_model.rst
+    form.rst
