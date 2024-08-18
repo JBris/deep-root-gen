@@ -50,6 +50,7 @@ def build_common_components(
             component_spec.help,
             target=f"{page_id}-{component_spec.id}-tooltip-target",
             placement="right",
+            delay={"show": "500"},
         )
         component = locate(component_spec.class_name)
         kwargs = component_spec.kwargs
@@ -198,7 +199,12 @@ def build_common_layout(
             style={"margin-left": "1em", "margin-top": "0.2em", "text-align": "center"},
             id=f"{page_id}-title",
         ),
-        dbc.Tooltip(layout_description, target=f"{page_id}-title", placement="right"),
+        dbc.Tooltip(
+            layout_description,
+            target=f"{page_id}-title",
+            placement="right",
+            delay={"show": "500"},
+        ),
         input_components,
         dcc.Download(id=f"{page_id}-download-content"),
         dbc.Toast(

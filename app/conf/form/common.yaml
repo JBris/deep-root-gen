@@ -218,9 +218,26 @@ components:
           max: 1
           step: 0.01
           value: 0.1
-  data:
+  simulation:
     collapsible: true
     children:
+      - id: run-sim-button
+        label: Run
+        help: Run the simulation modelling procedure
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Run model
+          color: primary
+          className: me-1
+      - id: cancel-sim-button
+        label: Cancel
+        help: Cancel the simulation modelling run
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Cancel run
+          color: primary
+          className: me-1
+          disabled: true
       - id: save-param-button
         label: Save
         help: Save current parameter configuration to file
@@ -236,3 +253,21 @@ components:
         handler: file_upload
         kwargs:
           children: Load parameters
+      - id: save-results-button
+        label: Save
+        help: Save the current simulation modelling results
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Save results
+          color: primary
+          className: me-1
+          disabled: true
+      - id: load-results-button
+        label: Load
+        help: Load previous simulation modelling results
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Load results
+          color: primary
+          className: me-1
+          disabled: true
