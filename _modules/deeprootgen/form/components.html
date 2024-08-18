@@ -127,6 +127,7 @@
             <span class="n">component_spec</span><span class="o">.</span><span class="n">help</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">component_spec</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">-tooltip-target&quot;</span><span class="p">,</span>
             <span class="n">placement</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+            <span class="n">delay</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;show&quot;</span><span class="p">:</span> <span class="s2">&quot;500&quot;</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="n">component</span> <span class="o">=</span> <span class="n">locate</span><span class="p">(</span><span class="n">component_spec</span><span class="o">.</span><span class="n">class_name</span><span class="p">)</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">kwargs</span>
@@ -281,7 +282,12 @@
             <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;margin-left&quot;</span><span class="p">:</span> <span class="s2">&quot;1em&quot;</span><span class="p">,</span> <span class="s2">&quot;margin-top&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2em&quot;</span><span class="p">,</span> <span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">},</span>
             <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-title&quot;</span><span class="p">,</span>
         <span class="p">),</span>
-        <span class="n">dbc</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="n">layout_description</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-title&quot;</span><span class="p">,</span> <span class="n">placement</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span>
+            <span class="n">layout_description</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-title&quot;</span><span class="p">,</span>
+            <span class="n">placement</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+            <span class="n">delay</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;show&quot;</span><span class="p">:</span> <span class="s2">&quot;500&quot;</span><span class="p">},</span>
+        <span class="p">),</span>
         <span class="n">input_components</span><span class="p">,</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Download</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-download-content&quot;</span><span class="p">),</span>
         <span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">(</span>
