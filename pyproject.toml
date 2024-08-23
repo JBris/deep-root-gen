@@ -59,6 +59,7 @@ pyro-api = "^0.1.2"
 nflows = "^0.14"
 tensorboard = "^2.17.1"
 torch-geometric = "^2.5.3"
+lightning = "^2.4.0"
 
 
 [tool.poetry.group.dev.dependencies]
