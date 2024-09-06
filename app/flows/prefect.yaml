@@ -3,48 +3,31 @@
 # control along with your flow code.
 
 # Generic metadata about this project
-name: deeprootgen
-prefect-version: 2.16.8
+name: ''
+prefect-version: 2.20.2
 
 # build section allows you to manage and build docker images
-build:
+build: null
 
 # push section allows you to manage if and how this project is uploaded to remote locations
-push:
+push: null
 
 # pull section allows you to provide instructions for cloning this project in remote locations
 pull:
-- prefect.deployments.steps.git_clone:
-    repository: git@github.com:JBris/deep-root-gen.git
-    branch: main
-    access_token:
+- prefect.deployments.steps.set_working_directory:
+    directory: /
 
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
-- name:
-  version:
-  tags: []
-  description:
-  schedule: {}
-  flow_name:
-  entrypoint:
-  parameters: {}
-  work_pool:
-    name:
-    work_queue_name:
-    job_variables: {}
-- name: default
-  version:
-  tags: []
-  description: Test description.
-  entrypoint: app/flows/test_flow.py:hello_flow
+- name: Hello Flow
+  description: Hello description.
+  entrypoint: /app/flows/hello_flow.py:hello_flow
   parameters: {}
   work_pool:
     name: default
-    work_queue_name:
-    job_variables: {}
-  schedules:
-  - interval: 3600.0
-    anchor_date: '2024-09-06T09:04:39.429625+00:00'
-    timezone: UTC
-    active: true
+- name: Bye Flow
+  description: Bye description.
+  entrypoint: /app/flows/bye_flow.py:bye_flow
+  parameters: {}
+  work_pool:
+    name: default

@@ -16,6 +16,7 @@ services:
       - ./app/conf:/app/conf
       - ./app/pages:/app/pages
       - ./app/outputs:/app/outputs
+      - ./app/flows:/app/flows
     command: >
       gunicorn -b 0.0.0.0:8000 -w 4 app:server
       
@@ -58,6 +59,42 @@ services:
       - 4200:4200
     entrypoint: >
       prefect server start
+
+  prefect-worker:
+    image: ghcr.io/jbris/deep-root-gen:${APP_VERSION}
+    build:
+      context: .
+      dockerfile: ./dockerfiles/python/Dockerfile.${APP_VERSION}  
+      args:
+        BUILD_DATE: date -u +'%Y-%m-%dT%H:%M:%SZ'
+    restart: always
+    stop_grace_period: 10s
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+    depends_on:
+      - prefect-server
+    entrypoint: prefect worker start -p default
+    volumes:
+      - ./app/flows:/app/flows
+
+  prefect-deployments:
+    image: ghcr.io/jbris/deep-root-gen:${APP_VERSION}
+    build:
+      context: .
+      dockerfile: ./dockerfiles/python/Dockerfile.${APP_VERSION}  
+      args:
+        BUILD_DATE: date -u +'%Y-%m-%dT%H:%M:%SZ'
+    restart: always
+    stop_grace_period: 10s
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+    depends_on:
+      - prefect-worker
+    entrypoint: >
+      /bin/sh -c ' sleep 10; 
+      prefect deploy --prefect-file /app/flows/prefect.yaml --all; '
+    volumes:
+      - ./app/flows:/app/flows
 
   postgres:
     image: ${COMPOSE_PROJECT_NAME}-postgres:${APP_VERSION}
@@ -148,4 +185,4 @@ volumes:
   postgres-data: {}
   cloudbeaver-data: {}
   metabase-data: {}
-  
+  prefect-flows: {}

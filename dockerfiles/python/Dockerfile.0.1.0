@@ -20,6 +20,8 @@ COPY app/pages pages
 
 COPY app/outputs outputs
 
+COPY app/flows flows
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential libpq-dev graphviz \
     && apt-get clean \
