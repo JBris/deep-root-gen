@@ -84,14 +84,12 @@ services:
       dockerfile: ./dockerfiles/python/Dockerfile.${APP_VERSION}  
       args:
         BUILD_DATE: date -u +'%Y-%m-%dT%H:%M:%SZ'
-    restart: always
-    stop_grace_period: 10s
     environment:
       PREFECT_API_URL: http://prefect-server:4200/api
     depends_on:
       - prefect-worker
     entrypoint: >
-      /bin/sh -c ' sleep 10; 
+      /bin/sh -c ' sleep 45; 
       prefect deploy --prefect-file /app/flows/prefect.yaml --all; '
     volumes:
       - ./app/flows:/app/flows
