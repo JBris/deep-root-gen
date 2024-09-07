@@ -83,7 +83,7 @@ def build_common_components(
             row = []
 
     if len(row) == 1:
-        components.append(dbc.Row(row))
+        components.append(dbc.Row(dbc.Col(row), style={"width": "52.5%"}))
 
     return components
 

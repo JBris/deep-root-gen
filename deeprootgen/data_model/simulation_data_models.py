@@ -17,7 +17,6 @@ class RootSimulationModel(BaseModel):
             The Pydantic Base model class.
     """
 
-    nplants: int
     random_seed: int | None
     max_order: int
     root_ratio: float
@@ -37,3 +36,8 @@ class RootSimulationModel(BaseModel):
     root_vary: float
     origin_min: float
     origin_max: float
+    enable_soil: bool
+    soil_layer_height: float
+    soil_layer_width: float
+    soil_n_layers: int
+    soil_n_cols: int

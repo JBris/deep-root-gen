@@ -153,9 +153,10 @@ def update_output(list_of_contents: list, list_of_names: list) -> tuple:
     Output("generate-root-system-plot", "figure"),
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
+    State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
     prevent_initial_call=True,
 )
-def run_root_model(n_clicks: list, form_values: list) -> dcc.Graph:
+def run_root_model(n_clicks: list, form_values: list, enable_soils: list) -> dcc.Graph:
     """Run and plot the root model.
 
     Args:
@@ -169,7 +170,7 @@ def run_root_model(n_clicks: list, form_values: list) -> dcc.Graph:
     """
     n_click: int = n_clicks[0]
     if n_click == 0:
-        return dcc.Graph()
+        return None
 
     form_inputs = {}
     app = get_app()
@@ -178,10 +179,14 @@ def run_root_model(n_clicks: list, form_values: list) -> dcc.Graph:
         k = input["param"]
         form_inputs[k] = form_values[i]
 
+    enable_soil: bool = enable_soils[0]
+    form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
+
     input_params = RootSimulationModel.parse_obj(form_inputs)
     simulation = RootSystemSimulation()
     results = simulation.run(input_params)
-    return dcc.Graph(figure=results["figure"])
+
+    return results["figure"]
 
 
 ######################################

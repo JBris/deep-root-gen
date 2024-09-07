@@ -3,25 +3,6 @@ components:
   parameters:
     collapsible: true
     children:
-      - id: nplants-slider
-        param: nplants
-        label: Number of root systems
-        help: The number of root system architectures to generate
-        class_name: dash.dcc.Slider
-        kwargs:
-          min: 1
-          max: 10
-          value: 1
-          step: 1
-          persistence: true
-      - id: random-seed-input
-        param: random_seed
-        label: Random seed
-        help: The simulation random seed to ensure replicability
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          step: 1
       - id: max-order-slider
         param: max_order
         label: Maximum order
@@ -218,6 +199,64 @@ components:
           max: 1
           step: 0.01
           value: 0.1
+      - id: enable-soil-input
+        param: enable_soil
+        label: Enable soil
+        help: Enable the soil voxel grid into the simulation.
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: soil-layer-height-input
+        param: soil_layer_height
+        label: Soil layer height
+        help: The height of each soil layer (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 100
+          step: 10
+          value: 10
+      - id: soil-layer-width-input
+        param: soil_layer_width
+        label: Soil layer width
+        help: The width of each soil layer (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 100
+          step: 10
+          value: 10
+      - id: soil-n-layers
+        param: soil_n_layers
+        label: Number soil layers
+        help: The number of vertical soil layers
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 20
+          step: 1
+          value: 1
+      - id: soil-n-cols
+        param: soil_n_cols
+        label: Number soil columns
+        help: The number of horizontal soil layers/columns
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 20
+          step: 1
+          value: 1
+      - id: random-seed-input
+        param: random_seed
+        label: Random seed
+        help: The simulation random seed to ensure replicability
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          step: 1
   simulation:
     collapsible: true
     children:
