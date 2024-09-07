@@ -24,13 +24,27 @@ class RootSystemSimulation:
         self.soil: Soil = Soil()
 
     def run(self, input_parameters: RootSimulationModel) -> dict:
-        soil_df = self.soil.create_soil_grid(
-            input_parameters.soil_layer_height,
-            input_parameters.soil_n_layers,
-            input_parameters.soil_layer_width,
-            input_parameters.soil_n_cols,
+        run_results = {}
+
+        # Initialise figure (optionally with soil)
+        if input_parameters.enable_soil:
+            soil_df = self.soil.create_soil_grid(
+                input_parameters.soil_layer_height,
+                input_parameters.soil_n_layers,
+                input_parameters.soil_layer_width,
+                input_parameters.soil_n_cols,
+            )
+
+            run_results["soil"] = soil_df
+            fig = self.soil.create_soil_fig(soil_df)
+        else:
+            run_results["soil"] = None
+            fig = go.Figure()
+
+        fig.update_layout(
+            scene=dict(
+                xaxis=dict(title="x"), yaxis=dict(title="z"), zaxis=dict(title="y")
+            )
         )
-
-        fig = self.soil.create_soil_fig(soil_df)
-
-        return {"figure": fig}
+        run_results["figure"] = fig
+        return run_results

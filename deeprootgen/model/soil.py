@@ -44,7 +44,7 @@ class Soil:
         # Create unit hypercube
         x = np.linspace(0, 1, n_cols)
         y = np.linspace(0, 1, n_layers)
-        z = np.linspace(0, 1, n_cols)
+        z = np.linspace(0, 1, 2)
         M = np.meshgrid(x, y, z)
         grid = [vector.flatten() for vector in M]
 
@@ -52,9 +52,9 @@ class Soil:
         xv, yv, zv = grid
         xv *= voxel_width * (n_cols - 1)
         xv -= voxel_width / 2 * (n_cols - 1)
-        yv *= voxel_height * (n_layers - 1)
-        zv *= voxel_width * (n_cols - 1)
-        zv -= voxel_width / 2 * (n_cols - 1)
+        yv *= -voxel_height * (n_layers - 1)
+        zv *= voxel_width
+        zv -= voxel_width / 2
 
         soil_df = pd.DataFrame({"x": xv, "y": yv, "z": zv})
         return soil_df
@@ -82,12 +82,6 @@ class Soil:
                     ),
                 )
             ]
-        )
-
-        fig.update_layout(
-            scene=dict(
-                xaxis=dict(title="x"), yaxis=dict(title="z"), zaxis=dict(title="y")
-            )
         )
 
         return fig
