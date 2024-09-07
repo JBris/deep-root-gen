@@ -5,7 +5,37 @@ root system architecture simulation procedures.
 
 """
 
+from typing import Optional
+
 from pydantic import BaseModel
+
+
+class RootNodeModel(BaseModel):
+    """The node data model for the hierarchical graph representation of the root system.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    node_id: Optional[int] = 0
+    parent_id: Optional[int] = -1
+    organ_id: Optional[int] = 0
+    x: Optional[float] = 0.0
+    y: Optional[float] = 0.0
+    z: Optional[float] = 0.0
+
+
+class RootEdgeModel(BaseModel):
+    """The edge data model for the hierarchical graph representation of the root system.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    parent_id: int
+    child_id: int
 
 
 class RootSimulationModel(BaseModel):
