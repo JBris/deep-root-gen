@@ -183,7 +183,7 @@ def run_root_model(n_clicks: list, form_values: list, enable_soils: list) -> dcc
     form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
 
     input_params = RootSimulationModel.parse_obj(form_inputs)
-    simulation = RootSystemSimulation()
+    simulation = RootSystemSimulation(random_seed=input_params.random_seed)
     results = simulation.run(input_params)
 
     return results["figure"]

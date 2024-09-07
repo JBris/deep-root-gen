@@ -19,11 +19,16 @@ class RootNodeModel(BaseModel):
     """
 
     node_id: Optional[int] = 0
+    plant_id: Optional[int] = 1
     parent_id: Optional[int] = -1
     organ_id: Optional[int] = 0
     x: Optional[float] = 0.0
     y: Optional[float] = 0.0
     z: Optional[float] = 0.0
+    order: Optional[int] = 0
+    segment_rank: Optional[int] = 0
+    diameter: Optional[float] = 0.0
+    length: Optional[float] = 0.0
 
 
 class RootEdgeModel(BaseModel):
@@ -55,14 +60,16 @@ class RootSimulationModel(BaseModel):
     inner_root_num: int
     min_primary_length: float
     max_primary_length: float
-    diam_primary_root: float
+    base_diameter: float
+    diameter_reduction: float
+    apex_diameter: float
     min_sec_root_num: int
     max_sec_root_num: int
     growth_sec_root: float
     min_sec_root_length: float
     max_sec_root_length: float
     segments_per_root: int
-    root_length_reduction: float
+    length_reduction: float
     root_vary: float
     origin_min: float
     origin_max: float
@@ -71,3 +78,4 @@ class RootSimulationModel(BaseModel):
     soil_layer_width: float
     soil_n_layers: int
     soil_n_cols: int
+    no_root_zone: Optional[float] = 1e-4

@@ -4,12 +4,15 @@ This module defines the root system architecture simulation model for constructi
 
 """
 
+# mypy: ignore-errors
+
 from typing import List
 
 import networkx as nx
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+from numpy.random import default_rng
 from torch_geometric.data import Data
 from torch_geometric.utils import from_networkx
 
@@ -35,23 +38,38 @@ class RootNode:
         """
         self.G = G
         self.node_data = node_data
-        self.children: List[RootNode] = []
 
-    def add_child_node(self, child_data: RootNodeModel) -> "RootNode":
+    def add_child_node(
+        self, child_data: RootNodeModel, new_organ: bool = False
+    ) -> "RootNode":
         """Add a child node to the hierarchical graph.
 
         Args:
             child_data (RootNodeModel):
                 The node data for the child node.
+            new_organ (bool):
+                Whether the new child node belongs to a new plant organ.
 
         Returns:
             RootNode:
                 The child node.
         """
-        child_data.parent_id = self.node_data.node_id
-        child_node = self.G.add_node(child_data)
-        self.children.append(child_node)
+        if new_organ:
+            organ_id = self.G.increment_organ_id()
+            segment_rank = 0
+            order = self.node_data.order + 1
+        else:
+            organ_id = self.node_data.organ_id
+            segment_rank = self.node_data.segment_rank + 1
+            order = self.node_data.order
 
+        child_data.parent_id = self.node_data.node_id
+        child_data.organ_id = organ_id
+        child_data.plant_id = self.node_data.plant_id
+        child_data.segment_rank = segment_rank
+        child_data.order = order
+
+        child_node = self.G.add_node(child_data)
         edge_data = RootEdgeModel(
             parent_id=self.node_data.node_id, child_id=child_node.node_data.node_id
         )
@@ -111,9 +129,11 @@ class RootSystemGraph:
         self.nodes: List[RootNode] = []
         self.edges: List[RootEdge] = []
         self.node_id = 0
+        self.organ_id = 0
 
         # Base organ node
         node_data = RootNodeModel()
+        node_data.organ_id = self.increment_organ_id()
         self.base_node = self.add_node(node_data)
 
     def add_node(self, node_data: RootNodeModel) -> RootNode:
@@ -159,6 +179,17 @@ class RootSystemGraph:
         self.node_id += 1
         return node_id
 
+    def increment_organ_id(self) -> int:
+        """Increment the organ ID.
+
+        Returns:
+            int:
+                The organ ID prior to incrementation.
+        """
+        organ_id = self.organ_id
+        self.organ_id += 1
+        return organ_id
+
     def as_dict(self) -> tuple:
         """Return the graph as a tuple of node and edge lists.
 
@@ -201,7 +232,7 @@ class RootSystemGraph:
             edge_df, "parent_id", "child_id", create_using=nx.Graph()
         )
 
-        node_features = node_df.set_index("node_id").T.squeeze().to_dict()
+        node_features = node_df.set_index("node_id", drop=False).T.squeeze().to_dict()
         nx.set_node_attributes(G, node_features, "x")
         return G
 
@@ -213,15 +244,163 @@ class RootSystemGraph:
                 The graph as a PyTorch Geometric graph dataset.
         """
         G = self.as_networkx()
-        torch_G = from_networkx(G)
+        torch_G = from_networkx(G).double()
         return torch_G
+
+
+class RootOrgan:
+    """A single root organ within the root system."""
+
+    def __init__(
+        self,
+        parent_node: RootNode,
+        input_parameters: RootSimulationModel,
+        rng: np.random.Generator,
+    ) -> None:
+        """RootOrgan constructor.
+
+        Args:
+            parent_node (RootNode):
+                The parent root node.
+            input_parameters (RootSimulationModel):
+                The root simulation data model.
+            rng (np.random.Generator):
+                The random number generator.
+
+        Returns:
+            RootOrgan:
+                A root organ within the root system.
+        """
+        self.parent_node = parent_node
+        self.segments: List[RootNode] = []
+        self.child_roots: List["RootOrgan"] = []
+
+        # Diameter
+        self.base_diameter = input_parameters.base_diameter * input_parameters.max_order
+        self.diameter_reduction = input_parameters.diameter_reduction
+
+        # Length
+        self.proot_length_interval = np.array(
+            [input_parameters.min_primary_length, input_parameters.max_primary_length]
+        )
+        self.sroot_length_interval = np.array(
+            [input_parameters.min_sec_root_length, input_parameters.max_sec_root_length]
+        )
+        self.length_reduction = input_parameters.length_reduction
+
+        self.rng = rng
+
+    def init_diameters(self, segments_per_root: int, apex_diameter: int) -> np.ndarray:
+        """Initialise root diameters for the root organ.
+
+        Args:
+            segments_per_root (int):
+                The number of segments for a single root organ.
+            apex_diameter (int):
+                The diameter of the root apex.
+        """
+        base_diameter = self.base_diameter * self.diameter_reduction ** (
+            self.parent_node.node_data.order
+        )
+        diameters = self.rng.uniform(apex_diameter, base_diameter, segments_per_root)
+        diameters = np.sort(diameters)[::-1]
+        return diameters
+
+    def init_lengths(self, segments_per_root: int) -> np.ndarray:
+        """Initialise root lengths for the root organ.
+
+        Args:
+            segments_per_root (int):
+                The number of segments for a single root organ.
+            length_range (tuple[float]):
+                The minimum and maximum value for the segment lengths.
+        """
+        order = self.parent_node.node_data.order + 1
+        if order > 1:
+            reduction_factor = self.length_reduction ** (
+                self.parent_node.node_data.order
+            )
+            min_length, max_length = self.sroot_length_interval * reduction_factor
+        else:
+            min_length, max_length = self.proot_length_interval
+
+        lengths = self.rng.uniform(min_length, max_length, segments_per_root)
+        lengths = np.sort(lengths)[::-1]
+        return lengths
+
+    def add_child_node(
+        self,
+        parent_node: RootNode,
+        diameters: np.ndarray,
+        lengths: np.ndarray,
+        i: int,
+        new_organ: bool = False,
+    ) -> RootNode:
+        """Add a new child node to the root organ.
+
+        Args:
+            parent_node (RootNode):
+                The parent node of the root organ.
+            diameters (np.ndarray):
+                The array of segment diameters.
+            lengths (np.ndarray):
+                The array of segment lengths.
+            i (int):
+                The current array index.
+            new_organ (bool, optional):
+                Whether the node belongs to a new root organ. Defaults to False.
+
+        Returns:
+            RootNode:
+                The child node.
+        """
+        diameter = diameters[i]
+        length = lengths[i]
+        node_data = RootNodeModel(diameter=diameter, length=length)
+
+        child_node = parent_node.add_child_node(node_data, new_organ=new_organ)
+        self.segments.append(child_node)
+        return child_node
+
+    def construct_root(
+        self, segments_per_root: int, apex_diameter: int
+    ) -> List[RootNode]:
+        """Construct all root segments for the root organ.
+
+        Args:
+            segments_per_root (int):
+                The number of segments for a single root organ.
+            apex_diameter (int):
+                The diameter of the root apex.
+
+        Returns:
+            List[RootNode]:
+                The root segments for the root organ.
+        """
+        diameters = self.init_diameters(segments_per_root, apex_diameter)
+        lengths = self.init_lengths(segments_per_root)
+
+        child_node = self.add_child_node(
+            self.parent_node, diameters=diameters, lengths=lengths, i=0, new_organ=True
+        )
+
+        for i in range(1, segments_per_root):
+            child_node = self.add_child_node(
+                child_node, diameters=diameters, lengths=lengths, i=i, new_organ=False
+            )
+
+        return self.segments
 
 
 class RootSystemSimulation:
     """The root system architecture simulation model."""
 
-    def __init__(self) -> None:
+    def __init__(self, random_seed: int = None) -> None:
         """RootSystemSimulation constructor.
+
+        Args:
+            random_seed (int, optional):
+                The seed for the random number generator. Defaults to None.
 
         Returns:
             RootSystemSimulation:
@@ -229,8 +408,20 @@ class RootSystemSimulation:
         """
         self.soil: Soil = Soil()
         self.G: RootSystemGraph = RootSystemGraph()
+        self.organs: List["RootOrgan"] = []
+        self.rng = default_rng(random_seed)
 
     def run(self, input_parameters: RootSimulationModel) -> dict:
+        """Run a root system architecture simulation.
+
+        Args:
+            input_parameters (RootSimulationModel):
+                The root simulation data model.
+
+        Returns:
+            dict:
+                The simulation results.
+        """
         run_results = {}
 
         # Initialise figure (optionally with soil)
@@ -254,8 +445,13 @@ class RootSystemSimulation:
             )
         )
 
-        node_data = RootNodeModel()
-        self.G.base_node.add_child_node(node_data)
+        segments_per_root = input_parameters.segments_per_root
+        apex_diameter = input_parameters.apex_diameter
 
+        organ = RootOrgan(
+            self.G.base_node, input_parameters=input_parameters, rng=self.rng
+        )
+        organ.construct_root(segments_per_root, apex_diameter)
+        print(self.G.as_dict())
         run_results["figure"] = fig
         return run_results

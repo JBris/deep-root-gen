@@ -79,17 +79,39 @@ components:
           max: 50
           step: 1
           value: 30
-      - id: diam-primary-root-input
-        param: diam_primary_root
-        label: Primary root base diameter
-        help: The base diameter of the first segment of each primary root (cm)
+      - id: base-diameter-root-input
+        param: base_diameter
+        label: Base root diameter
+        help: The base diameter of the first segment of each root (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.001
+          max: 10
+          step: 0.1
+          value: 0.11
+      - id: root-apex-input
+        param: apex_diameter
+        label: Apex diameter
+        help: The diameter of the root apex (cm)
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
           min: 0.001
           max: 1
-          step: 0.01
-          value: 0.012
+          step: 0.1
+          value: 0.1
+      - id: diameter-reduction-factor-input
+        param: diameter_reduction
+        label: Diameter reduction
+        help: The diameter reduction factor for subsequent root segments.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.001
+          max: 1
+          step: 0.1
+          value: 0.7
       - id: min-num-secondary-roots-input
         param: min_sec_root_num
         label: Minimum number of secondary roots
@@ -156,7 +178,7 @@ components:
           step: 1
           value: 10
       - id: root-length-reduction-input
-        param: root_length_reduction
+        param: length_reduction
         label: Length reduction
         help: The root length reduction factor
         class_name: dash_bootstrap_components.Input 
