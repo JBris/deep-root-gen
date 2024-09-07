@@ -4,3 +4,4 @@ from .config_data_models import (
     ObjectStorageModel,
     OrchestrationModel,
 )
+from .simulation_data_models import RootSimulationModel

@@ -9,11 +9,13 @@ import os.path as osp
 import dash_bootstrap_components as dbc
 from dash import ALL, Input, Output, State, callback, dcc, get_app, html, register_page
 
+from deeprootgen.data_model import RootSimulationModel
 from deeprootgen.form import (
     build_collapsible,
     build_common_components,
     build_common_layout,
 )
+from deeprootgen.model import RootSystemSimulation
 
 ######################################
 # Constants
@@ -166,15 +168,20 @@ def run_root_model(n_clicks: list, form_values: list) -> dcc.Graph:
         dcc.Graph: The visualised root model.
     """
     n_click: int = n_clicks[0]
-    if n_click > 0:
-        inputs = {}
-        app = get_app()
-        form_model = app.settings["form"]
-        for i, input in enumerate(form_model.components["parameters"]["children"]):
-            k = input["param"]
-            inputs[k] = form_values[i]
+    if n_click == 0:
+        return dcc.Graph()
 
-    return dcc.Graph()
+    form_inputs = {}
+    app = get_app()
+    form_model = app.settings["form"]
+    for i, input in enumerate(form_model.components["parameters"]["children"]):
+        k = input["param"]
+        form_inputs[k] = form_values[i]
+
+    input_params = RootSimulationModel.parse_obj(form_inputs)
+    simulation = RootSystemSimulation()
+    results = simulation.run(input_params)
+    return dcc.Graph(figure=results["figure"])
 
 
 ######################################

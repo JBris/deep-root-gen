@@ -4,7 +4,7 @@
 # Imports
 ######################################
 
-from prefect import flow, task
+from prefect import context, flow, task
 from prefect.task_runners import SequentialTaskRunner
 
 ######################################
@@ -14,6 +14,7 @@ from prefect.task_runners import SequentialTaskRunner
 
 @task
 def bye() -> None:
+    print(context.get_run_context().task_run.flow_run_id)
     print("Bye")
 
 

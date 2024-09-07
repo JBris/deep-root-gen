@@ -229,12 +229,12 @@ components:
           children: Run model
           color: primary
           className: me-1
-      - id: cancel-sim-button
-        label: Cancel
-        help: Cancel the simulation modelling run
+      - id: download-results-button
+        label: Download
+        help: Download the current simulation modelling results
         class_name: dash_bootstrap_components.Button 
         kwargs:
-          children: Cancel run
+          children: Download results
           color: primary
           className: me-1
           disabled: true
@@ -253,21 +253,3 @@ components:
         handler: file_upload
         kwargs:
           children: Load parameters
-      - id: save-results-button
-        label: Save
-        help: Save the current simulation modelling results
-        class_name: dash_bootstrap_components.Button 
-        kwargs:
-          children: Save results
-          color: primary
-          className: me-1
-          disabled: true
-      - id: load-results-button
-        label: Load
-        help: Load previous simulation modelling results
-        class_name: dash_bootstrap_components.Button 
-        kwargs:
-          children: Load results
-          color: primary
-          className: me-1
-          disabled: true
