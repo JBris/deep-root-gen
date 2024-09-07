@@ -96,11 +96,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">node_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">plant_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">parent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="n">organ_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">segment_rank</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">diameter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">length</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span></div>
 
 
 
@@ -138,14 +143,16 @@
     <span class="n">inner_root_num</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">min_primary_length</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">max_primary_length</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">diam_primary_root</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">base_diameter</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">diameter_reduction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">apex_diameter</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">min_sec_root_num</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">max_sec_root_num</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">growth_sec_root</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">min_sec_root_length</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">max_sec_root_length</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">segments_per_root</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">root_length_reduction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">length_reduction</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">root_vary</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">origin_min</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">origin_max</span><span class="p">:</span> <span class="nb">float</span>
@@ -153,7 +160,8 @@
     <span class="n">soil_layer_height</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">soil_layer_width</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">soil_n_layers</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">soil_n_cols</span><span class="p">:</span> <span class="nb">int</span></div>
+    <span class="n">soil_n_cols</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">no_root_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-4</span></div>
 
 </pre></div>
 
