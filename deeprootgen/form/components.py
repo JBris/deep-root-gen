@@ -206,6 +206,7 @@ def build_common_layout(
             delay={"show": "500"},
         ),
         input_components,
+        dcc.Download(id=f"{page_id}-download-params"),
         dcc.Download(id=f"{page_id}-download-content"),
         dbc.Toast(
             "",

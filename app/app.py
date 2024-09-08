@@ -35,7 +35,6 @@ def define_ui(app: Dash) -> None:
     app.layout = dcc.Loading(
         id="loading_page_content",
         children=[
-            dcc.Store(id="store", storage_type="session", data=[{"name": "James"}]),
             html.Div(
                 dbc.Row(
                     [

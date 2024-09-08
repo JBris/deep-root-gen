@@ -7,6 +7,7 @@
 import os.path as osp
 
 import dash_bootstrap_components as dbc
+import pandas as pd
 from dash import ALL, Input, Output, State, callback, dcc, get_app, html, register_page
 
 from deeprootgen.data_model import RootSimulationModel
@@ -95,7 +96,7 @@ def toggle_external_links_collapse(n: int, is_open: bool) -> bool:
 
 
 @callback(
-    Output(f"{PAGE_ID}-download-content", "data"),
+    Output(f"{PAGE_ID}-download-params", "data"),
     [Input({"index": f"{PAGE_ID}-save-param-button", "type": ALL}, "n_clicks")],
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     prevent_initial_call=True,
@@ -151,6 +152,7 @@ def update_output(list_of_contents: list, list_of_names: list) -> tuple:
 
 @callback(
     Output("generate-root-system-plot", "figure"),
+    Output(f"{PAGE_ID}-download-content", "data"),
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
@@ -183,10 +185,19 @@ def run_root_model(n_clicks: list, form_values: list, enable_soils: list) -> dcc
     form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
 
     input_params = RootSimulationModel.parse_obj(form_inputs)
-    simulation = RootSystemSimulation(random_seed=input_params.random_seed)
+    simulation = RootSystemSimulation(
+        simulation_tag=input_params.simulation_tag, random_seed=input_params.random_seed
+    )
     results = simulation.run(input_params)
 
-    return results["figure"]
+    from datetime import datetime
+
+    now = datetime.today().strftime("%Y-%m-%d-%H-%M")
+    outfile = osp.join("outputs", f"{now}-nodes.csv")
+    df = pd.DataFrame(results.nodes)
+    df.to_csv(outfile, index=False)
+
+    return results.figure, dcc.send_file(outfile)
 
 
 ######################################

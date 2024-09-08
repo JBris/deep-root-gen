@@ -174,7 +174,7 @@ components:
         kwargs:
           type: number
           min: 1
-          max: 100
+          max: 500
           step: 1
           value: 10
       - id: root-length-reduction-input
@@ -279,6 +279,14 @@ components:
         kwargs:
           type: number
           step: 1
+      - id: simulation-tag-input
+        param: simulation_tag
+        label: Simulation tag
+        help: A tag to group together multiple simulations
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: text
+          value: default
   simulation:
     collapsible: true
     children:
@@ -290,15 +298,6 @@ components:
           children: Run model
           color: primary
           className: me-1
-      - id: download-results-button
-        label: Download
-        help: Download the current simulation modelling results
-        class_name: dash_bootstrap_components.Button 
-        kwargs:
-          children: Download results
-          color: primary
-          className: me-1
-          disabled: true
       - id: save-param-button
         label: Save
         help: Save current parameter configuration to file

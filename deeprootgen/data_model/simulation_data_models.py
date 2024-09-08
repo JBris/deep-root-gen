@@ -5,9 +5,15 @@ root system architecture simulation procedures.
 
 """
 
-from typing import Optional
+from typing import List, Optional
 
+import plotly.graph_objects as go
+import pydantic
 from pydantic import BaseModel
+
+
+class Config:
+    arbitrary_types_allowed = True
 
 
 class RootNodeModel(BaseModel):
@@ -29,6 +35,7 @@ class RootNodeModel(BaseModel):
     segment_rank: Optional[int] = 0
     diameter: Optional[float] = 0.0
     length: Optional[float] = 0.0
+    simulation_tag: Optional[str] = "default"
 
 
 class RootEdgeModel(BaseModel):
@@ -78,4 +85,22 @@ class RootSimulationModel(BaseModel):
     soil_layer_width: float
     soil_n_layers: int
     soil_n_cols: int
+    simulation_tag: Optional[str] = "default"
     no_root_zone: Optional[float] = 1e-4
+    floor_threshold: Optional[float] = 0.4
+    ceiling_threshold: Optional[float] = 0.9
+
+
+@pydantic.dataclasses.dataclass(config=Config)
+class RootSimulationResults:
+    """
+    The root system architecture simulation results.
+
+    Args:
+        Config (Config):
+            The Pydantic Config model class.
+    """
+
+    nodes: List[dict]
+    edges: List[dict]
+    figure: go.Figure | None

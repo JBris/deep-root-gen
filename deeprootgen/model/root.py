@@ -16,7 +16,13 @@ from numpy.random import default_rng
 from torch_geometric.data import Data
 from torch_geometric.utils import from_networkx
 
-from ..data_model import RootEdgeModel, RootNodeModel, RootSimulationModel
+from ..data_model import (
+    RootEdgeModel,
+    RootNodeModel,
+    RootSimulationModel,
+    RootSimulationResults,
+)
+from ..spatial import get_transform_matrix, make_homogenous
 from .soil import Soil
 
 
@@ -56,7 +62,7 @@ class RootNode:
         """
         if new_organ:
             organ_id = self.G.increment_organ_id()
-            segment_rank = 0
+            segment_rank = 1
             order = self.node_data.order + 1
         else:
             organ_id = self.node_data.organ_id
@@ -255,6 +261,7 @@ class RootOrgan:
         self,
         parent_node: RootNode,
         input_parameters: RootSimulationModel,
+        simulation_tag: str,
         rng: np.random.Generator,
     ) -> None:
         """RootOrgan constructor.
@@ -264,6 +271,8 @@ class RootOrgan:
                 The parent root node.
             input_parameters (RootSimulationModel):
                 The root simulation data model.
+            simulation_tag (str, optional):
+                A tag to group together multiple simulations.
             rng (np.random.Generator):
                 The random number generator.
 
@@ -273,7 +282,8 @@ class RootOrgan:
         """
         self.parent_node = parent_node
         self.segments: List[RootNode] = []
-        self.child_roots: List["RootOrgan"] = []
+        self.child_organs: List["RootOrgan"] = []
+        self.input_parameters = input_parameters
 
         # Diameter
         self.base_diameter = input_parameters.base_diameter * input_parameters.max_order
@@ -288,6 +298,7 @@ class RootOrgan:
         )
         self.length_reduction = input_parameters.length_reduction
 
+        self.simulation_tag = simulation_tag
         self.rng = rng
 
     def init_diameters(self, segments_per_root: int, apex_diameter: int) -> np.ndarray:
@@ -302,7 +313,13 @@ class RootOrgan:
         base_diameter = self.base_diameter * self.diameter_reduction ** (
             self.parent_node.node_data.order
         )
-        diameters = self.rng.uniform(apex_diameter, base_diameter, segments_per_root)
+
+        if base_diameter > apex_diameter:
+            ub, lb = base_diameter, apex_diameter
+        else:
+            lb, ub = base_diameter, apex_diameter
+
+        diameters = self.rng.uniform(lb, ub, segments_per_root)
         diameters = np.sort(diameters)[::-1]
         return diameters
 
@@ -324,8 +341,17 @@ class RootOrgan:
         else:
             min_length, max_length = self.proot_length_interval
 
-        lengths = self.rng.uniform(min_length, max_length, segments_per_root)
-        lengths = np.sort(lengths)[::-1]
+        if max_length > min_length:
+            ub, lb = max_length, min_length
+        else:
+            lb, ub = max_length, min_length
+
+        root_length = self.rng.uniform(lb, ub)
+        # Rescale segment samples
+        segment_samples = self.rng.uniform(0, 1, segments_per_root)
+        segment_samples = np.sort(segment_samples)[::-1]
+        segment_samples /= segment_samples.sum(axis=0)
+        lengths = segment_samples * root_length
         return lengths
 
     def add_child_node(
@@ -356,7 +382,9 @@ class RootOrgan:
         """
         diameter = diameters[i]
         length = lengths[i]
-        node_data = RootNodeModel(diameter=diameter, length=length)
+        node_data = RootNodeModel(
+            diameter=diameter, length=length, simulation_tag=self.simulation_tag
+        )
 
         child_node = parent_node.add_child_node(node_data, new_organ=new_organ)
         self.segments.append(child_node)
@@ -391,14 +419,36 @@ class RootOrgan:
 
         return self.segments
 
+    def add_child_organ(
+        self, floor_threshold: float = 0.4, ceiling_threshold: float = 0.9
+    ) -> "RootOrgan":
+        floor = int(len(self.segments) * floor_threshold)
+        ceiling = int(len(self.segments) * ceiling_threshold)
+
+        indx = self.rng.integers(floor, ceiling)
+        parent_node = self.segments[indx]
+
+        child_organ = RootOrgan(
+            parent_node,
+            input_parameters=self.input_parameters,
+            simulation_tag=self.simulation_tag,
+            rng=self.rng,
+        )
+        self.child_organs.append(child_organ)
+        return child_organ
+
 
 class RootSystemSimulation:
     """The root system architecture simulation model."""
 
-    def __init__(self, random_seed: int = None) -> None:
+    def __init__(
+        self, simulation_tag: str = "default", random_seed: int = None
+    ) -> None:
         """RootSystemSimulation constructor.
 
         Args:
+            simulation_tag (str, optional):
+                A tag to group together multiple simulations. Defaults to 'default'.
             random_seed (int, optional):
                 The seed for the random number generator. Defaults to None.
 
@@ -409,9 +459,10 @@ class RootSystemSimulation:
         self.soil: Soil = Soil()
         self.G: RootSystemGraph = RootSystemGraph()
         self.organs: List["RootOrgan"] = []
+        self.simulation_tag = simulation_tag
         self.rng = default_rng(random_seed)
 
-    def run(self, input_parameters: RootSimulationModel) -> dict:
+    def run(self, input_parameters: RootSimulationModel) -> RootSimulationResults:
         """Run a root system architecture simulation.
 
         Args:
@@ -422,8 +473,6 @@ class RootSystemSimulation:
             dict:
                 The simulation results.
         """
-        run_results = {}
-
         # Initialise figure (optionally with soil)
         if input_parameters.enable_soil:
             soil_df = self.soil.create_soil_grid(
@@ -433,25 +482,48 @@ class RootSystemSimulation:
                 input_parameters.soil_n_cols,
             )
 
-            run_results["soil"] = soil_df
             fig = self.soil.create_soil_fig(soil_df)
         else:
-            run_results["soil"] = None
             fig = go.Figure()
 
         fig.update_layout(
             scene=dict(
-                xaxis=dict(title="x"), yaxis=dict(title="z"), zaxis=dict(title="y")
+                xaxis=dict(title="x"), yaxis=dict(title="y"), zaxis=dict(title="z")
             )
         )
 
         segments_per_root = input_parameters.segments_per_root
         apex_diameter = input_parameters.apex_diameter
+        floor_threshold = input_parameters.floor_threshold
+        ceiling_threshold = input_parameters.ceiling_threshold
 
         organ = RootOrgan(
-            self.G.base_node, input_parameters=input_parameters, rng=self.rng
+            self.G.base_node,
+            input_parameters=input_parameters,
+            simulation_tag=self.simulation_tag,
+            rng=self.rng,
         )
         organ.construct_root(segments_per_root, apex_diameter)
-        print(self.G.as_dict())
-        run_results["figure"] = fig
-        return run_results
+
+        df, _ = self.G.as_df()
+
+        fig.add_trace(
+            go.Scatter3d(
+                x=df["x"],
+                y=df["y"],
+                z=df["z"],
+                mode="markers",
+                marker=dict(size=6, color="green", colorscale="brwnyl", opacity=1),
+            )
+        )
+
+        child_organ = organ.add_child_organ(floor_threshold, ceiling_threshold)
+        child_organ.construct_root(segments_per_root, apex_diameter)
+
+        nodes, edges = self.G.as_dict()
+        results = RootSimulationResults(
+            nodes=nodes,
+            edges=edges,
+            figure=fig,
+        )
+        return results
