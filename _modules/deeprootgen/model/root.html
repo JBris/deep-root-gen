@@ -91,7 +91,13 @@
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">from_networkx</span>
 
-<span class="kn">from</span> <span class="nn">..data_model</span> <span class="kn">import</span> <span class="n">RootEdgeModel</span><span class="p">,</span> <span class="n">RootNodeModel</span><span class="p">,</span> <span class="n">RootSimulationModel</span>
+<span class="kn">from</span> <span class="nn">..data_model</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RootEdgeModel</span><span class="p">,</span>
+    <span class="n">RootNodeModel</span><span class="p">,</span>
+    <span class="n">RootSimulationModel</span><span class="p">,</span>
+    <span class="n">RootSimulationResults</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..spatial</span> <span class="kn">import</span> <span class="n">get_transform_matrix</span><span class="p">,</span> <span class="n">make_homogenous</span>
 <span class="kn">from</span> <span class="nn">.soil</span> <span class="kn">import</span> <span class="n">Soil</span>
 
 
@@ -135,7 +141,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">new_organ</span><span class="p">:</span>
             <span class="n">organ_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">increment_organ_id</span><span class="p">()</span>
-            <span class="n">segment_rank</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">segment_rank</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">order</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">organ_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">organ_id</span>
@@ -374,6 +380,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">parent_node</span><span class="p">:</span> <span class="n">RootNode</span><span class="p">,</span>
         <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootSimulationModel</span><span class="p">,</span>
+        <span class="n">simulation_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;RootOrgan constructor.</span>
@@ -383,6 +390,8 @@
 <span class="sd">                The parent root node.</span>
 <span class="sd">            input_parameters (RootSimulationModel):</span>
 <span class="sd">                The root simulation data model.</span>
+<span class="sd">            simulation_tag (str, optional):</span>
+<span class="sd">                A tag to group together multiple simulations.</span>
 <span class="sd">            rng (np.random.Generator):</span>
 <span class="sd">                The random number generator.</span>
 
@@ -392,7 +401,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent_node</span> <span class="o">=</span> <span class="n">parent_node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RootNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">child_roots</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;RootOrgan&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">child_organs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;RootOrgan&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
 
         <span class="c1"># Diameter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">base_diameter</span> <span class="o">*</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">max_order</span>
@@ -407,6 +417,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length_reduction</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">length_reduction</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation_tag</span> <span class="o">=</span> <span class="n">simulation_tag</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
 
 <div class="viewcode-block" id="RootOrgan.init_diameters">
@@ -423,7 +434,13 @@
         <span class="n">base_diameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_diameter</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter_reduction</span> <span class="o">**</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent_node</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">order</span>
         <span class="p">)</span>
-        <span class="n">diameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">apex_diameter</span><span class="p">,</span> <span class="n">base_diameter</span><span class="p">,</span> <span class="n">segments_per_root</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">base_diameter</span> <span class="o">&gt;</span> <span class="n">apex_diameter</span><span class="p">:</span>
+            <span class="n">ub</span><span class="p">,</span> <span class="n">lb</span> <span class="o">=</span> <span class="n">base_diameter</span><span class="p">,</span> <span class="n">apex_diameter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">base_diameter</span><span class="p">,</span> <span class="n">apex_diameter</span>
+
+        <span class="n">diameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">segments_per_root</span><span class="p">)</span>
         <span class="n">diameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">diameters</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">diameters</span></div>
 
@@ -448,8 +465,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proot_length_interval</span>
 
-        <span class="n">lengths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">segments_per_root</span><span class="p">)</span>
-        <span class="n">lengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">lengths</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">max_length</span> <span class="o">&gt;</span> <span class="n">min_length</span><span class="p">:</span>
+            <span class="n">ub</span><span class="p">,</span> <span class="n">lb</span> <span class="o">=</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">min_length</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span> <span class="o">=</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">min_length</span>
+
+        <span class="n">root_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+        <span class="c1"># Rescale segment samples</span>
+        <span class="n">segment_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">segments_per_root</span><span class="p">)</span>
+        <span class="n">segment_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">segment_samples</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">segment_samples</span> <span class="o">/=</span> <span class="n">segment_samples</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">lengths</span> <span class="o">=</span> <span class="n">segment_samples</span> <span class="o">*</span> <span class="n">root_length</span>
         <span class="k">return</span> <span class="n">lengths</span></div>
 
 
@@ -483,7 +509,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">diameter</span> <span class="o">=</span> <span class="n">diameters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">node_data</span> <span class="o">=</span> <span class="n">RootNodeModel</span><span class="p">(</span><span class="n">diameter</span><span class="o">=</span><span class="n">diameter</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
+        <span class="n">node_data</span> <span class="o">=</span> <span class="n">RootNodeModel</span><span class="p">(</span>
+            <span class="n">diameter</span><span class="o">=</span><span class="n">diameter</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">,</span> <span class="n">simulation_tag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_tag</span>
+        <span class="p">)</span>
 
         <span class="n">child_node</span> <span class="o">=</span> <span class="n">parent_node</span><span class="o">.</span><span class="n">add_child_node</span><span class="p">(</span><span class="n">node_data</span><span class="p">,</span> <span class="n">new_organ</span><span class="o">=</span><span class="n">new_organ</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child_node</span><span class="p">)</span>
@@ -520,7 +548,25 @@
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">segments</span></div>
-</div>
+
+
+    <span class="k">def</span> <span class="nf">add_child_organ</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">floor_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">ceiling_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RootOrgan&quot;</span><span class="p">:</span>
+        <span class="n">floor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span> <span class="o">*</span> <span class="n">floor_threshold</span><span class="p">)</span>
+        <span class="n">ceiling</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span> <span class="o">*</span> <span class="n">ceiling_threshold</span><span class="p">)</span>
+
+        <span class="n">indx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="n">floor</span><span class="p">,</span> <span class="n">ceiling</span><span class="p">)</span>
+        <span class="n">parent_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="n">indx</span><span class="p">]</span>
+
+        <span class="n">child_organ</span> <span class="o">=</span> <span class="n">RootOrgan</span><span class="p">(</span>
+            <span class="n">parent_node</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">,</span>
+            <span class="n">simulation_tag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_tag</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">child_organs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child_organ</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">child_organ</span></div>
 
 
 
@@ -529,10 +575,14 @@
 <span class="k">class</span> <span class="nc">RootSystemSimulation</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The root system architecture simulation model.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">simulation_tag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;RootSystemSimulation constructor.</span>
 
 <span class="sd">        Args:</span>
+<span class="sd">            simulation_tag (str, optional):</span>
+<span class="sd">                A tag to group together multiple simulations. Defaults to &#39;default&#39;.</span>
 <span class="sd">            random_seed (int, optional):</span>
 <span class="sd">                The seed for the random number generator. Defaults to None.</span>
 
@@ -543,11 +593,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">soil</span><span class="p">:</span> <span class="n">Soil</span> <span class="o">=</span> <span class="n">Soil</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">:</span> <span class="n">RootSystemGraph</span> <span class="o">=</span> <span class="n">RootSystemGraph</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">organs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;RootOrgan&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation_tag</span> <span class="o">=</span> <span class="n">simulation_tag</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RootSystemSimulation.run">
 <a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootSimulationModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootSimulationModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RootSimulationResults</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a root system architecture simulation.</span>
 
 <span class="sd">        Args:</span>
@@ -558,8 +609,6 @@
 <span class="sd">            dict:</span>
 <span class="sd">                The simulation results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">run_results</span> <span class="o">=</span> <span class="p">{}</span>
-
         <span class="c1"># Initialise figure (optionally with soil)</span>
         <span class="k">if</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">enable_soil</span><span class="p">:</span>
             <span class="n">soil_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soil</span><span class="o">.</span><span class="n">create_soil_grid</span><span class="p">(</span>
@@ -569,28 +618,51 @@
                 <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_cols</span><span class="p">,</span>
             <span class="p">)</span>
 
-            <span class="n">run_results</span><span class="p">[</span><span class="s2">&quot;soil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">soil_df</span>
             <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soil</span><span class="o">.</span><span class="n">create_soil_fig</span><span class="p">(</span><span class="n">soil_df</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">run_results</span><span class="p">[</span><span class="s2">&quot;soil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
 
         <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">scene</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">),</span> <span class="n">zaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+                <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">),</span> <span class="n">zaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
         <span class="n">segments_per_root</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">segments_per_root</span>
         <span class="n">apex_diameter</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">apex_diameter</span>
+        <span class="n">floor_threshold</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">floor_threshold</span>
+        <span class="n">ceiling_threshold</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">ceiling_threshold</span>
 
         <span class="n">organ</span> <span class="o">=</span> <span class="n">RootOrgan</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">base_node</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="n">input_parameters</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">base_node</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">=</span><span class="n">input_parameters</span><span class="p">,</span>
+            <span class="n">simulation_tag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_tag</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">organ</span><span class="o">.</span><span class="n">construct_root</span><span class="p">(</span><span class="n">segments_per_root</span><span class="p">,</span> <span class="n">apex_diameter</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
-        <span class="n">run_results</span><span class="p">[</span><span class="s2">&quot;figure&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig</span>
-        <span class="k">return</span> <span class="n">run_results</span></div>
+
+        <span class="n">df</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+            <span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span>
+                <span class="n">z</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">],</span>
+                <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
+                <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="s2">&quot;brwnyl&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">child_organ</span> <span class="o">=</span> <span class="n">organ</span><span class="o">.</span><span class="n">add_child_organ</span><span class="p">(</span><span class="n">floor_threshold</span><span class="p">,</span> <span class="n">ceiling_threshold</span><span class="p">)</span>
+        <span class="n">child_organ</span><span class="o">.</span><span class="n">construct_root</span><span class="p">(</span><span class="n">segments_per_root</span><span class="p">,</span> <span class="n">apex_diameter</span><span class="p">)</span>
+
+        <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">RootSimulationResults</span><span class="p">(</span>
+            <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span>
+            <span class="n">edges</span><span class="o">=</span><span class="n">edges</span><span class="p">,</span>
+            <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div>
 </div>
 
 </pre></div>
