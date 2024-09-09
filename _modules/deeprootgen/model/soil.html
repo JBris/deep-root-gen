@@ -123,7 +123,7 @@
         <span class="c1"># Create unit hypercube</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">)</span>
         <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
         <span class="n">grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="n">M</span><span class="p">]</span>
 
@@ -132,8 +132,8 @@
         <span class="n">xv</span> <span class="o">*=</span> <span class="n">voxel_width</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">xv</span> <span class="o">-=</span> <span class="n">voxel_width</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">yv</span> <span class="o">*=</span> <span class="o">-</span><span class="n">voxel_height</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">zv</span> <span class="o">*=</span> <span class="n">voxel_width</span>
-        <span class="n">zv</span> <span class="o">-=</span> <span class="n">voxel_width</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">zv</span> <span class="o">*=</span> <span class="n">voxel_width</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">zv</span> <span class="o">-=</span> <span class="n">voxel_width</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_cols</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="n">soil_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">xv</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">yv</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">zv</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">soil_df</span></div>
@@ -155,6 +155,7 @@
         <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span>
             <span class="n">data</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">go</span><span class="o">.</span><span class="n">Scatter3d</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;soil&quot;</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">soil_df</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span>
                     <span class="n">y</span><span class="o">=</span><span class="n">soil_df</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">],</span>
                     <span class="n">z</span><span class="o">=</span><span class="n">soil_df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span>

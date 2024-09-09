@@ -1,6 +1,12 @@
 Model
 =====
 
+Graph
+-----
+
+.. automodule:: deeprootgen.model.graph
+   :members:
+
 Root
 ----
 
