@@ -5,6 +5,7 @@ root system architecture simulation procedures.
 
 """
 
+from enum import Enum
 from typing import List, Optional
 
 import plotly.graph_objects as go
@@ -14,6 +15,28 @@ from pydantic import BaseModel
 
 class Config:
     arbitrary_types_allowed = True
+
+
+class RootType(Enum):
+    STRUCTURAL = "structural"
+    FINE = "fine"
+    PRIMARY = "primary"
+    SECONDARY = "secondary"
+    OUTER = "outer"
+    INNER = "inner"
+
+
+class RootTypeModel(BaseModel):
+    """The root type data model for classifying roots.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    root_type: str
+    order_type: str
+    position_type: str
 
 
 class RootNodeModel(BaseModel):
@@ -35,7 +58,11 @@ class RootNodeModel(BaseModel):
     segment_rank: Optional[int] = 0
     diameter: Optional[float] = 0.0
     length: Optional[float] = 0.0
+    root_type: Optional[str] = "base"
+    order_type: Optional[str] = "base"
+    position_type: Optional[str] = "base"
     simulation_tag: Optional[str] = "default"
+    invalid_root: Optional[bool] = False
 
 
 class RootEdgeModel(BaseModel):
@@ -78,13 +105,14 @@ class RootSimulationModel(BaseModel):
     segments_per_root: int
     length_reduction: float
     root_vary: float
-    origin_min: float
-    origin_max: float
+    origin_min: Optional[float] = 1e-3
+    origin_max: Optional[float] = 1e-2
     enable_soil: bool
     soil_layer_height: float
     soil_layer_width: float
     soil_n_layers: int
     soil_n_cols: int
+    max_val_attempts: Optional[int] = 50
     simulation_tag: Optional[str] = "default"
     no_root_zone: Optional[float] = 1e-4
     floor_threshold: Optional[float] = 0.4
@@ -92,9 +120,9 @@ class RootSimulationModel(BaseModel):
 
 
 @pydantic.dataclasses.dataclass(config=Config)
-class RootSimulationResults:
+class RootSimulationResultModel:
     """
-    The root system architecture simulation results.
+    The root system architecture simulation results data model.
 
     Args:
         Config (Config):

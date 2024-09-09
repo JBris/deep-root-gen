@@ -25,16 +25,18 @@ components:
           max: 1
           step: 0.1
           value: 0.5
+          persistence: true
       - id: fine-root-threshold-input
         param: fine_root_threshold
-        label: Fine root threshold ratio
-        help: Threshold for classifying a root as a fine root, rather than a structural root (mm)
+        label: Fine root threshold
+        help: Threshold for classifying a root as a fine root, rather than a structural root (cm)
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
           min: 0
-          step: 0.1
-          value: 1.5
+          step: 0.01
+          value: 0.06
+          persistence: true
       - id: outer-primary-root-num-input
         param: outer_root_num
         label: Number of outer roots
@@ -46,6 +48,7 @@ components:
           max: 20
           step: 1
           value: 10
+          persistence: true
       - id: inner-primary-root-num-input
         param: inner_root_num
         label: Number of inner roots
@@ -57,6 +60,7 @@ components:
           max: 20
           step: 1
           value: 8
+          persistence: true
       - id: min-length-primary-root-input
         param: min_primary_length
         label: Primary root minimum length
@@ -68,6 +72,7 @@ components:
           max: 50
           step: 1
           value: 20
+          persistence: true
       - id: max-length-primary-root-input
         param: max_primary_length
         label: Primary root maximum length
@@ -79,6 +84,7 @@ components:
           max: 50
           step: 1
           value: 30
+          persistence: true
       - id: base-diameter-root-input
         param: base_diameter
         label: Base root diameter
@@ -87,9 +93,10 @@ components:
         kwargs:
           type: number
           min: 0.001
-          max: 10
-          step: 0.1
+          max: 1
+          step: 0.01
           value: 0.11
+          persistence: true
       - id: root-apex-input
         param: apex_diameter
         label: Apex diameter
@@ -97,10 +104,11 @@ components:
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
-          min: 0.001
+          min: 0.01
           max: 1
-          step: 0.1
-          value: 0.1
+          step: 0.01
+          value: 0.02
+          persistence: true
       - id: diameter-reduction-factor-input
         param: diameter_reduction
         label: Diameter reduction
@@ -108,10 +116,11 @@ components:
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
-          min: 0.001
+          min: 0
           max: 1
           step: 0.1
-          value: 0.7
+          value: 0.2
+          persistence: true
       - id: min-num-secondary-roots-input
         param: min_sec_root_num
         label: Minimum number of secondary roots
@@ -120,9 +129,9 @@ components:
         kwargs:
           type: number
           min: 0
-          max: 10
           step: 1
-          value: 3
+          value: 1
+          persistence: true
       - id: max-num-secondary-roots-input
         param: max_sec_root_num
         label: Maximum number of secondary roots
@@ -131,9 +140,10 @@ components:
         kwargs:
           type: number
           min: 0
-          max: 10
+          max: 20
           step: 1
-          value: 4
+          value: 3
+          persistence: true
       - id: secondary-root-growth-input
         param: growth_sec_root
         label: Secondary root growth rate
@@ -143,7 +153,8 @@ components:
           type: number
           min: 0
           step: 0.1
-          value: 0.5
+          value: 0.2
+          persistence: true
       - id: min-length-secondary-root-input
         param: min_sec_root_length
         label: Secondary root minimum length
@@ -155,6 +166,7 @@ components:
           max: 250
           step: 1
           value: 100
+          persistence: true
       - id: max-length-secondary-root-input
         param: max_sec_root_length
         label: Secondary root maximum length
@@ -166,6 +178,7 @@ components:
           max: 500
           step: 1
           value: 220
+          persistence: true
       - id: segments-per-root-input
         param: segments_per_root
         label: Segments per root
@@ -176,7 +189,8 @@ components:
           min: 1
           max: 500
           step: 1
-          value: 10
+          value: 50
+          persistence: true
       - id: root-length-reduction-input
         param: length_reduction
         label: Length reduction
@@ -188,6 +202,7 @@ components:
           max: 1
           step: 0.1
           value: 0.5
+          persistence: true
       - id: root-vary-input
         param: root_vary
         label: Root segment variance
@@ -199,28 +214,7 @@ components:
           max: 360
           step: 1
           value: 30
-      - id: origin-min-input
-        param: origin_min
-        label: Origin minimum
-        help: The minimum distance of the initial primary root from the origin (cm)
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          min: 0.001
-          max: 1
-          step: 0.01
-          value: 0.01
-      - id: origin-max-input
-        param: origin_max
-        label: Origin maximum
-        help: The maximum distance of the initial primary root from the origin (cm)
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          min: 0.01
-          max: 1
-          step: 0.01
-          value: 0.1
+          persistence: true
       - id: enable-soil-input
         param: enable_soil
         label: Enable soil
@@ -238,6 +232,7 @@ components:
           max: 100
           step: 10
           value: 10
+          persistence: true
       - id: soil-layer-width-input
         param: soil_layer_width
         label: Soil layer width
@@ -249,6 +244,7 @@ components:
           max: 100
           step: 10
           value: 10
+          persistence: true
       - id: soil-n-layers
         param: soil_n_layers
         label: Number soil layers
@@ -260,6 +256,7 @@ components:
           max: 20
           step: 1
           value: 1
+          persistence: true
       - id: soil-n-cols
         param: soil_n_cols
         label: Number soil columns
@@ -271,6 +268,7 @@ components:
           max: 20
           step: 1
           value: 1
+          persistence: true
       - id: random-seed-input
         param: random_seed
         label: Random seed
@@ -279,6 +277,19 @@ components:
         kwargs:
           type: number
           step: 1
+          persistence: true
+      - id: max-val-attempts-input
+        param: max_val_attempts
+        label: Maximum validation attempts
+        help: The maximum number of attempts to validate each root (for plausibility) within the root system.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 1000
+          step: 1
+          value: 50
+          persistence: true
       - id: simulation-tag-input
         param: simulation_tag
         label: Simulation tag
@@ -287,6 +298,7 @@ components:
         kwargs:
           type: text
           value: default
+          persistence: true
   simulation:
     collapsible: true
     children:
@@ -298,6 +310,11 @@ components:
           children: Run model
           color: primary
           className: me-1
+      - id: download-sim-data-input
+        label: Download
+        help: Download the simulation output data
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
       - id: save-param-button
         label: Save
         help: Save current parameter configuration to file

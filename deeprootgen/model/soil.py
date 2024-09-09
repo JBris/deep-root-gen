@@ -44,7 +44,7 @@ class Soil:
         # Create unit hypercube
         x = np.linspace(0, 1, n_cols)
         y = np.linspace(0, 1, n_layers)
-        z = np.linspace(0, 1, 2)
+        z = np.linspace(0, 1, n_cols)
         M = np.meshgrid(x, y, z)
         grid = [vector.flatten() for vector in M]
 
@@ -53,8 +53,8 @@ class Soil:
         xv *= voxel_width * (n_cols - 1)
         xv -= voxel_width / 2 * (n_cols - 1)
         yv *= -voxel_height * (n_layers - 1)
-        zv *= voxel_width
-        zv -= voxel_width / 2
+        zv *= voxel_width * (n_cols - 1)
+        zv -= voxel_width / 2 * (n_cols - 1)
 
         soil_df = pd.DataFrame({"x": xv, "y": yv, "z": zv})
         return soil_df
@@ -73,6 +73,7 @@ class Soil:
         fig = go.Figure(
             data=[
                 go.Scatter3d(
+                    name="soil",
                     x=soil_df["x"],
                     y=soil_df["z"],
                     z=soil_df["y"],

@@ -4,10 +4,13 @@
 # Imports
 ######################################
 
+import base64
 import os.path as osp
+from datetime import datetime
 
 import dash_bootstrap_components as dbc
 import pandas as pd
+import yaml
 from dash import ALL, Input, Output, State, callback, dcc, get_app, html, register_page
 
 from deeprootgen.data_model import RootSimulationModel
@@ -117,10 +120,6 @@ def save_param(n_clicks: int, param_inputs: list) -> None:
         k = input["param"]
         inputs[k] = param_inputs[i]
 
-    from datetime import datetime
-
-    import yaml
-
     outfile = osp.join(
         "outputs", f"{datetime.today().strftime('%Y-%m-%d-%H-%M')}-{PAGE_ID}.yaml"
     )
@@ -138,10 +137,6 @@ def save_param(n_clicks: int, param_inputs: list) -> None:
     prevent_initial_call=True,
 )
 def update_output(list_of_contents: list, list_of_names: list) -> tuple:
-    import base64
-
-    import yaml
-
     _, content_string = list_of_contents[0].split(",")
     decoded = base64.b64decode(content_string)
     input_dict = yaml.safe_load(decoded.decode("utf-8"))
@@ -156,9 +151,12 @@ def update_output(list_of_contents: list, list_of_names: list) -> tuple:
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
+    State({"index": f"{PAGE_ID}-download-sim-data-input", "type": ALL}, "on"),
     prevent_initial_call=True,
 )
-def run_root_model(n_clicks: list, form_values: list, enable_soils: list) -> dcc.Graph:
+def run_root_model(
+    n_clicks: list, form_values: list, enable_soils: list, download_data: list
+) -> dcc.Graph:
     """Run and plot the root model.
 
     Args:
@@ -166,7 +164,10 @@ def run_root_model(n_clicks: list, form_values: list, enable_soils: list) -> dcc
             Number of times the button has been clicked.
         form_values (list):
             The form input data.
-
+        enable_soils (list):
+            Enable visualisation of soil data.
+        download_data (list):
+            Whether to download the simulation results data.
     Returns:
         dcc.Graph: The visualised root model.
     """
@@ -186,18 +187,25 @@ def run_root_model(n_clicks: list, form_values: list, enable_soils: list) -> dcc
 
     input_params = RootSimulationModel.parse_obj(form_inputs)
     simulation = RootSystemSimulation(
-        simulation_tag=input_params.simulation_tag, random_seed=input_params.random_seed
+        simulation_tag=input_params.simulation_tag,
+        random_seed=input_params.random_seed,
+        visualise=True,
     )
     results = simulation.run(input_params)
 
-    from datetime import datetime
+    download_data = download_data[0]
+    if download_data:
+        from datetime import datetime
 
-    now = datetime.today().strftime("%Y-%m-%d-%H-%M")
-    outfile = osp.join("outputs", f"{now}-nodes.csv")
-    df = pd.DataFrame(results.nodes)
-    df.to_csv(outfile, index=False)
+        now = datetime.today().strftime("%Y-%m-%d-%H-%M")
+        outfile = osp.join("outputs", f"{now}-nodes.csv")
+        df = pd.DataFrame(results.nodes)
+        df.to_csv(outfile, index=False)
+        download_file = dcc.send_file(outfile)
+    else:
+        download_file = None
 
-    return results.figure, dcc.send_file(outfile)
+    return results.figure, download_file
 
 
 ######################################
