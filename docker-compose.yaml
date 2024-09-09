@@ -200,6 +200,19 @@ services:
     volumes:
       - metabase-data:/metabase-data
 
+  arangodb:
+    image: arangodb:3.11.3
+    restart: always
+    stop_grace_period: 10s
+    environment:
+      ARANGO_ROOT_PASSWORD: $ARANGO_ROOT_PASSWORD
+      ARANGO_NO_AUTH: 1
+    ports:
+      - 8529:8529
+    volumes:
+      - arangodb-data:/var/lib/arangodb3
+      - arangodb-app-data:/var/lib/arangodb3-apps
+
 networks:
   default:
     name: $COMPOSE_PROJECT_NAME
@@ -211,3 +224,5 @@ volumes:
   cloudbeaver-data: {}
   metabase-data: {}
   prefect-flows: {}
+  arangodb-data: {}
+  arangodb-app-data: {}

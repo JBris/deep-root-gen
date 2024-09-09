@@ -12,6 +12,27 @@ files = [
 ]
 
 [[package]]
+name = "adbnx-adapter"
+version = "5.0.3"
+description = "Convert ArangoDB graphs to NetworkX & vice-versa."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "adbnx_adapter-5.0.3-py3-none-any.whl", hash = "sha256:c35f99bb07f403ad05d8fffc19b623e89d554fc05f129bce9865308bff9ce49c"},
+    {file = "adbnx_adapter-5.0.3.tar.gz", hash = "sha256:e9128f77ad013b983396ff9dfa68c7158ad50a6c9bb5a103aaa8ab284fcf5690"},
+]
+
+[package.dependencies]
+networkx = ">=2.5.1"
+python-arango = ">=7.4,<8.0"
+requests = ">=2.27.1"
+rich = ">=12.5.1"
+setuptools = ">=45"
+
+[package.extras]
+dev = ["Flake8-pyproject", "black (==23.3.0)", "coveralls (>=3.3.1)", "flake8 (==6.0.0)", "isort (==5.12.0)", "mypy (==1.4.1)", "pytest (>=6.0.0)", "pytest-cov (>=2.0.0)", "types-setuptools"]
+
+[[package]]
 name = "aiohappyeyeballs"
 version = "2.3.6"
 description = "Happy Eyeballs for asyncio"
@@ -5373,6 +5394,23 @@ files = [
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pyjwt"
+version = "2.9.0"
+description = "JSON Web Token implementation in Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "PyJWT-2.9.0-py3-none-any.whl", hash = "sha256:3b02fb0f44517787776cf48f2ae25d8e14f300e6d7545a4315cee571a415e850"},
+    {file = "pyjwt-2.9.0.tar.gz", hash = "sha256:7e1e5b56cc735432a7369cbfa0efe50fa113ebecdc04ae6922deba8b84582d0c"},
+]
+
+[package.extras]
+crypto = ["cryptography (>=3.4.0)"]
+dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx", "sphinx-rtd-theme", "zope.interface"]
+docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
+tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
+
+[[package]]
 name = "pyknos"
 version = "0.15.2"
 description = "Conditional density estimation."
@@ -5607,6 +5645,29 @@ pytest = ">=7.0.0"
 psutil = ["psutil (>=3.0)"]
 setproctitle = ["setproctitle"]
 testing = ["filelock"]
+
+[[package]]
+name = "python-arango"
+version = "7.9.1"
+description = "Python Driver for ArangoDB"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "python-arango-7.9.1.tar.gz", hash = "sha256:18f7d365fb6cf45778fa73b559e3865d0a1c00081de65ef00ba238db52e374ab"},
+    {file = "python_arango-7.9.1-py3-none-any.whl", hash = "sha256:23ec7b3aad774db5f99df20f6a1036385c85eb5c9864e47628bc622ea812f2f8"},
+]
+
+[package.dependencies]
+importlib-metadata = ">=4.7.1"
+packaging = ">=23.1"
+PyJWT = "*"
+requests = "*"
+requests-toolbelt = "*"
+setuptools = ">=42"
+urllib3 = ">=1.26.0"
+
+[package.extras]
+dev = ["black (>=22.3.0)", "flake8 (>=4.0.1)", "isort (>=5.10.1)", "mock", "mypy (>=0.942)", "pre-commit (>=2.17.0)", "pytest (>=7.1.1)", "pytest-cov (>=3.0.0)", "sphinx", "sphinx-rtd-theme", "types-pkg-resources", "types-requests", "types-setuptools"]
 
 [[package]]
 name = "python-dateutil"
@@ -6139,6 +6200,20 @@ requests = ">=2.0.0"
 
 [package.extras]
 rsa = ["oauthlib[signedtoken] (>=3.0.0)"]
+
+[[package]]
+name = "requests-toolbelt"
+version = "1.0.0"
+description = "A utility belt for advanced users of python-requests"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+files = [
+    {file = "requests-toolbelt-1.0.0.tar.gz", hash = "sha256:7681a0a3d047012b5bdc0ee37d7f8f07ebe76ab08caeccfc3921ce23c88d5bc6"},
+    {file = "requests_toolbelt-1.0.0-py2.py3-none-any.whl", hash = "sha256:cccfdd665f0a24fcf4726e690f65639d272bb0637b9b92dfd91a5568ccf6bd06"},
+]
+
+[package.dependencies]
+requests = ">=2.0.1,<3.0.0"
 
 [[package]]
 name = "retrying"
@@ -8305,4 +8380,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "90c940afdc3485480ef8c2b0ae3148866ed041bbf8b768da49a7db594887b300"
+content-hash = "95d6a8c75238eda2219b60c8cb7401fc74e7cc121bf5a7a3eaaa2490152552f9"
