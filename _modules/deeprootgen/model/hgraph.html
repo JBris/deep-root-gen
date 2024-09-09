@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeprootgen.model.hgraph &mdash; DeepRootGen 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelogs/changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deeprootgen.model.hgraph</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeprootgen.model.hgraph</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains the hierarchical graph representation of the root system.</span>
+
+<span class="sd">This module defines the hierarchical graph representation of the root system.</span>
+<span class="sd">This includes integration with NetworkX and PyTorch Geometric.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">from_networkx</span>
+
+<span class="kn">from</span> <span class="nn">..data_model</span> <span class="kn">import</span> <span class="n">RootEdgeModel</span><span class="p">,</span> <span class="n">RootNodeModel</span>
+<span class="kn">from</span> <span class="nn">..spatial</span> <span class="kn">import</span> <span class="n">get_transform_matrix</span><span class="p">,</span> <span class="n">make_homogenous</span>
+
+
+<div class="viewcode-block" id="RootNode">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootNode">[docs]</a>
+<span class="k">class</span> <span class="nc">RootNode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A node within the hierarchical graph representation of the root system.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="p">:</span> <span class="s2">&quot;RootSystemGraph&quot;</span><span class="p">,</span> <span class="n">node_data</span><span class="p">:</span> <span class="n">RootNodeModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;RootNode constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            G: (RootSystemGraph):</span>
+<span class="sd">                The hierarchical graph representation of the root system.</span>
+<span class="sd">            node_data (RootNodeModel):</span>
+<span class="sd">                The root node data model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RootNode:</span>
+<span class="sd">                The RootNode instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">G</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span> <span class="o">=</span> <span class="n">node_data</span>
+
+<div class="viewcode-block" id="RootNode.add_child_node">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootNode.add_child_node">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_child_node</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">child_data</span><span class="p">:</span> <span class="n">RootNodeModel</span><span class="p">,</span> <span class="n">new_organ</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RootNode&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a child node to the hierarchical graph.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            child_data (RootNodeModel):</span>
+<span class="sd">                The node data for the child node.</span>
+<span class="sd">            new_organ (bool):</span>
+<span class="sd">                Whether the new child node belongs to a new plant organ.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RootNode:</span>
+<span class="sd">                The child node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">new_organ</span><span class="p">:</span>
+            <span class="n">organ_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">increment_organ_id</span><span class="p">()</span>
+            <span class="n">segment_rank</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">order</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># type: ignore</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">organ_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">organ_id</span>  <span class="c1"># type: ignore</span>
+            <span class="n">segment_rank</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">segment_rank</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># type: ignore</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">order</span>  <span class="c1"># type: ignore</span>
+
+        <span class="n">child_data</span><span class="o">.</span><span class="n">parent_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">node_id</span>
+        <span class="n">child_data</span><span class="o">.</span><span class="n">organ_id</span> <span class="o">=</span> <span class="n">organ_id</span>
+        <span class="n">child_data</span><span class="o">.</span><span class="n">plant_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">plant_id</span>
+        <span class="n">child_data</span><span class="o">.</span><span class="n">segment_rank</span> <span class="o">=</span> <span class="n">segment_rank</span>
+        <span class="n">child_data</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="n">order</span>
+
+        <span class="n">child_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">child_data</span><span class="p">)</span>
+        <span class="n">edge_data</span> <span class="o">=</span> <span class="n">RootEdgeModel</span><span class="p">(</span>
+            <span class="n">parent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">node_id</span><span class="p">,</span> <span class="n">child_id</span><span class="o">=</span><span class="n">child_node</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">node_id</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge_data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">child_node</span></div>
+
+
+<div class="viewcode-block" id="RootNode.as_dict">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootNode.as_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the graph node as a dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict:</span>
+<span class="sd">                The node as a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RootEdge">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootEdge">[docs]</a>
+<span class="k">class</span> <span class="nc">RootEdge</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An edge within the hierarchical graph representation of the root system.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="p">:</span> <span class="s2">&quot;RootSystemGraph&quot;</span><span class="p">,</span> <span class="n">edge_data</span><span class="p">:</span> <span class="n">RootEdgeModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;RootEdge constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            G: (RootSystemGraph):</span>
+<span class="sd">                The hierarchical graph representation of the root system.</span>
+<span class="sd">            edge_data (RootEdgeModel):</span>
+<span class="sd">                The root edge data model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RootEdge:</span>
+<span class="sd">                The RootEdge instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">G</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_data</span> <span class="o">=</span> <span class="n">edge_data</span>
+
+<div class="viewcode-block" id="RootEdge.as_dict">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootEdge.as_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the graph edge as a dictionary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict:</span>
+<span class="sd">                The edge as a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_data</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RootSystemGraph">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph">[docs]</a>
+<span class="k">class</span> <span class="nc">RootSystemGraph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The hierarchical graph representation of the root system.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;RootSystemGraph constructor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RootSystemSimulation:</span>
+<span class="sd">                The RootSystemGraph instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RootNode</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RootEdge</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">organ_id</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Base organ node</span>
+        <span class="n">node_data</span> <span class="o">=</span> <span class="n">RootNodeModel</span><span class="p">()</span>
+        <span class="n">node_data</span><span class="o">.</span><span class="n">organ_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">increment_organ_id</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node_data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RootSystemGraph.add_node">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.add_node">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_data</span><span class="p">:</span> <span class="n">RootNodeModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RootNode</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a new RootNode.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node_data (RootNodeModel):</span>
+<span class="sd">                The root node data model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RootNode:</span>
+<span class="sd">                The new RootNode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node_data</span><span class="o">.</span><span class="n">node_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">increment_node_id</span><span class="p">()</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">RootNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span></div>
+
+
+<div class="viewcode-block" id="RootSystemGraph.add_edge">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.add_edge">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_data</span><span class="p">:</span> <span class="n">RootEdgeModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RootEdge</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a new RootEdge.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node_data (RootEdgeModel):</span>
+<span class="sd">                The root edge data model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RootEdge:</span>
+<span class="sd">                The new RootEdge.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">edge</span> <span class="o">=</span> <span class="n">RootEdge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">edge</span></div>
+
+
+<div class="viewcode-block" id="RootSystemGraph.increment_node_id">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.increment_node_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">increment_node_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Increment the node ID.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int:</span>
+<span class="sd">                The node ID prior to incrementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_id</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">node_id</span></div>
+
+
+<div class="viewcode-block" id="RootSystemGraph.increment_organ_id">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.increment_organ_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">increment_organ_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Increment the organ ID.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int:</span>
+<span class="sd">                The organ ID prior to incrementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">organ_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">organ_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">organ_id</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">organ_id</span></div>
+
+
+<div class="viewcode-block" id="RootSystemGraph.as_dict">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the graph as a tuple of node and edge lists.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple:</span>
+<span class="sd">                The graph as a tuple of node and edge lists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
+
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span></div>
+
+
+<div class="viewcode-block" id="RootSystemGraph.as_df">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_df">[docs]</a>
+    <span class="k">def</span> <span class="nf">as_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the graph as a tuple of node and edge dataframes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple:</span>
+<span class="sd">                The graph as a tuple of node and edge dataframes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="n">node_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="n">edge_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node_df</span><span class="p">,</span> <span class="n">edge_df</span></div>
+
+
+<div class="viewcode-block" id="RootSystemGraph.as_networkx">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_networkx">[docs]</a>
+    <span class="k">def</span> <span class="nf">as_networkx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the graph as a NetworkX graph.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple:</span>
+<span class="sd">                The graph in NetworkX format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node_df</span><span class="p">,</span> <span class="n">edge_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span>
+
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_pandas_edgelist</span><span class="p">(</span>
+            <span class="n">edge_df</span><span class="p">,</span> <span class="s2">&quot;parent_id&quot;</span><span class="p">,</span> <span class="s2">&quot;child_id&quot;</span><span class="p">,</span> <span class="n">create_using</span><span class="o">=</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="n">node_features</span> <span class="o">=</span> <span class="n">node_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;node_id&quot;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">set_node_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">node_features</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">G</span></div>
+
+
+<div class="viewcode-block" id="RootSystemGraph.as_torch">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_torch">[docs]</a>
+    <span class="k">def</span> <span class="nf">as_torch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the graph as a PyTorch Geometric graph dataset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple:</span>
+<span class="sd">                The graph as a PyTorch Geometric graph dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_networkx</span><span class="p">()</span>
+        <span class="n">torch_G</span> <span class="o">=</span> <span class="n">from_networkx</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">torch_G</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

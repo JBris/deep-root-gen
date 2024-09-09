@@ -7,3 +7,5 @@ API Reference
     data_model.rst
     form.rst
     model.rst
+    spatial.rst
+    pipeline.rst

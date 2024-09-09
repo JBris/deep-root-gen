@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pipeline &mdash; DeepRootGen 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changelog" href="../changelogs/changelog.html" />
+    <link rel="prev" title="Spatial" href="spatial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_model.html">Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="form.html">Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spatial.html">Spatial</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.pipeline.experiment">Experiment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.begin_experiment"><code class="docutils literal notranslate"><span class="pre">begin_experiment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.get_outdir"><code class="docutils literal notranslate"><span class="pre">get_outdir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.get_simulation_uuid"><code class="docutils literal notranslate"><span class="pre">get_simulation_uuid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.log_config"><code class="docutils literal notranslate"><span class="pre">log_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.log_simulation"><code class="docutils literal notranslate"><span class="pre">log_simulation()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.pipeline.workflow">Workflow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.workflow.log_experiment_details"><code class="docutils literal notranslate"><span class="pre">log_experiment_details()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelogs/changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api_reference/pipeline.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pipeline">
+<h1>Pipeline<a class="headerlink" href="#pipeline" title="Link to this heading"></a></h1>
+<section id="module-deeprootgen.pipeline.experiment">
+<span id="experiment"></span><h2>Experiment<a class="headerlink" href="#module-deeprootgen.pipeline.experiment" title="Link to this heading"></a></h2>
+<p>Contains utilities for performing experiment tracking.</p>
+<p>This module defines utility functions for performing experiment
+tracking with MLflow.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.pipeline.experiment.begin_experiment">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.pipeline.experiment.</span></span><span class="sig-name descname"><span class="pre">begin_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow_run_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/deeprootgen/pipeline/experiment.html#begin_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.pipeline.experiment.begin_experiment" title="Link to this definition"></a></dt>
+<dd><p>Begin the experiment session.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>task (str):</dt><dd><p>The name of the current task for the experiment.</p>
+</dd>
+<dt>simulation_uuid (str):</dt><dd><p>The simulation uuid.</p>
+</dd>
+<dt>flow_run_id (str):</dt><dd><p>The Prefect flow run ID.</p>
+</dd>
+<dt>simulation_tag (str):</dt><dd><p>The tag for the current root model simulation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.pipeline.experiment.get_outdir">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.pipeline.experiment.</span></span><span class="sig-name descname"><span class="pre">get_outdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/deeprootgen/pipeline/experiment.html#get_outdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.pipeline.experiment.get_outdir" title="Link to this definition"></a></dt>
+<dd><p>Get the output directory.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>str:</dt><dd><p>The output directory.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.pipeline.experiment.get_simulation_uuid">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.pipeline.experiment.</span></span><span class="sig-name descname"><span class="pre">get_simulation_uuid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/deeprootgen/pipeline/experiment.html#get_simulation_uuid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.pipeline.experiment.get_simulation_uuid" title="Link to this definition"></a></dt>
+<dd><p>Get a new simulation uuid.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>str:</dt><dd><p>The simulation uuid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.pipeline.experiment.log_config">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.pipeline.experiment.</span></span><span class="sig-name descname"><span class="pre">log_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/deeprootgen/pipeline/experiment.html#log_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.pipeline.experiment.log_config" title="Link to this definition"></a></dt>
+<dd><p>Log the simulation configuration.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>config (dict):</dt><dd><p>The simulation configuration as a dictionary.</p>
+</dd>
+<dt>task (str):</dt><dd><p>The task name.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>str:</dt><dd><p>The written configuration file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.pipeline.experiment.log_simulation">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.pipeline.experiment.</span></span><span class="sig-name descname"><span class="pre">log_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data_model.html#deeprootgen.data_model.simulation_data_models.RootSimulationModel" title="deeprootgen.data_model.simulation_data_models.RootSimulationModel"><span class="pre">RootSimulationModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="model.html#deeprootgen.model.root.RootSystemSimulation" title="deeprootgen.model.root.RootSystemSimulation"><span class="pre">RootSystemSimulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/deeprootgen/pipeline/experiment.html#log_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.pipeline.experiment.log_simulation" title="Link to this definition"></a></dt>
+<dd><p>Log details for the current simulation.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>input_parameters (RootSimulationModel):</dt><dd><p>The root simulation data model.</p>
+</dd>
+<dt>simulation (RootSystemSimulation):</dt><dd><p>The root system simulation instance.</p>
+</dd>
+<dt>task (str):</dt><dd><p>The task name.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-deeprootgen.pipeline.workflow">
+<span id="workflow"></span><h2>Workflow<a class="headerlink" href="#module-deeprootgen.pipeline.workflow" title="Link to this heading"></a></h2>
+<p>Contains utilities for managing workflows.</p>
+<p>This module defines utility functions for managing and orchestrating
+workflows with Prefect.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.pipeline.workflow.log_experiment_details">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.pipeline.workflow.</span></span><span class="sig-name descname"><span class="pre">log_experiment_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/deeprootgen/pipeline/workflow.html#log_experiment_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.pipeline.workflow.log_experiment_details" title="Link to this definition"></a></dt>
+<dd><p>Log the experiment details.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>simulation_uuid (str):</dt><dd><p>The simulation uuid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="spatial.html" class="btn btn-neutral float-left" title="Spatial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../changelogs/changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

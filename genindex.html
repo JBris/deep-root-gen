@@ -83,6 +83,7 @@
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
@@ -96,7 +97,31 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.add_child_node">add_child_node() (deeprootgen.model.root.RootOrgan method)</a>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootNode.add_child_node">add_child_node() (deeprootgen.model.hgraph.RootNode method)</a>
+
+      <ul>
+        <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.add_child_node">(deeprootgen.model.root.RootOrgan method)</a>
+</li>
+      </ul></li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.add_edge">add_edge() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
+</li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.add_node">add_node() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
+</li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_df">as_df() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootEdge.as_dict">as_dict() (deeprootgen.model.hgraph.RootEdge method)</a>
+
+      <ul>
+        <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootNode.as_dict">(deeprootgen.model.hgraph.RootNode method)</a>
+</li>
+        <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_dict">(deeprootgen.model.hgraph.RootSystemGraph method)</a>
+</li>
+      </ul></li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_networkx">as_networkx() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
+</li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_torch">as_torch() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -104,6 +129,8 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.begin_experiment">begin_experiment() (in module deeprootgen.pipeline.experiment)</a>
+</li>
       <li><a href="api_reference/form.html#deeprootgen.form.components.build_collapsible">build_collapsible() (in module deeprootgen.form.components)</a>
 </li>
   </ul></td>
@@ -163,8 +190,13 @@
         <li><a href="api_reference/form.html#module-deeprootgen.form.components">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    deeprootgen.model.hgraph
+
+      <ul>
+        <li><a href="api_reference/model.html#module-deeprootgen.model.hgraph">module</a>
+</li>
+      </ul></li>
       <li>
     deeprootgen.model.root
 
@@ -172,11 +204,34 @@
         <li><a href="api_reference/model.html#module-deeprootgen.model.root">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     deeprootgen.model.soil
 
       <ul>
         <li><a href="api_reference/model.html#module-deeprootgen.model.soil">module</a>
+</li>
+      </ul></li>
+      <li>
+    deeprootgen.pipeline.experiment
+
+      <ul>
+        <li><a href="api_reference/pipeline.html#module-deeprootgen.pipeline.experiment">module</a>
+</li>
+      </ul></li>
+      <li>
+    deeprootgen.pipeline.workflow
+
+      <ul>
+        <li><a href="api_reference/pipeline.html#module-deeprootgen.pipeline.workflow">module</a>
+</li>
+      </ul></li>
+      <li>
+    deeprootgen.spatial.transform
+
+      <ul>
+        <li><a href="api_reference/spatial.html#module-deeprootgen.spatial.transform">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -205,13 +260,25 @@
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_coordinates">get_coordinates() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_local_origin">get_local_origin() (deeprootgen.model.root.RootOrgan method)</a>
+</li>
+      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.get_outdir">get_outdir() (in module deeprootgen.pipeline.experiment)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_parent_origin">get_parent_origin() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.get_simulation_uuid">get_simulation_uuid() (in module deeprootgen.pipeline.experiment)</a>
+</li>
+      <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_transform_matrix">get_transform_matrix() (in module deeprootgen.spatial.transform)</a>
+</li>
+      <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_x_rotation_matrix">get_x_rotation_matrix() (in module deeprootgen.spatial.transform)</a>
+</li>
+      <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_y_rotation_matrix">get_y_rotation_matrix() (in module deeprootgen.spatial.transform)</a>
+</li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.get_yaw">get_yaw() (deeprootgen.model.root.RootSystemSimulation method)</a>
+</li>
+      <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_z_rotation_matrix">get_z_rotation_matrix() (in module deeprootgen.spatial.transform)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -219,12 +286,16 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.init_diameters">init_diameters() (deeprootgen.model.root.RootOrgan method)</a>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.increment_node_id">increment_node_id() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
 </li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.init_fig">init_fig() (deeprootgen.model.root.RootSystemSimulation method)</a>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.increment_organ_id">increment_organ_id() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
+</li>
+      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.init_diameters">init_diameters() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.init_fig">init_fig() (deeprootgen.model.root.RootSystemSimulation method)</a>
+</li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.init_lengths">init_lengths() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.init_organs">init_organs() (deeprootgen.model.root.RootSystemSimulation method)</a>
@@ -234,9 +305,25 @@
   </ul></td>
 </tr></table>
 
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.log_config">log_config() (in module deeprootgen.pipeline.experiment)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.workflow.log_experiment_details">log_experiment_details() (in module deeprootgen.pipeline.workflow)</a>
+</li>
+      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.log_simulation">log_simulation() (in module deeprootgen.pipeline.experiment)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.make_homogenous">make_homogenous() (in module deeprootgen.spatial.transform)</a>
+</li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.config_data_models.ExperimentModel.model_computed_fields">model_computed_fields (deeprootgen.data_model.config_data_models.ExperimentModel attribute)</a>
 
       <ul>
@@ -303,9 +390,17 @@
 </li>
         <li><a href="api_reference/form.html#module-deeprootgen.form.components">deeprootgen.form.components</a>
 </li>
+        <li><a href="api_reference/model.html#module-deeprootgen.model.hgraph">deeprootgen.model.hgraph</a>
+</li>
         <li><a href="api_reference/model.html#module-deeprootgen.model.root">deeprootgen.model.root</a>
 </li>
         <li><a href="api_reference/model.html#module-deeprootgen.model.soil">deeprootgen.model.soil</a>
+</li>
+        <li><a href="api_reference/pipeline.html#module-deeprootgen.pipeline.experiment">deeprootgen.pipeline.experiment</a>
+</li>
+        <li><a href="api_reference/pipeline.html#module-deeprootgen.pipeline.workflow">deeprootgen.pipeline.workflow</a>
+</li>
+        <li><a href="api_reference/spatial.html#module-deeprootgen.spatial.transform">deeprootgen.spatial.transform</a>
 </li>
       </ul></li>
   </ul></td>
@@ -326,6 +421,8 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.plot_hierarchical_graph">plot_hierarchical_graph() (deeprootgen.model.root.RootSystemSimulation method)</a>
+</li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.plot_root_system">plot_root_system() (deeprootgen.model.root.RootSystemSimulation method)</a>
 </li>
   </ul></td>
@@ -342,17 +439,21 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.reset_transform">reset_transform() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootEdge">RootEdge (class in deeprootgen.model.hgraph)</a>
+</li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootEdgeModel">RootEdgeModel (class in deeprootgen.data_model.simulation_data_models)</a>
+</li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootNode">RootNode (class in deeprootgen.model.hgraph)</a>
 </li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootNodeModel">RootNodeModel (class in deeprootgen.data_model.simulation_data_models)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan">RootOrgan (class in deeprootgen.model.root)</a>
 </li>
-      <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootSimulationModel">RootSimulationModel (class in deeprootgen.data_model.simulation_data_models)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootSimulationResultModel">RootSimulationResultModel (class in deeprootgen.data_model.simulation_data_models)</a>
+      <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootSimulationModel">RootSimulationModel (class in deeprootgen.data_model.simulation_data_models)</a>
+</li>
+      <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph">RootSystemGraph (class in deeprootgen.model.hgraph)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation">RootSystemSimulation (class in deeprootgen.model.root)</a>
 </li>
