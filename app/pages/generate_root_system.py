@@ -18,6 +18,7 @@ from deeprootgen.form import (
     build_collapsible,
     build_common_components,
     build_common_layout,
+    get_out_table_df,
 )
 from deeprootgen.pipeline import get_simulation_uuid
 
@@ -166,13 +167,9 @@ def save_runs(n_clicks: int, simulation_runs: list) -> None:
 def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
     _, content_string = list_of_contents[0].split(",")
     decoded = base64.b64decode(content_string).decode("utf-8")
-    split_lines = decoded.split("\n")
-    split_lines.pop(0)
+    from io import StringIO
 
-    workflow_urls = []
-    for workflow_url in split_lines:
-        if workflow_url != "":
-            workflow_urls.append({"workflow_url": workflow_url})
+    workflow_urls = pd.read_csv(StringIO(decoded)).to_dict("records")
 
     toast_message = f"Loading run history from: {list_of_names[0]}"
     return [workflow_urls], True, toast_message
@@ -279,7 +276,6 @@ def run_root_model(
         timeout=0,
     )
 
-    simulation_uuid
     flow_run_id = str(flow_data.id)
     flow_name = flow_data.name
     simulation_tag = form_inputs["simulation_tag"]
@@ -295,7 +291,10 @@ def run_root_model(
 
     simulation_runs.append(
         {
-            "workflow_url": f"<a href='{prefect_flow_url}' target='_blank'>{prefect_flow_url}</a>"
+            "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{flow_name}</a>",
+            "tag": simulation_tag,
+            "date": datetime.today().strftime("%Y-%m-%d-%H-%M"),
+            "seed": form_inputs["random_seed"],
         }
     )
 
@@ -343,7 +342,7 @@ def layout() -> html.Div:
         )
 
     input_components = dbc.Col([parameter_components, data_io_components])
-    simulation_run_df = pd.DataFrame([], columns=["workflow_url"])
+    simulation_run_df = get_out_table_df()
 
     simulation_results_data = {"simulation-runs-table": simulation_run_df}
 

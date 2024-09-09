@@ -9,6 +9,7 @@ components that are specific to a given page.
 from pydoc import locate
 
 import dash_bootstrap_components as dbc
+import pandas as pd
 from dash import dcc, html
 
 
@@ -287,3 +288,14 @@ def build_common_layout(
         ),
     )
     return layout
+
+
+def get_out_table_df() -> pd.DataFrame:
+    """Get the default output table as a dataframe.
+
+    Returns:
+        pd.DataFrame:
+            The output table as a dataframe.
+    """
+    out_df = pd.DataFrame([], columns=["workflow", "tag", "date", "seed"])
+    return out_df

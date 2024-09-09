@@ -12,6 +12,7 @@ from datetime import datetime
 
 import mlflow
 import yaml
+from ydata_profiling import ProfileReport
 
 from ..data_model import RootSimulationModel
 from ..model import RootSystemSimulation
@@ -148,4 +149,9 @@ def log_simulation(
     fig = simulation.plot_hierarchical_graph(G)
     outfile = osp.join(OUT_DIR, f"{time_now}-{task}_hgraph.html")
     fig.write_html(outfile)
+    mlflow.log_artifact(outfile)
+
+    profile = ProfileReport(node_df, title="Root Model Report")
+    outfile = osp.join(OUT_DIR, f"{time_now}-{task}_data_profile.html")
+    profile.to_file(outfile)
     mlflow.log_artifact(outfile)
