@@ -19,6 +19,10 @@ services:
       MLFLOW_S3_ENDPOINT_URL: http://minio:9000
       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      ARANGO_DB: deeprootgen 
+      ARANGO_ROOT_USER: root
+      ARANGO_ROOT_PASSWORD: $ARANGO_ROOT_PASSWORD
+      ARANGO_HOST_URL: http://arangodb:8529 
     ports:
       - 8000:8000
     volumes:
@@ -96,6 +100,10 @@ services:
       MLFLOW_S3_ENDPOINT_URL: http://minio:9000
       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      ARANGO_DB: deeprootgen 
+      ARANGO_ROOT_USER: root
+      ARANGO_ROOT_PASSWORD: $ARANGO_ROOT_PASSWORD
+      ARANGO_HOST_URL: http://arangodb:8529 
     depends_on:
       - prefect-server
     entrypoint: prefect worker start -p default
