@@ -13,7 +13,11 @@ from dash import dcc, html
 
 
 def build_common_components(
-    component_specs: list, page_id: str, component_type: str
+    component_specs: list,
+    page_id: str,
+    component_type: str,
+    component_data: dict | None = None,
+    resize_component: bool = True,
 ) -> list:
     """Build form components that are common across pages.
 
@@ -24,6 +28,10 @@ def build_common_components(
             The page ID.
         component_type (str):
             The type of component. Used for grouping common components.
+        component_data: (dict, optional):
+            A dictionary of data to render within form component.
+        resize_component: (bool, optional):
+            Whether to resize the last component in the row.
 
     Returns:
         list: The common form components.
@@ -41,7 +49,11 @@ def build_common_components(
                     id=f"{page_id}-{component_spec.id}-label",
                 ),
                 id=f"{page_id}-{component_spec.id}-tooltip-target",
-                style={"cursor": "pointer"},
+                style={
+                    "cursor": "pointer",
+                    "padding-left": "0.5em",
+                    "padding-top": "0.5em",
+                },
             ),
             style={"margin": "0"},
         )
@@ -62,6 +74,7 @@ def build_common_components(
             },
             **kwargs,
         )  # type: ignore
+        component_instance.style = {"padding-left": "0.5em"}
 
         if hasattr(component_spec, "handler"):
             if component_spec.handler == "file_upload":
@@ -74,6 +87,24 @@ def build_common_components(
                     "textAlign": "center",
                 }
 
+            if component_spec.handler == "data_table":
+                if (
+                    component_data is not None
+                    and component_data.get(component_spec.id) is not None
+                ):
+                    table_df = component_data[component_spec.id]
+                    component_instance.data = table_df.to_dict("records")
+                    component_instance.columns = [
+                        {
+                            "name": i,
+                            "id": i,
+                            "selectable": True,
+                            "presentation": "markdown",
+                        }
+                        for i in table_df.columns
+                    ]
+                    component_instance.markdown_options = {"html": True}
+
         row.append(dbc.Col([component_label, component_tooltip, component_instance]))
 
         col_num += 1
@@ -82,8 +113,12 @@ def build_common_components(
             components.append(dbc.Row(row))
             row = []
 
+    if resize_component:
+        width = "52.5%"
+    else:
+        width = "100%"
     if len(row) == 1:
-        components.append(dbc.Row(dbc.Col(row), style={"width": "52.5%"}))
+        components.append(dbc.Row(dbc.Col(row), style={"width": width}))
 
     return components
 
@@ -208,10 +243,21 @@ def build_common_layout(
         input_components,
         dcc.Download(id=f"{page_id}-download-params"),
         dcc.Download(id=f"{page_id}-download-content"),
+        dcc.Download(id=f"{page_id}-download-results"),
         dbc.Toast(
             "",
             id=f"{page_id}-load-toast",
             header="Load Notification",
+            is_open=False,
+            dismissable=True,
+            icon="primary",
+            duration=5000,
+            style={"position": "fixed", "bottom": "0", "left": "0", "zIndex": "9999"},
+        ),
+        dbc.Toast(
+            "",
+            id=f"{page_id}-results-toast",
+            header="Simulation Results",
             is_open=False,
             dismissable=True,
             icon="primary",

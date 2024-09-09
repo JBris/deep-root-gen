@@ -14,7 +14,6 @@ import yaml
 from dash import ALL, Input, Output, State, callback, dcc, get_app, html, register_page
 from prefect.deployments import run_deployment
 
-from deeprootgen.data_model import RootSimulationModel
 from deeprootgen.form import (
     build_collapsible,
     build_common_components,
@@ -130,34 +129,118 @@ def save_param(n_clicks: int, param_inputs: list) -> None:
 
 
 @callback(
+    Output(f"{PAGE_ID}-download-results", "data"),
+    [Input({"index": f"{PAGE_ID}-save-runs-button", "type": ALL}, "n_clicks")],
+    State({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
+    prevent_initial_call=True,
+)
+def save_runs(n_clicks: int, simulation_runs: list) -> None:
+    """Save simulation runs to file.
+
+    Args:
+        n_clicks (int):
+            The number of times that the button has been clicked.
+        simulation_runs (list):
+            A list of simulation run data.
+    """
+    simulation_runs = simulation_runs[0]
+    df = pd.DataFrame(simulation_runs)
+    date_now = datetime.today().strftime("%Y-%m-%d-%H-%M")
+    outfile = osp.join("outputs", f"{date_now}-{PAGE_ID}-runs.csv")
+    df.to_csv(outfile, index=False)
+    return dcc.send_file(outfile)
+
+
+@callback(
+    Output(
+        {"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL},
+        "data",
+        allow_duplicate=True,
+    ),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input({"index": f"{PAGE_ID}-upload-runs-file-button", "type": ALL}, "contents"),
+    State({"index": f"{PAGE_ID}-upload-runs-file-button", "type": ALL}, "filename"),
+    prevent_initial_call=True,
+)
+def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
+    _, content_string = list_of_contents[0].split(",")
+    decoded = base64.b64decode(content_string).decode("utf-8")
+    split_lines = decoded.split("\n")
+    split_lines.pop(0)
+
+    workflow_urls = []
+    for workflow_url in split_lines:
+        if workflow_url != "":
+            workflow_urls.append({"workflow_url": workflow_url})
+
+    toast_message = f"Loading run history from: {list_of_names[0]}"
+    return [workflow_urls], True, toast_message
+
+
+@callback(
+    Output(
+        {"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL},
+        "data",
+        allow_duplicate=True,
+    ),
+    [Input({"index": f"{PAGE_ID}-clear-runs-button", "type": ALL}, "n_clicks")],
+    prevent_initial_call=True,
+)
+def clear_runs(n_clicks: int) -> list:
+    """Clear the simulation runs table.
+
+    Args:
+        n_clicks (int):
+            The number of times that the button has been clicked.
+
+    Returns:
+        list:
+            An empty list.
+    """
+    return [[]]
+
+
+@callback(
     Output({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
-    Output(f"{PAGE_ID}-load-toast", "is_open"),
-    Output(f"{PAGE_ID}-load-toast", "children"),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-upload-param-file-button", "type": ALL}, "contents"),
     State({"index": f"{PAGE_ID}-upload-param-file-button", "type": ALL}, "filename"),
     prevent_initial_call=True,
 )
-def update_output(list_of_contents: list, list_of_names: list) -> tuple:
+def load_params(list_of_contents: list, list_of_names: list) -> tuple:
     _, content_string = list_of_contents[0].split(",")
     decoded = base64.b64decode(content_string)
     input_dict = yaml.safe_load(decoded.decode("utf-8"))
-    inputs = list(input_dict.values())
+
+    app = get_app()
+    form_model = app.settings["form"]
+    inputs = []
+    for input in form_model.components["parameters"]["children"]:
+        k = input["param"]
+        inputs.append(input_dict[k])
+
     toast_message = f"Loading parameter specification from: {list_of_names[0]}"
     return inputs, True, toast_message
 
 
 @callback(
-    # Output("generate-root-system-plot", "figure"),
-    # Output(f"{PAGE_ID}-download-content", "data"),
+    Output(
+        {"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL},
+        "data",
+        allow_duplicate=True,
+    ),
+    Output(f"{PAGE_ID}-results-toast", "is_open"),
+    Output(f"{PAGE_ID}-results-toast", "children"),
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
+    State({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
     prevent_initial_call=True,
 )
 def run_root_model(
-    n_clicks: list,
-    form_values: list,
-    enable_soils: list,
+    n_clicks: list, form_values: list, enable_soils: list, simulation_runs: list
 ) -> dcc.Graph:
     """Run and plot the root model.
 
@@ -168,6 +251,8 @@ def run_root_model(
             The form input data.
         enable_soils (list):
             Enable visualisation of soil data.
+        simulation_runs (list):
+            A list of simulation run data.
 
     Returns:
         dcc.Graph: The visualised root model.
@@ -187,26 +272,38 @@ def run_root_model(
     form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
 
     simulation_uuid = get_simulation_uuid()
-    run_deployment(
+    flow_data = run_deployment(
         "simulation/run_simulation_flow",
-        parameters=dict(input_params=form_inputs, simulation_uuid=simulation_uuid),
+        parameters=dict(input_parameters=form_inputs, simulation_uuid=simulation_uuid),
         flow_run_name=f"run-{simulation_uuid}",
         timeout=0,
     )
 
-    # download_data = download_data[0]
-    # if download_data:
-    #     from datetime import datetime
+    simulation_uuid
+    flow_run_id = str(flow_data.id)
+    flow_name = flow_data.name
+    simulation_tag = form_inputs["simulation_tag"]
 
-    #     now = datetime.today().strftime("%Y-%m-%d-%H-%M")
-    #     outfile = osp.join("outputs", f"{now}-nodes.csv")
-    #     df = pd.DataFrame(results.nodes)
-    #     df.to_csv(outfile, index=False)
-    #     download_file = dcc.send_file(outfile)
-    # else:
-    #     download_file = None
+    simulation_runs = simulation_runs[0]
 
-    # return results.figure, download_file
+    import os
+
+    app_prefect_host = os.environ.get("APP_PREFECT_USER_HOST")
+    if app_prefect_host is None:
+        app_prefect_host = "http://localhost:4200"
+    prefect_flow_url = f"{app_prefect_host}/flow-runs/flow-run/{flow_run_id}"
+
+    simulation_runs.append(
+        {
+            "workflow_url": f"<a href='{prefect_flow_url}' target='_blank'>{prefect_flow_url}</a>"
+        }
+    )
+
+    toast_message = f"""
+    Running simulation workflow: {flow_name}
+    Simulation tag: {simulation_tag}
+    """
+    return [simulation_runs], True, toast_message
 
 
 ######################################
@@ -246,12 +343,21 @@ def layout() -> html.Div:
         )
 
     input_components = dbc.Col([parameter_components, data_io_components])
+    simulation_run_df = pd.DataFrame([], columns=["workflow_url"])
+
+    simulation_results_data = {"simulation-runs-table": simulation_run_df}
+
+    k = "results"
+    simulation_results_components = build_common_components(
+        form_model.components[k]["children"],
+        PAGE_ID,
+        k,
+        simulation_results_data,
+        resize_component=False,
+    )
+
     output_components = dbc.Row(
-        [
-            dbc.Col(
-                dcc.Graph(id="generate-root-system-plot"),
-            )
-        ]
+        dbc.Col(simulation_results_components, style={"margin-left": "0.5em"})
     )
 
     page_description = """
