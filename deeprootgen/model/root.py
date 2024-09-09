@@ -8,18 +8,13 @@ This module defines the root system architecture simulation model for constructi
 
 from typing import Dict, List
 
+import networkx as nx
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from numpy.random import default_rng
 
-from ..data_model import (
-    RootNodeModel,
-    RootSimulationModel,
-    RootSimulationResultModel,
-    RootType,
-    RootTypeModel,
-)
+from ..data_model import RootNodeModel, RootSimulationModel, RootType, RootTypeModel
 from ..spatial import get_transform_matrix, make_homogenous
 from .hgraph import RootNode, RootSystemGraph
 from .soil import Soil
@@ -612,7 +607,6 @@ class RootSystemSimulation:
         self,
         simulation_tag: str = "default",
         random_seed: int = None,
-        visualise: bool = False,
     ) -> None:
         """RootSystemSimulation constructor.
 
@@ -621,8 +615,6 @@ class RootSystemSimulation:
                 A tag to group together multiple simulations. Defaults to 'default'.
             random_seed (int, optional):
                 The seed for the random number generator. Defaults to None.
-            visualise (bool, optional):
-                Whether to visualise the results. Defaults to False
 
         Returns:
             RootSystemSimulation:
@@ -632,7 +624,6 @@ class RootSystemSimulation:
         self.G: RootSystemGraph = RootSystemGraph()
         self.organs: Dict[int, List[RootOrgan]] = {}
         self.simulation_tag = simulation_tag
-        self.visualise = visualise
         self.rng = default_rng(random_seed)
 
     def get_yaw(self, number_of_roots: int) -> tuple:
@@ -648,6 +639,136 @@ class RootSystemSimulation:
         """
         yaw_base = 360 / number_of_roots
         return yaw_base, yaw_base * 0.05, yaw_base
+
+    def plot_hierarchical_graph(
+        self,
+        G: nx.Graph,
+        feature_key: str = "x",
+        x_key: str = "x",
+        y_key: str = "y",
+        z_key: str = "z",
+    ) -> go.Figure:
+        """Create a visualisation of hierarchical graph representation of the root system.
+
+        Args:
+            G (nx.Graph):
+                The NetworkX graph.
+            feature_key (str, optional):
+                The node features key. Defaults to 'x'.
+            x_key (str, optional):
+                The node features key. Defaults to 'x'.
+            y_key (str, optional):
+                The node features key. Defaults to 'y'.
+            z_key (str, optional):
+                The node features key. Defaults to 'z'.
+
+        Returns:
+            go.Figure:
+                The visualisation of the hierarchical graph representation.
+        """
+        src_indx, dest_indx = 0, 1
+        x_edges, y_edges, z_edges = [], [], []
+        x_nodes, y_nodes, z_nodes = [], [], []
+        node_texts = []
+
+        for node_indx in G.nodes:
+            node = G.nodes[node_indx]
+            x_nodes.append(node[feature_key][x_key])
+            y_nodes.append(node[feature_key][y_key])
+            z_nodes.append(node[feature_key][z_key])
+
+            node_text = f"""
+            x: {node[feature_key][x_key]}<br>
+            y: {node[feature_key][y_key]}<br>
+            z: {node[feature_key][z_key]}<br>
+            Organ ID: {node[feature_key]['organ_id']}<br>
+            Order: {node[feature_key]['order']}<br>
+            Segment rank: {node[feature_key]['segment_rank']}<br>
+            Diameter: {node[feature_key]['diameter']}<br>
+            Length: {node[feature_key]['length']}<br>
+            Root type: {node[feature_key]['root_type']}<br>
+            Order type: {node[feature_key]['order_type']}<br>
+            Position type: {node[feature_key]['position_type']}<br>
+            Simulation tag: {node[feature_key]['simulation_tag']}<br>"""
+
+            node_texts.append(node_text)
+
+        trace_nodes = go.Scatter3d(
+            x=x_nodes,
+            y=y_nodes,
+            z=z_nodes,
+            mode="markers",
+            marker=dict(
+                symbol="circle",
+                size=7,
+                color="green",
+                line=dict(color="black", width=0.5),
+            ),
+            text=node_texts,
+            hoverinfo="text",
+        )
+
+        edge_list = G.edges()
+        for edge in edge_list:
+            src_edge = edge[src_indx]
+
+            node_src = G.nodes[src_edge]
+            node_dest = G.nodes[edge[dest_indx]]
+
+            x_coords = [
+                node_src[feature_key][x_key],
+                node_dest[feature_key][x_key],
+                None,
+            ]
+            x_edges += x_coords
+
+            y_coords = [
+                node_src[feature_key][y_key],
+                node_dest[feature_key][y_key],
+                None,
+            ]
+            y_edges += y_coords
+
+            z_coords = [
+                node_src[feature_key][z_key],
+                node_dest[feature_key][z_key],
+                None,
+            ]
+            z_edges += z_coords
+
+        trace_edges = go.Scatter3d(
+            x=x_edges,
+            y=y_edges,
+            z=z_edges,
+            mode="lines",
+            line=dict(color="green", width=10),
+            hoverinfo="none",
+        )
+
+        axis = dict(
+            showbackground=False,
+            showline=False,
+            zeroline=False,
+            showgrid=False,
+            showticklabels=False,
+        )
+
+        layout = go.Layout(
+            width=1000,
+            height=1000,
+            showlegend=False,
+            scene=dict(
+                xaxis=dict(axis),
+                yaxis=dict(axis),
+                zaxis=dict(axis),
+            ),
+            margin=dict(t=100),
+            hovermode="closest",
+        )
+
+        data = [trace_edges, trace_nodes]
+        fig = go.Figure(data=data, layout=layout)
+        return fig
 
     def plot_root_system(self, fig: go.Figure, node_df: pd.DataFrame) -> go.Figure:
         """Create a visualisation of the root system.
@@ -716,26 +837,24 @@ class RootSystemSimulation:
             go.Figure | None:
                 The root system visualisation.
         """
-        fig = None
-        if self.visualise:
-            # Initialise figure (optionally with soil)
-            if input_parameters.enable_soil:
-                soil_df = self.soil.create_soil_grid(
-                    input_parameters.soil_layer_height,
-                    input_parameters.soil_n_layers,
-                    input_parameters.soil_layer_width,
-                    input_parameters.soil_n_cols,
-                )
-
-                fig = self.soil.create_soil_fig(soil_df)
-            else:
-                fig = go.Figure()
-
-            fig.update_layout(
-                scene=dict(
-                    xaxis=dict(title="x"), yaxis=dict(title="y"), zaxis=dict(title="z")
-                )
+        # Initialise figure (optionally with soil)
+        if input_parameters.enable_soil:
+            soil_df = self.soil.create_soil_grid(
+                input_parameters.soil_layer_height,
+                input_parameters.soil_n_layers,
+                input_parameters.soil_layer_width,
+                input_parameters.soil_n_cols,
             )
+
+            fig = self.soil.create_soil_fig(soil_df)
+        else:
+            fig = go.Figure()
+
+        fig.update_layout(
+            scene=dict(
+                xaxis=dict(title="x"), yaxis=dict(title="y"), zaxis=dict(title="z")
+            )
+        )
 
         return fig
 

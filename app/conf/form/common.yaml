@@ -310,11 +310,6 @@ components:
           children: Run model
           color: primary
           className: me-1
-      - id: download-sim-data-input
-        label: Download
-        help: Download the simulation output data
-        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
       - id: save-param-button
         label: Save
         help: Save current parameter configuration to file

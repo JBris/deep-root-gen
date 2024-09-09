@@ -12,6 +12,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import yaml
 from dash import ALL, Input, Output, State, callback, dcc, get_app, html, register_page
+from prefect.deployments import run_deployment
 
 from deeprootgen.data_model import RootSimulationModel
 from deeprootgen.form import (
@@ -19,7 +20,7 @@ from deeprootgen.form import (
     build_common_components,
     build_common_layout,
 )
-from deeprootgen.model import RootSystemSimulation
+from deeprootgen.pipeline import get_simulation_uuid
 
 ######################################
 # Constants
@@ -146,16 +147,17 @@ def update_output(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output("generate-root-system-plot", "figure"),
-    Output(f"{PAGE_ID}-download-content", "data"),
+    # Output("generate-root-system-plot", "figure"),
+    # Output(f"{PAGE_ID}-download-content", "data"),
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
-    State({"index": f"{PAGE_ID}-download-sim-data-input", "type": ALL}, "on"),
     prevent_initial_call=True,
 )
 def run_root_model(
-    n_clicks: list, form_values: list, enable_soils: list, download_data: list
+    n_clicks: list,
+    form_values: list,
+    enable_soils: list,
 ) -> dcc.Graph:
     """Run and plot the root model.
 
@@ -166,8 +168,7 @@ def run_root_model(
             The form input data.
         enable_soils (list):
             Enable visualisation of soil data.
-        download_data (list):
-            Whether to download the simulation results data.
+
     Returns:
         dcc.Graph: The visualised root model.
     """
@@ -185,27 +186,27 @@ def run_root_model(
     enable_soil: bool = enable_soils[0]
     form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
 
-    input_params = RootSimulationModel.parse_obj(form_inputs)
-    simulation = RootSystemSimulation(
-        simulation_tag=input_params.simulation_tag,
-        random_seed=input_params.random_seed,
-        visualise=True,
+    simulation_uuid = get_simulation_uuid()
+    run_deployment(
+        "simulation/run_simulation_flow",
+        parameters=dict(input_params=form_inputs, simulation_uuid=simulation_uuid),
+        flow_run_name=f"run-{simulation_uuid}",
+        timeout=0,
     )
-    results = simulation.run(input_params)
 
-    download_data = download_data[0]
-    if download_data:
-        from datetime import datetime
+    # download_data = download_data[0]
+    # if download_data:
+    #     from datetime import datetime
 
-        now = datetime.today().strftime("%Y-%m-%d-%H-%M")
-        outfile = osp.join("outputs", f"{now}-nodes.csv")
-        df = pd.DataFrame(results.nodes)
-        df.to_csv(outfile, index=False)
-        download_file = dcc.send_file(outfile)
-    else:
-        download_file = None
+    #     now = datetime.today().strftime("%Y-%m-%d-%H-%M")
+    #     outfile = osp.join("outputs", f"{now}-nodes.csv")
+    #     df = pd.DataFrame(results.nodes)
+    #     df.to_csv(outfile, index=False)
+    #     download_file = dcc.send_file(outfile)
+    # else:
+    #     download_file = None
 
-    return results.figure, download_file
+    # return results.figure, download_file
 
 
 ######################################

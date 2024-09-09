@@ -4,6 +4,8 @@
 # Imports
 ######################################
 
+import os
+
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
@@ -11,6 +13,13 @@ from dash import Dash, Input, Output, callback, dcc, html, page_container, page_
 from dash_bootstrap_templates import load_figure_template
 from hydra import compose, initialize
 from hydra.utils import instantiate
+
+######################################
+# Environment
+######################################
+
+if os.environ.get("PREFECT_API_URL") is None:
+    os.environ["PREFECT_API_URL"] = "http://127.0.0.1:4200/api"
 
 ######################################
 # Functions

@@ -4,7 +4,7 @@ Model
 Graph
 -----
 
-.. automodule:: deeprootgen.model.graph
+.. automodule:: deeprootgen.model.hgraph
    :members:
 
 Root

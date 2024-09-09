@@ -6,10 +6,8 @@ root system architecture simulation procedures.
 """
 
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
-import plotly.graph_objects as go
-import pydantic
 from pydantic import BaseModel
 
 
@@ -117,18 +115,3 @@ class RootSimulationModel(BaseModel):
     no_root_zone: Optional[float] = 1e-4
     floor_threshold: Optional[float] = 0.4
     ceiling_threshold: Optional[float] = 0.9
-
-
-@pydantic.dataclasses.dataclass(config=Config)
-class RootSimulationResultModel:
-    """
-    The root system architecture simulation results data model.
-
-    Args:
-        Config (Config):
-            The Pydantic Config model class.
-    """
-
-    nodes: List[dict]
-    edges: List[dict]
-    figure: go.Figure | None

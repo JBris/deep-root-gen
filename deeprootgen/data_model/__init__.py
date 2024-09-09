@@ -8,7 +8,6 @@ from .simulation_data_models import (
     RootEdgeModel,
     RootNodeModel,
     RootSimulationModel,
-    RootSimulationResultModel,
     RootType,
     RootTypeModel,
 )

@@ -19,15 +19,37 @@ pull:
 
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
-- name: Hello Flow
-  description: Hello description.
-  entrypoint: /app/flows/hello_flow.py:hello_flow
+- name: run_simulation_flow
+  description: Run a single simulation for the root model.
+  entrypoint: /app/flows/run_simulation.py:run_simulation_flow
   parameters: {}
   work_pool:
     name: default
-- name: Bye Flow
-  description: Bye description.
-  entrypoint: /app/flows/bye_flow.py:bye_flow
+
+- name: run_optimisation_flow
+  description: Run an optimisation procedure for the root model.
+  entrypoint: /app/flows/run_optimisation.py:run_optimisation_flow
+  parameters: {}
+  work_pool:
+    name: default
+
+- name: run_sensitivity_analysis_flow
+  description: Run a sensitivity analysis for the root model.
+  entrypoint: /app/flows/run_sensitivity_analysis.py:run_sensitivity_analysis_flow
+  parameters: {}
+  work_pool:
+    name: default
+
+- name: run_abc_flow
+  description: Perform Bayesian parameter estimation for the root model using Approximate Bayesian Computation.
+  entrypoint: /app/flows/run_abc.py:run_abc_flow
+  parameters: {}
+  work_pool:
+    name: default
+
+- name: run_snpe_flow
+  description: Perform Bayesian parameter estimation for the root model using Sequential Neural Posterior Estimation.
+  entrypoint: /app/flows/run_snpe.py:run_snpe_flow
   parameters: {}
   work_pool:
     name: default
