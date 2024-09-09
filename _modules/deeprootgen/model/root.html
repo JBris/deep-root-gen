@@ -1049,7 +1049,7 @@
 
 <div class="viewcode-block" id="RootSystemSimulation.run">
 <a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootSimulationModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RootSimulationResultModel</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootSimulationModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a root system architecture simulation.</span>
 
 <span class="sd">        Args:</span>
@@ -1060,24 +1060,10 @@
 <span class="sd">            dict:</span>
 <span class="sd">                The simulation results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_fig</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_organs</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position_secondary_roots</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position_primary_roots</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-
-        <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-        <span class="n">node_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visualise</span><span class="p">:</span>
-            <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_root_system</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">node_df</span><span class="p">)</span>
-
-        <span class="n">results</span> <span class="o">=</span> <span class="n">RootSimulationResultModel</span><span class="p">(</span>
-            <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span>
-            <span class="n">edges</span><span class="o">=</span><span class="n">edges</span><span class="p">,</span>
-            <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">results</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
