@@ -5,8 +5,6 @@ This includes integration with NetworkX and PyTorch Geometric.
 
 """
 
-# mypy: ignore-errors
-
 from typing import List
 
 import networkx as nx
@@ -56,11 +54,11 @@ class RootNode:
         if new_organ:
             organ_id = self.G.increment_organ_id()
             segment_rank = 1
-            order = self.node_data.order + 1
+            order = self.node_data.order + 1  # type: ignore
         else:
-            organ_id = self.node_data.organ_id
-            segment_rank = self.node_data.segment_rank + 1
-            order = self.node_data.order
+            organ_id = self.node_data.organ_id  # type: ignore
+            segment_rank = self.node_data.segment_rank + 1  # type: ignore
+            order = self.node_data.order  # type: ignore
 
         child_data.parent_id = self.node_data.node_id
         child_data.organ_id = organ_id

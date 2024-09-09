@@ -630,7 +630,7 @@ class RootSystemSimulation:
         """
         self.soil: Soil = Soil()
         self.G: RootSystemGraph = RootSystemGraph()
-        self.organs: Dict[str, List[RootOrgan]] = {}
+        self.organs: Dict[int, List[RootOrgan]] = {}
         self.simulation_tag = simulation_tag
         self.visualise = visualise
         self.rng = default_rng(random_seed)
