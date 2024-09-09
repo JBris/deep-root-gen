@@ -889,7 +889,7 @@ class RootSystemSimulation:
                     input_parameters.max_val_attempts,
                 )
 
-    def run(self, input_parameters: RootSimulationModel) -> RootSimulationResultModel:
+    def run(self, input_parameters: RootSimulationModel) -> None:
         """Run a root system architecture simulation.
 
         Args:
@@ -900,21 +900,7 @@ class RootSystemSimulation:
             dict:
                 The simulation results.
         """
-        fig = self.init_fig(input_parameters)
         self.init_organs(input_parameters)
         self.position_secondary_roots(input_parameters)
         self.position_primary_roots(input_parameters)
         self.validate(input_parameters, pitch=60)
-
-        nodes, edges = self.G.as_dict()
-        node_df = pd.DataFrame(nodes)
-
-        if self.visualise:
-            fig = self.plot_root_system(fig, node_df)
-
-        results = RootSimulationResultModel(
-            nodes=nodes,
-            edges=edges,
-            figure=fig,
-        )
-        return results
