@@ -56,6 +56,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Pipeline</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.pipeline.experiment">Experiment</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.begin_experiment"><code class="docutils literal notranslate"><span class="pre">begin_experiment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.get_datetime_now"><code class="docutils literal notranslate"><span class="pre">get_datetime_now()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.get_outdir"><code class="docutils literal notranslate"><span class="pre">get_outdir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.get_simulation_uuid"><code class="docutils literal notranslate"><span class="pre">get_simulation_uuid()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.pipeline.experiment.log_config"><code class="docutils literal notranslate"><span class="pre">log_config()</span></code></a></li>
@@ -118,6 +119,19 @@ tracking with MLflow.</p>
 <dt>flow_run_id (str):</dt><dd><p>The Prefect flow run ID.</p>
 </dd>
 <dt>simulation_tag (str):</dt><dd><p>The tag for the current root model simulation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.pipeline.experiment.get_datetime_now">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.pipeline.experiment.</span></span><span class="sig-name descname"><span class="pre">get_datetime_now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/deeprootgen/pipeline/experiment.html#get_datetime_now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.pipeline.experiment.get_datetime_now" title="Link to this definition"></a></dt>
+<dd><p>Get the current datetime for now.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>str:</dt><dd><p>The current datetime.</p>
 </dd>
 </dl>
 </dd>
