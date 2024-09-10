@@ -43,6 +43,16 @@ def s3_upload_file(file_name: str, object_name: str, bucket_name: str = "data") 
 def save_graph_to_db(
     simulation: RootSystemSimulation, task: str, simulation_uuid: str
 ) -> None:
+    """Save the hierarchical graph representation of the root model to ArangoDB.
+
+    Args:
+        simulation (RootSystemSimulation):
+            The root system simulation instance.
+        task (str):
+            The current simulation task.
+        simulation_uuid (str):
+            The simulation uuid.
+    """
     G = simulation.G.as_networkx()
     collection = f"{task}-{simulation_uuid}"
 
