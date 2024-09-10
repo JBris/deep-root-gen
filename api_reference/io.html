@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Reference &mdash; DeepRootGen 0.1.0 documentation</title>
+  <title>Input/Output &mdash; DeepRootGen 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data Model" href="data_model.html" />
-    <link rel="prev" title="Introduction" href="../introduction/index.html" /> 
+    <link rel="next" title="Model" href="model.html" />
+    <link rel="prev" title="Form" href="form.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,10 +47,16 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="data_model.html">Data Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="form.html">Form</a></li>
-<li class="toctree-l2"><a class="reference internal" href="io.html">Input/Output</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Input/Output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.io.simulation_data">Simulation Data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.io.simulation_data.s3_upload_file"><code class="docutils literal notranslate"><span class="pre">s3_upload_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spatial.html">Spatial</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
@@ -73,9 +79,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">API Reference</li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Input/Output</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/api_reference/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api_reference/io.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -83,26 +90,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="form.html">Form</a></li>
-<li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spatial.html">Spatial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
-</ul>
-</div>
+  <section id="input-output">
+<h1>Input/Output<a class="headerlink" href="#input-output" title="Link to this heading"></a></h1>
+<section id="module-deeprootgen.io.simulation_data">
+<span id="simulation-data"></span><h2>Simulation Data<a class="headerlink" href="#module-deeprootgen.io.simulation_data" title="Link to this heading"></a></h2>
+<p>Contains utilities for managing simulation data.</p>
+<p>This module defines utility functions for managing inputs and outputs for simulation data.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.io.simulation_data.s3_upload_file">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.io.simulation_data.</span></span><span class="sig-name descname"><span class="pre">s3_upload_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'data'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/deeprootgen/io/simulation_data.html#s3_upload_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.io.simulation_data.s3_upload_file" title="Link to this definition"></a></dt>
+<dd><p>Upload a file to an S3 bucket.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>file_name (str):</dt><dd><p>The file to upload.</p>
+</dd>
+<dt>object_name (str):</dt><dd><p>The S3 object name.</p>
+</dd>
+<dt>bucket_name (str, optional):</dt><dd><p>The bucket name. Defaults to “data”.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>bool:</dt><dd><p>The client response.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../introduction/index.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="data_model.html" class="btn btn-neutral float-right" title="Data Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="form.html" class="btn btn-neutral float-left" title="Form" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="model.html" class="btn btn-neutral float-right" title="Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

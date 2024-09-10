@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeprootgen.io.simulation_data &mdash; DeepRootGen 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelogs/changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deeprootgen.io.simulation_data</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeprootgen.io.simulation_data</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains utilities for managing simulation data.</span>
+
+<span class="sd">This module defines utility functions for managing inputs and outputs for simulation data.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">adbnx_adapter</span> <span class="kn">import</span> <span class="n">ADBNX_Adapter</span>
+<span class="kn">from</span> <span class="nn">arango</span> <span class="kn">import</span> <span class="n">ArangoClient</span>
+
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">RootSystemSimulation</span>
+
+
+<div class="viewcode-block" id="s3_upload_file">
+<a class="viewcode-back" href="../../../api_reference/io.html#deeprootgen.io.simulation_data.s3_upload_file">[docs]</a>
+<span class="k">def</span> <span class="nf">s3_upload_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upload a file to an S3 bucket.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_name (str):</span>
+<span class="sd">            The file to upload.</span>
+<span class="sd">        object_name (str):</span>
+<span class="sd">            The S3 object name.</span>
+<span class="sd">        bucket_name (str, optional):</span>
+<span class="sd">            The bucket name. Defaults to &quot;data&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool:</span>
+<span class="sd">            The client response.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s3_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+        <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
+        <span class="n">use_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">endpoint_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MLFLOW_S3_ENDPOINT_URL&quot;</span><span class="p">],</span>
+        <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_ACCESS_KEY_ID&quot;</span><span class="p">],</span>
+        <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;AWS_SECRET_ACCESS_KEY&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">s3_client</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">,</span> <span class="n">object_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">save_graph_to_db</span><span class="p">(</span>
+    <span class="n">simulation</span><span class="p">:</span> <span class="n">RootSystemSimulation</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_uuid</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_networkx</span><span class="p">()</span>
+    <span class="n">collection</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">simulation_uuid</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ARANGO_HOST_URL&quot;</span><span class="p">]</span>
+    <span class="n">db_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ARANGO_DB&quot;</span><span class="p">]</span>
+    <span class="n">db_username</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ARANGO_ROOT_USER&quot;</span><span class="p">]</span>
+    <span class="n">db_password</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;ARANGO_ROOT_PASSWORD&quot;</span><span class="p">]</span>
+
+    <span class="n">sys_db</span> <span class="o">=</span> <span class="n">ArangoClient</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="n">db_host</span><span class="p">)</span><span class="o">.</span><span class="n">db</span><span class="p">(</span>
+        <span class="s2">&quot;_system&quot;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">db_username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">db_password</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_db</span><span class="o">.</span><span class="n">has_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">):</span>
+        <span class="n">sys_db</span><span class="o">.</span><span class="n">create_database</span><span class="p">(</span><span class="n">db_name</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">ArangoClient</span><span class="p">(</span><span class="n">hosts</span><span class="o">=</span><span class="n">db_host</span><span class="p">)</span><span class="o">.</span><span class="n">db</span><span class="p">(</span>
+        <span class="n">db_name</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">db_username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">db_password</span>
+    <span class="p">)</span>
+
+    <span class="n">edges_collection</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s2">_edges&quot;</span>
+    <span class="k">for</span> <span class="n">db_collection</span> <span class="ow">in</span> <span class="p">[</span><span class="n">collection</span><span class="p">,</span> <span class="n">edges_collection</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">db_collection</span><span class="p">):</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">delete_collection</span><span class="p">(</span><span class="n">db_collection</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">has_graph</span><span class="p">(</span><span class="n">collection</span><span class="p">):</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">delete_graph</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
+
+    <span class="n">graph_definitions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;edge_collection&quot;</span><span class="p">:</span> <span class="n">edges_collection</span><span class="p">,</span>
+            <span class="s2">&quot;from_vertex_collections&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">collection</span><span class="p">],</span>
+            <span class="s2">&quot;to_vertex_collections&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">collection</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+
+    <span class="n">adapter</span> <span class="o">=</span> <span class="n">ADBNX_Adapter</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+    <span class="n">adapter</span><span class="o">.</span><span class="n">networkx_to_arangodb</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">graph_definitions</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
