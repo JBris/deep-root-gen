@@ -22,7 +22,7 @@ Website: [DeepRootGen](https://jbris.github.io/deep-root-gen/)
   
 # Introduction
 
-This repository contains an implementation of a simulation model for generating the root system architecture, for the estimation of root parameters as informed by observational data collected from the field.
+This repository contains an implementation of a simulation model for generating a synthetic root system architecture, for the estimation of root parameters as informed by observational data collected from the field.
 
 # Data Schema
 

@@ -9,6 +9,7 @@ from prefect import context, flow, task
 from prefect.task_runners import ConcurrentTaskRunner
 
 from deeprootgen.data_model import RootSimulationModel
+from deeprootgen.io import save_graph_to_db
 from deeprootgen.model import RootSystemSimulation
 from deeprootgen.pipeline import (
     begin_experiment,
@@ -51,7 +52,7 @@ def run_simulation(input_parameters: RootSimulationModel, simulation_uuid: str) 
     log_config(config, task)
     log_simulation(input_parameters, simulation, task)
     log_experiment_details(simulation_uuid)
-
+    save_graph_to_db(simulation, task, simulation_uuid)
     mlflow.end_run()
 
 

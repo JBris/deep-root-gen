@@ -220,6 +220,9 @@ def build_common_layout(
                     "Cloudbeaver", href="http://127.0.0.1:8978", target="_blank"
                 )
             ),
+            dbc.NavItem(
+                dbc.NavLink("ArangoDB", href="http://127.0.0.1:8529", target="_blank")
+            ),
         ],
         pills=True,
         justified=True,

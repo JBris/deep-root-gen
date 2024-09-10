@@ -20,6 +20,7 @@ from deeprootgen.form import (
     build_common_layout,
     get_out_table_df,
 )
+from deeprootgen.io import s3_upload_file
 from deeprootgen.pipeline import get_simulation_uuid
 
 ######################################
@@ -121,11 +122,11 @@ def save_param(n_clicks: int, param_inputs: list) -> None:
         k = input["param"]
         inputs[k] = param_inputs[i]
 
-    outfile = osp.join(
-        "outputs", f"{datetime.today().strftime('%Y-%m-%d-%H-%M')}-{PAGE_ID}.yaml"
-    )
+    file_name = f"{datetime.today().strftime('%Y-%m-%d-%H-%M')}-{PAGE_ID}.yaml"
+    outfile = osp.join("outputs", file_name)
     with open(outfile, "w") as f:
         yaml.dump(inputs, f, default_flow_style=False, sort_keys=False)
+    s3_upload_file(outfile, file_name)
     return dcc.send_file(outfile)
 
 
@@ -147,8 +148,10 @@ def save_runs(n_clicks: int, simulation_runs: list) -> None:
     simulation_runs = simulation_runs[0]
     df = pd.DataFrame(simulation_runs)
     date_now = datetime.today().strftime("%Y-%m-%d-%H-%M")
-    outfile = osp.join("outputs", f"{date_now}-{PAGE_ID}-runs.csv")
+    file_name = f"{date_now}-{PAGE_ID}-runs.csv"
+    outfile = osp.join("outputs", file_name)
     df.to_csv(outfile, index=False)
+    s3_upload_file(outfile, file_name)
     return dcc.send_file(outfile)
 
 

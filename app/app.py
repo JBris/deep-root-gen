@@ -7,9 +7,7 @@
 import os
 
 import dash_bootstrap_components as dbc
-import pandas as pd
-import plotly.express as px
-from dash import Dash, Input, Output, callback, dcc, html, page_container, page_registry
+from dash import Dash, dcc, html, page_container, page_registry
 from dash_bootstrap_templates import load_figure_template
 from hydra import compose, initialize
 from hydra.utils import instantiate
@@ -19,7 +17,28 @@ from hydra.utils import instantiate
 ######################################
 
 if os.environ.get("PREFECT_API_URL") is None:
-    os.environ["PREFECT_API_URL"] = "http://127.0.0.1:4200/api"
+    os.environ["PREFECT_API_URL"] = "http://localhost:4200/api"
+
+if os.environ.get("AWS_ACCESS_KEY_ID") is None:
+    os.environ["AWS_ACCESS_KEY_ID"] = "user"
+
+if os.environ.get("AWS_SECRET_ACCESS_KEY") is None:
+    os.environ["AWS_SECRET_ACCESS_KEY"] = "password"
+
+if os.environ.get("MLFLOW_S3_ENDPOINT_URL") is None:
+    os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9000"
+
+if os.environ.get("ARANGO_DB") is None:
+    os.environ["ARANGO_DB"] = "deeprootgen"
+
+if os.environ.get("ARANGO_ROOT_USER") is None:
+    os.environ["ARANGO_ROOT_USER"] = "root"
+
+if os.environ.get("ARANGO_ROOT_PASSWORD") is None:
+    os.environ["ARANGO_ROOT_PASSWORD"] = "password"
+
+if os.environ.get("ARANGO_HOST_URL") is None:
+    os.environ["ARANGO_HOST_URL"] = "http://localhost:8529 "
 
 ######################################
 # Functions

@@ -13,6 +13,7 @@ services:
       APP_USER_HOST: http://localhost:8000
       APP_PREFECT_USER_HOST: http://localhost:4200
       APP_MLFLOW_USER_HOST: http://localhost:5000
+      APP_ARANGODB_USER_HOST: http://localhost:8529
       PREFECT_API_URL: http://prefect-server:4200/api
       MLFLOW_TRACKING_URI: http://mlflow:5000
       MLFLOW_BACKEND_STORE_URI: $MLFLOW_BACKEND_STORE_URI
@@ -31,6 +32,7 @@ services:
       - ./app/pages:/app/pages
       - ./app/outputs:/app/outputs
       - ./app/flows:/app/flows
+      - ./deeprootgen:/app/deeprootgen
     command: >
       gunicorn -b 0.0.0.0:8000 -w 4 app:server
       
