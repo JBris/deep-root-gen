@@ -26,7 +26,7 @@ from deeprootgen.pipeline import get_datetime_now, get_simulation_uuid
 # Constants
 ######################################
 
-PAGE_ID = "generate-root-system-page"
+PAGE_ID = "snpe-root-system-page"
 
 ######################################
 # Callbacks
@@ -272,7 +272,7 @@ def run_root_model(
 
     simulation_uuid = get_simulation_uuid()
     flow_data = run_deployment(
-        "simulation/run_simulation_flow",
+        "snpe/run_snpe_flow",
         parameters=dict(input_parameters=form_inputs, simulation_uuid=simulation_uuid),
         flow_run_name=f"run-{simulation_uuid}",
         timeout=0,
@@ -311,7 +311,9 @@ def run_root_model(
 # Layout
 ######################################
 
-register_page(__name__, name="Generate Root Data", top_nav=True, path="/")
+register_page(
+    __name__, name="Sequential Neural Posterior Estimation", top_nav=True, path="/snpe"
+)
 
 
 def layout() -> html.Div:
@@ -362,10 +364,10 @@ def layout() -> html.Div:
     )
 
     page_description = """
-    Create synthetic root data by running the root system architecture simulation
+    Perform Bayesian parameter estimation for the root system architecture simulation against a target dataset using deep learning
     """
     layout = build_common_layout(
-        "Run Simulation", PAGE_ID, input_components, output_components, page_description
+        "Run SNPE", PAGE_ID, input_components, output_components, page_description
     )
 
     return layout

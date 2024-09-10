@@ -9,6 +9,7 @@ from prefect import context, flow, task
 from prefect.task_runners import ConcurrentTaskRunner
 
 from deeprootgen.data_model import RootSimulationModel
+from deeprootgen.io import save_graph_to_db
 from deeprootgen.model import RootSystemSimulation
 from deeprootgen.pipeline import (
     begin_experiment,
@@ -23,7 +24,17 @@ from deeprootgen.pipeline import (
 
 
 @task
-def run_optimisation() -> None:
+def run_optimisation(
+    input_parameters: RootSimulationModel, simulation_uuid: str
+) -> None:
+    """Running a optimisation procedure.
+
+    Args:
+        input_parameters (RootSimulationModel):
+            The root simulation data model.
+        simulation_uuid (str):
+            The simulation uuid.
+    """
     print("hello")
 
 
@@ -33,6 +44,14 @@ def run_optimisation() -> None:
     task_runner=ConcurrentTaskRunner(),
 )
 def run_optimisation_flow(
-    # input_params: RootSimulationModel
+    input_parameters: RootSimulationModel, simulation_uuid: str
 ) -> None:
-    run_optimisation.submit()
+    """Flow for running a optimisation procedure.
+
+    Args:
+        input_parameters (RootSimulationModel):
+            The root simulation data model.
+        simulation_uuid (str):
+            The simulation uuid.
+    """
+    run_optimisation.submit(input_parameters, simulation_uuid)

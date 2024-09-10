@@ -9,6 +9,7 @@ from prefect import context, flow, task
 from prefect.task_runners import ConcurrentTaskRunner
 
 from deeprootgen.data_model import RootSimulationModel
+from deeprootgen.io import save_graph_to_db
 from deeprootgen.model import RootSystemSimulation
 from deeprootgen.pipeline import (
     begin_experiment,
@@ -23,7 +24,15 @@ from deeprootgen.pipeline import (
 
 
 @task
-def run_snpe() -> None:
+def run_snpe(input_parameters: RootSimulationModel, simulation_uuid: str) -> None:
+    """Running sequential neural posterior estimation.
+
+    Args:
+        input_parameters (RootSimulationModel):
+            The root simulation data model.
+        simulation_uuid (str):
+            The simulation uuid.
+    """
     print("hello")
 
 
@@ -32,7 +41,13 @@ def run_snpe() -> None:
     description="Perform Bayesian parameter estimation for the root model using Sequential Neural Posterior Estimation.",
     task_runner=ConcurrentTaskRunner(),
 )
-def run_snpe_flow(
-    # input_params: RootSimulationModel
-) -> None:
-    run_snpe.submit()
+def run_snpe_flow(input_parameters: RootSimulationModel, simulation_uuid: str) -> None:
+    """Flow for running sequential neural posterior estimation.
+
+    Args:
+        input_parameters (RootSimulationModel):
+            The root simulation data model.
+        simulation_uuid (str):
+            The simulation uuid.
+    """
+    run_snpe.submit(input_parameters, simulation_uuid)
