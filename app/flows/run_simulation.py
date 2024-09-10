@@ -38,6 +38,7 @@ def run_simulation(input_parameters: RootSimulationModel, simulation_uuid: str) 
     begin_experiment(
         task, simulation_uuid, flow_run_id, input_parameters.simulation_tag  # type: ignore
     )
+    log_experiment_details(simulation_uuid)
 
     simulation = RootSystemSimulation(
         simulation_tag=input_parameters.simulation_tag,  # type: ignore
@@ -46,12 +47,8 @@ def run_simulation(input_parameters: RootSimulationModel, simulation_uuid: str) 
     simulation.run(input_parameters)
     config = input_parameters.dict()
 
-    for k, v in config.items():
-        mlflow.log_param(k, v)
-
     log_config(config, task)
     log_simulation(input_parameters, simulation, task)
-    log_experiment_details(simulation_uuid)
     save_graph_to_db(simulation, task, simulation_uuid)
     mlflow.end_run()
 

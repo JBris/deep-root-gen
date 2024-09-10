@@ -11,6 +11,8 @@ import uuid
 from datetime import datetime
 
 import mlflow
+import networkx as nx
+import pandas as pd
 import yaml
 from ydata_profiling import ProfileReport
 
@@ -18,6 +20,16 @@ from ..data_model import RootSimulationModel
 from ..model import RootSystemSimulation
 
 OUT_DIR = osp.join("/app", "outputs")
+
+
+def get_datetime_now() -> str:
+    """Get the current datetime for now.
+
+    Returns:
+        str:
+            The current datetime.
+    """
+    return datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
 
 
 def get_outdir() -> str:
@@ -105,9 +117,10 @@ def log_config(
         str:
             The written configuration file.
     """
-    outfile = osp.join(
-        OUT_DIR, f"{datetime.today().strftime('%Y-%m-%d-%H-%M')}-{task}_config.yaml"
-    )
+    for k, v in config.items():
+        mlflow.log_param(k, v)
+
+    outfile = osp.join(OUT_DIR, f"{get_datetime_now()}-{task}_config.yaml")
     with open(outfile, "w") as f:
         yaml.dump(config, f, default_flow_style=False, sort_keys=False)
 
@@ -130,7 +143,7 @@ def log_simulation(
     """
     node_df, edge_df = simulation.G.as_df()
     G = simulation.G.as_networkx()
-    time_now = datetime.today().strftime("%Y-%m-%d-%H-%M")
+    time_now = get_datetime_now()
 
     outfile = osp.join(OUT_DIR, f"{time_now}-{task}_nodes.csv")
     node_df.to_csv(outfile, index=False)
@@ -154,4 +167,28 @@ def log_simulation(
     profile = ProfileReport(node_df, title="Root Model Report")
     outfile = osp.join(OUT_DIR, f"{time_now}-{task}_data_profile.html")
     profile.to_file(outfile)
+    mlflow.log_artifact(outfile)
+
+    metric_names = []
+    metric_values = []
+    for metric_func in [
+        nx.diameter,
+        nx.radius,
+        nx.average_clustering,
+        nx.node_connectivity,
+        nx.degree_assortativity_coefficient,
+        nx.degree_pearson_correlation_coefficient,
+    ]:
+        metric_name = metric_func.__name__
+        metric_value = metric_func(G)
+
+        mlflow.log_metric(metric_name, metric_value)
+        metric_names.append(metric_name)
+        metric_values.append(metric_value)
+
+    metric_df = pd.DataFrame(
+        {"metric_name": metric_names, "metric_value": metric_values}
+    )
+    outfile = osp.join(OUT_DIR, f"{time_now}-{task}_graph_metrics.csv")
+    metric_df.to_csv(outfile, index=False)
     mlflow.log_artifact(outfile)

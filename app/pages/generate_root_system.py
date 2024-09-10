@@ -6,7 +6,6 @@
 
 import base64
 import os.path as osp
-from datetime import datetime
 
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -21,7 +20,7 @@ from deeprootgen.form import (
     get_out_table_df,
 )
 from deeprootgen.io import s3_upload_file
-from deeprootgen.pipeline import get_simulation_uuid
+from deeprootgen.pipeline import get_datetime_now, get_simulation_uuid
 
 ######################################
 # Constants
@@ -122,7 +121,7 @@ def save_param(n_clicks: int, param_inputs: list) -> None:
         k = input["param"]
         inputs[k] = param_inputs[i]
 
-    file_name = f"{datetime.today().strftime('%Y-%m-%d-%H-%M')}-{PAGE_ID}.yaml"
+    file_name = f"{get_datetime_now()}-{PAGE_ID}.yaml"
     outfile = osp.join("outputs", file_name)
     with open(outfile, "w") as f:
         yaml.dump(inputs, f, default_flow_style=False, sort_keys=False)
@@ -147,7 +146,7 @@ def save_runs(n_clicks: int, simulation_runs: list) -> None:
     """
     simulation_runs = simulation_runs[0]
     df = pd.DataFrame(simulation_runs)
-    date_now = datetime.today().strftime("%Y-%m-%d-%H-%M")
+    date_now = get_datetime_now()
     file_name = f"{date_now}-{PAGE_ID}-runs.csv"
     outfile = osp.join("outputs", file_name)
     df.to_csv(outfile, index=False)
@@ -296,7 +295,7 @@ def run_root_model(
         {
             "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{flow_name}</a>",
             "tag": simulation_tag,
-            "date": datetime.today().strftime("%Y-%m-%d-%H-%M"),
+            "date": get_datetime_now(),
             "seed": form_inputs["random_seed"],
         }
     )
