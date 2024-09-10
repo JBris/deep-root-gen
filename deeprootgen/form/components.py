@@ -300,5 +300,5 @@ def get_out_table_df() -> pd.DataFrame:
         pd.DataFrame:
             The output table as a dataframe.
     """
-    out_df = pd.DataFrame([], columns=["workflow", "tag", "date", "seed"])
+    out_df = pd.DataFrame([], columns=["workflow", "task", "date", "tag"])
     return out_df

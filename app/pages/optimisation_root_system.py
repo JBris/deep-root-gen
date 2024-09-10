@@ -291,12 +291,13 @@ def run_root_model(
         app_prefect_host = "http://localhost:4200"
     prefect_flow_url = f"{app_prefect_host}/flow-runs/flow-run/{flow_run_id}"
 
+    task = "optimisation"
     simulation_runs.append(
         {
             "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{flow_name}</a>",
-            "tag": simulation_tag,
+            "task": task,
             "date": get_datetime_now(),
-            "seed": form_inputs["random_seed"],
+            "tag": simulation_tag,
         }
     )
 
