@@ -12,6 +12,8 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 from dash import dcc, get_app, html
 
+from deeprootgen.statistics import get_summary_statistics
+
 
 def build_common_components(
     component_specs: list,
@@ -78,6 +80,20 @@ def build_common_components(
         component_instance.style = {"padding-left": "0.5em"}
 
         if hasattr(component_spec, "handler"):
+            if component_spec.handler == "dropdown":
+                summary_statistics = get_summary_statistics()
+                component_instance.options = summary_statistics
+
+            if component_spec.handler == "range_slider":
+                component_instance.value = [
+                    component_spec.min_value,
+                    component_spec.max_value,
+                ]
+                component_instance.tooltip = {
+                    "placement": "top",
+                    "always_visible": True,
+                }
+
             if component_spec.handler == "file_upload":
                 component_instance.style = {
                     "width": "100%",
@@ -101,6 +117,7 @@ def build_common_components(
                 component_instance.style_cell = table_style
                 component_instance.style_header = table_style
                 component_instance.style_filter = table_style
+                component_instance.fixed_rows = {"headers": True}
 
                 if (
                     component_data is not None
@@ -292,8 +309,8 @@ def build_common_layout(
                             id=f"{page_id}-sidebar-fade",
                             is_in=False,
                             appear=True,
-                            timeout=1000,
-                            style={"transition": "opacity 1000ms ease"},
+                            timeout=750,
+                            style={"transition": "opacity 750ms ease"},
                             children=dbc.Card(
                                 sidebar_components,
                                 style={"borderRadius": "0", "padding-top": "1em"},
@@ -308,15 +325,22 @@ def build_common_layout(
                             id=f"{page_id}-output-fade",
                             is_in=False,
                             appear=True,
-                            timeout=1500,
-                            style={"transition": "opacity 1500ms ease"},
+                            timeout=1000,
+                            style={"transition": "opacity 1000ms ease"},
                             children=dbc.Card(
                                 output_components,
                                 style={"borderRadius": "0", "padding-top": "1em"},
                             ),
                         )
                     ),
-                    style={"width": "60%", "padding-left": "0", "text-align": "center"},
+                    style={
+                        "width": "60%",
+                        "padding-left": "0",
+                        "text-align": "center",
+                        "position": "sticky",
+                        "top": "0",
+                        "max-height": "100vh",
+                    },
                 ),
             ],
             id=page_id,
@@ -343,6 +367,24 @@ def get_common_layout(
     parameter_form_name: str = "simulation_form",
     simulation_form_name: str = "simulation_form",
 ) -> html.Div:
+    """Get the common form layout for multiple dashboard pages.
+
+    Args:
+        title (str):
+            The page title.
+        page_id (str):
+            The current page ID.
+        page_description (str):
+            A description of the page.
+        parameter_form_name (str, optional):
+            The name of the parameter form components specification. Defaults to "simulation_form".
+        simulation_form_name (str, optional):
+            The name of the simulation form components specification. Defaults to "simulation_form".
+
+    Returns:
+        html.Div:
+            The common layout.
+    """
     app = get_app()
     parameter_form = app.settings[parameter_form_name]
     simulation_form = app.settings[simulation_form_name]

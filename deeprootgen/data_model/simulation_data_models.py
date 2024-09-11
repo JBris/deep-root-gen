@@ -115,3 +115,16 @@ class RootSimulationModel(BaseModel):
     no_root_zone: Optional[float] = 1e-4
     floor_threshold: Optional[float] = 0.4
     ceiling_threshold: Optional[float] = 0.9
+
+
+class ParameterIntervalModel(BaseModel):
+    """The parameter specification data model.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    lower_bound: float
+    upper_bound: float
+    data_type: str

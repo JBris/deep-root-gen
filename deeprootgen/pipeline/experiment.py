@@ -297,19 +297,18 @@ def dispatch_new_run(task: str, form_inputs: dict, simulation_runs: list) -> tup
     flow_data = run_deployment(
         f"{task}/run_{task}_flow",
         parameters=dict(input_parameters=form_inputs, simulation_uuid=simulation_uuid),
-        flow_run_name=f"run-{simulation_uuid}",
+        flow_run_name=simulation_uuid,
         timeout=0,
     )
 
     app_prefect_host = os.environ.get("APP_PREFECT_USER_HOST", "http://localhost:4200")
     flow_run_id = str(flow_data.id)
     prefect_flow_url = f"{app_prefect_host}/flow-runs/flow-run/{flow_run_id}"
-    flow_name = flow_data.name
     simulation_tag = form_inputs["simulation_tag"]
 
     simulation_runs.append(
         {
-            "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{flow_name}</a>",
+            "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{simulation_uuid}</a>",
             "task": task,
             "date": get_datetime_now(),
             "tag": simulation_tag,
@@ -317,7 +316,7 @@ def dispatch_new_run(task: str, form_inputs: dict, simulation_runs: list) -> tup
     )
 
     toast_message = f"""
-    Running simulation workflow: {flow_name}
+    Running simulation workflow: {simulation_uuid}
     Simulation tag: {simulation_tag}
     """
 

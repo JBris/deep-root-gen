@@ -3,272 +3,331 @@ components:
   parameters:
     collapsible: true
     children:
-      - id: max-order-slider
-        param: max_order
+      - id: upload-obs-data-file-button
+        label: Upload  
+        help: Upload observed data from a csv file
+        class_name: dash.dcc.Upload
+        handler: file_upload
+        kwargs:
+          children: Load observed data
+      - id: clear-obs-data-file-button
+        label: Clear
+        help: Clear the observed data from the upload component
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Clear upload data
+          color: primary
+          className: me-1
+      - id: select-summary-stats-dropdown
+        label: Select statistics  
+        help: Select summary statistics for comparing simulated and observed data
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select summary statistics
+      - id: stat-by-soil-layer-switch
+        param: stat_by_soil_layer
+        label: Statistics by soil layer
+        help: Enable the calculation of summary statistics by soil layer within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: stat-by-soil-col-switch
+        param: stat_by_soil_column
+        label: Statistics by soil column
+        help: Enable the calculation of summary statistics by soil column within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: max-order-range-slider
+        param: max_order_interval
         label: Maximum order
-        help: The maximum root order
-        class_name: dash.dcc.Slider
+        help: The interval for the maximum root order
+        data_type: integer
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 1
+        max_value: 3
         kwargs:
           min: 1
           max: 5
-          value: 2
           step: 1
           persistence: true
-      - id: root-ratio-input
-        param: root_ratio
+          pushable: true
+          allowCross: true
+      - id: root-ratio-range-slider
+        param: root_ratio_interval
         label: Root ratio
-        help: The ratio between structural and fine roots
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for ratio between structural and fine roots
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.4
+        max_value: 0.6
         kwargs:
-          type: number
           min: 0
           max: 1
           step: 0.1
-          value: 0.5
           persistence: true
-      - id: fine-root-threshold-input
-        param: fine_root_threshold
+          pushable: true
+          allowCross: true
+      - id: fine-root-threshold-range-slider
+        param: fine_root_threshold_interval
         label: Fine root threshold
-        help: Threshold for classifying a root as a fine root, rather than a structural root (cm)
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the threshold for classifying a root as a fine root, rather than a structural root (cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.04
+        max_value: 0.06
         kwargs:
-          type: number
           min: 0
+          max: 0.1
           step: 0.01
-          value: 0.06
           persistence: true
-      - id: outer-primary-root-num-input
-        param: outer_root_num
+          pushable: true
+          allowCross: true
+      - id: outer-primary-root-num-range-slider
+        param: outer_root_num_interval
         label: Number of outer roots
-        help: The number of outer primary roots to be generated
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the number of outer primary roots to be generated
+        data_type: integer
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 8
+        max_value: 12
         kwargs:
-          type: number
           min: 0
           max: 20
           step: 1
-          value: 10
           persistence: true
-      - id: inner-primary-root-num-input
-        param: inner_root_num
+          pushable: true
+          allowCross: true
+      - id: inner-primary-root-num-range-slider
+        param: inner_root_num_interval
         label: Number of inner roots
-        help: The number of inner primary roots to be generated
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the number of inner primary roots to be generated
+        data_type: integer
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 6
+        max_value: 10
         kwargs:
-          type: number
           min: 0
           max: 20
           step: 1
-          value: 8
           persistence: true
-      - id: min-length-primary-root-input
-        param: min_primary_length
+          pushable: true
+          allowCross: true
+      - id: min-length-primary-root-range-slider
+        param: min_primary_length_interval
         label: Primary root minimum length
-        help: The minimum length of each primary root (cm)
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the minimum length of each primary root (cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 18
+        max_value: 22
         kwargs:
-          type: number
           min: 1
           max: 50
           step: 1
-          value: 20
           persistence: true
-      - id: max-length-primary-root-input
-        param: max_primary_length
+          pushable: true
+          allowCross: true
+      - id: max-length-primary-root-range-slider
+        param: max_primary_length_interval
         label: Primary root maximum length
-        help: The maximum length of each primary root (cm)
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the maximum length of each primary root (cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 25
+        max_value: 35
         kwargs:
-          type: number
           min: 1
           max: 50
           step: 1
-          value: 30
           persistence: true
-      - id: base-diameter-root-input
-        param: base_diameter
+          pushable: true
+          allowCross: true
+      - id: base-diameter-root-range-slider
+        param: base_diameter_interval
         label: Base root diameter
-        help: The base diameter of the first segment of each root (cm)
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the base diameter of the first segment of each root (cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.09
+        max_value: 0.13
         kwargs:
-          type: number
           min: 0.001
           max: 1
           step: 0.01
-          value: 0.11
           persistence: true
-      - id: root-apex-input
-        param: apex_diameter
+          pushable: true
+          allowCross: true
+      - id: root-apex-range-slider
+        param: apex_diameter_interval
         label: Apex diameter
-        help: The diameter of the root apex (cm)
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the diameter of the root apex (cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.01
+        max_value: 0.03
         kwargs:
-          type: number
           min: 0.01
           max: 1
           step: 0.01
-          value: 0.02
           persistence: true
-      - id: diameter-reduction-factor-input
-        param: diameter_reduction
+          pushable: true
+          allowCross: true
+      - id: diameter-reduction-factor-range-slider
+        param: diameter_reduction_interval
         label: Diameter reduction
-        help: The diameter reduction factor for subsequent root segments.
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the diameter reduction factor for subsequent root segments.
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.1
+        max_value: 0.3
         kwargs:
-          type: number
           min: 0
           max: 1
           step: 0.1
-          value: 0.2
           persistence: true
-      - id: min-num-secondary-roots-input
-        param: min_sec_root_num
+          pushable: true
+          allowCross: true
+      - id: min-num-secondary-roots-range-slider
+        param: min_sec_root_num_interval
         label: Minimum number of secondary roots
-        help: The minimum number of secondary roots to be generated
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the minimum number of secondary roots to be generated
+        data_type: integer
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 1
+        max_value: 3
         kwargs:
-          type: number
           min: 0
+          max: 10
           step: 1
-          value: 1
           persistence: true
-      - id: max-num-secondary-roots-input
-        param: max_sec_root_num
+          pushable: true
+          allowCross: true
+      - id: max-num-secondary-roots-range-slider
+        param: max_sec_root_num_interval
         label: Maximum number of secondary roots
-        help: The maximum number of secondary roots to be generated
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the maximum number of secondary roots to be generated
+        data_type: integer
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 3
+        max_value: 5
         kwargs:
-          type: number
           min: 0
           max: 20
           step: 1
-          value: 3
           persistence: true
-      - id: secondary-root-growth-input
-        param: growth_sec_root
+          pushable: true
+          allowCross: true
+      - id: secondary-root-growth-range-slider
+        param: growth_sec_root_interval
         label: Secondary root growth rate
-        help: The growth rate for the number of secondary roots per root order
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the growth rate for the number of secondary roots per root order
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.1
+        max_value: 0.3
         kwargs:
-          type: number
           min: 0
+          max: 1
           step: 0.1
-          value: 0.2
           persistence: true
-      - id: min-length-secondary-root-input
-        param: min_sec_root_length
+          pushable: true
+          allowCross: true
+      - id: min-length-secondary-root-range-slider
+        param: min_sec_root_length_interval
         label: Secondary root minimum length
-        help: The minimum length of each secondary root (cm)
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the minimum length of each secondary root (cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 80
+        max_value: 120
         kwargs:
-          type: number
           min: 1
           max: 250
           step: 1
-          value: 100
           persistence: true
-      - id: max-length-secondary-root-input
-        param: max_sec_root_length
+          pushable: true
+          allowCross: true
+      - id: max-length-secondary-root-range-slider
+        param: max_sec_root_length_interval
         label: Secondary root maximum length
-        help: The maximum length of each secondary root (cm)
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the maximum length of each secondary root (cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 200
+        max_value: 240
         kwargs:
-          type: number
           min: 1
           max: 500
           step: 1
-          value: 220
           persistence: true
-      - id: segments-per-root-input
-        param: segments_per_root
+          pushable: true
+          allowCross: true
+      - id: segments-per-root-range-slider
+        param: segments_per_root_interval
         label: Segments per root
-        help: The number of segments per root
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the number of segments per root
+        data_type: integer
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 30
+        max_value: 70
         kwargs:
-          type: number
           min: 1
           max: 500
           step: 1
-          value: 50
           persistence: true
-      - id: root-length-reduction-input
-        param: length_reduction
+          pushable: true
+          allowCross: true
+      - id: root-length-reduction-range-slider
+        param: length_reduction_interval
         label: Length reduction
-        help: The root length reduction factor
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the root length reduction factor
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.4
+        max_value: 0.6
         kwargs:
-          type: number
           min: 0
           max: 1
           step: 0.1
-          value: 0.5
           persistence: true
-      - id: root-vary-input
-        param: root_vary
+          pushable: true
+          allowCross: true
+      - id: root-vary-range-slider
+        param: root_vary_interval
         label: Root segment variance
-        help: Random variation in degrees of subsequent root segments along x, y, and z axes
-        class_name: dash_bootstrap_components.Input 
+        help: The interval for the random variation in degrees of subsequent root segments along x, y, and z axes
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 20
+        max_value: 40
         kwargs:
-          type: number
           min: 0
           max: 360
           step: 1
-          value: 30
           persistence: true
-      - id: enable-soil-input
-        param: enable_soil
-        label: Enable soil
-        help: Enable the soil voxel grid into the simulation.
-        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
-      - id: soil-layer-height-input
-        param: soil_layer_height
-        label: Soil layer height
-        help: The height of each soil layer (cm)
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          min: 0
-          max: 100
-          step: 10
-          value: 10
-          persistence: true
-      - id: soil-layer-width-input
-        param: soil_layer_width
-        label: Soil layer width
-        help: The width of each soil layer (cm)
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          min: 0
-          max: 100
-          step: 10
-          value: 10
-          persistence: true
-      - id: soil-n-layers
-        param: soil_n_layers
-        label: Number soil layers
-        help: The number of vertical soil layers
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          min: 0
-          max: 20
-          step: 1
-          value: 1
-          persistence: true
-      - id: soil-n-cols
-        param: soil_n_cols
-        label: Number soil columns
-        help: The number of horizontal soil layers/columns
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          min: 0
-          max: 20
-          step: 1
-          value: 1
-          persistence: true
+          pushable: true
+          allowCross: true
       - id: random-seed-input
         param: random_seed
         label: Random seed
