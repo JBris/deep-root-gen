@@ -83,7 +83,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">mlflow</span>
-<span class="kn">from</span> <span class="nn">prefect.artifacts</span> <span class="kn">import</span> <span class="n">create_link_artifact</span><span class="p">,</span> <span class="n">create_markdown_artifact</span>
+<span class="kn">from</span> <span class="nn">prefect.artifacts</span> <span class="kn">import</span> <span class="n">create_markdown_artifact</span>
 
 
 <div class="viewcode-block" id="log_experiment_details">
@@ -103,23 +103,11 @@
     <span class="k">if</span> <span class="n">app_url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">app_url</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000&quot;</span>
 
-    <span class="n">create_link_artifact</span><span class="p">(</span>
-        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;deeprootgen-app-link&quot;</span><span class="p">,</span>
-        <span class="n">link</span><span class="o">=</span><span class="n">app_url</span><span class="p">,</span>
-        <span class="n">link_text</span><span class="o">=</span><span class="s2">&quot;DeepRootGen&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-
     <span class="n">app_mlflow_host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;APP_MLFLOW_USER_HOST&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">app_mlflow_host</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">app_mlflow_host</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:5000&quot;</span>
     <span class="n">mlflow_experiment_url</span> <span class="o">=</span> <span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">app_mlflow_host</span><span class="si">}</span><span class="s2">/#/experiments/</span><span class="si">{</span><span class="n">experiment_id</span><span class="si">}</span><span class="s2">/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="p">)</span>
-
-    <span class="n">create_link_artifact</span><span class="p">(</span>
-        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;mlflow-link&quot;</span><span class="p">,</span>
-        <span class="n">link</span><span class="o">=</span><span class="n">mlflow_experiment_url</span><span class="p">,</span>
-        <span class="n">link_text</span><span class="o">=</span><span class="s2">&quot;MLflow&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">flow_description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
@@ -137,9 +125,9 @@
 <span class="s2">    &quot;&quot;&quot;</span>
 
     <span class="n">create_markdown_artifact</span><span class="p">(</span>
-        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;flow-description&quot;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="s2">&quot;root-simulation-run&quot;</span><span class="p">,</span>
         <span class="n">markdown</span><span class="o">=</span><span class="n">flow_description</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Flow Description&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Root simulation run.&quot;</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 </pre></div>
