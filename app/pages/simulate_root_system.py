@@ -5,12 +5,24 @@
 ######################################
 
 import base64
+import os
 import os.path as osp
 
 import dash_bootstrap_components as dbc
 import pandas as pd
 import yaml
-from dash import ALL, Input, Output, State, callback, dcc, get_app, html, register_page
+from dash import (
+    ALL,
+    Input,
+    Output,
+    State,
+    callback,
+    dcc,
+    get_app,
+    html,
+    no_update,
+    register_page,
+)
 from prefect.deployments import run_deployment
 
 from deeprootgen.form import (
@@ -26,11 +38,53 @@ from deeprootgen.pipeline import get_datetime_now, get_simulation_uuid
 # Constants
 ######################################
 
-PAGE_ID = "simulate-root-system-page"
+TASK = "simulation"
+PAGE_ID = "simulation-root-system-page"
 
 ######################################
 # Callbacks
 ######################################
+
+
+@callback(
+    Output(f"{PAGE_ID}-sidebar-fade", "is_in"),
+    Output(f"{PAGE_ID}-output-fade", "is_in"),
+    Input(f"{PAGE_ID}-sidebar-fade", "is_in"),
+)
+def fade_in(is_in: bool) -> tuple:
+    """Fade the page contents in.
+
+    Args:
+        is_in (bool):
+            Whether the sidebar is in the page.
+
+    Returns:
+        tuple:
+            A tuple for displaying the page contents.
+    """
+    if is_in:
+        return True, True
+    return True, True
+
+
+@callback(
+    Output({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
+    Input("store-simulation-run", "data"),
+)
+def update_table(runs: list | None) -> list | None:
+    """Update the simulation run table.
+
+    Args:
+        runs (list | None):
+            The list of simulation runs.
+
+    Returns:
+        list | None:
+            The updated list of simulation runs.
+    """
+    if runs is None:
+        return no_update
+    return [runs]
 
 
 @callback(
@@ -105,15 +159,21 @@ def toggle_external_links_collapse(n: int, is_open: bool) -> bool:
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     prevent_initial_call=True,
 )
-def save_param(n_clicks: int, param_inputs: list) -> None:
+def save_param(n_clicks: int | list[int], param_inputs: list) -> None:
     """Save parameter form values.
 
     Args:
-        n_clicks (int):
+        n_clicks (int | list[int]):
             The number of times that the button has been clicked.
         param_inputs (list):
             The parameter input data.
     """
+    if n_clicks is None or len(n_clicks) == 0:  # type: ignore
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
+        return no_update
+
     inputs = {}
     app = get_app()
     form_model = app.settings["form"]
@@ -132,19 +192,24 @@ def save_param(n_clicks: int, param_inputs: list) -> None:
 @callback(
     Output(f"{PAGE_ID}-download-results", "data"),
     [Input({"index": f"{PAGE_ID}-save-runs-button", "type": ALL}, "n_clicks")],
-    State({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
+    State("store-simulation-run", "data"),
     prevent_initial_call=True,
 )
-def save_runs(n_clicks: int, simulation_runs: list) -> None:
+def save_runs(n_clicks: int | list[int], simulation_runs: list) -> None:
     """Save simulation runs to file.
 
     Args:
-        n_clicks (int):
+        n_clicks (int | list[int]):
             The number of times that the button has been clicked.
         simulation_runs (list):
             A list of simulation run data.
     """
-    simulation_runs = simulation_runs[0]
+    if n_clicks is None or len(n_clicks) == 0:  # type: ignore
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
+        return no_update
+
     df = pd.DataFrame(simulation_runs)
     date_now = get_datetime_now()
     file_name = f"{date_now}-{PAGE_ID}-runs.csv"
@@ -155,11 +220,7 @@ def save_runs(n_clicks: int, simulation_runs: list) -> None:
 
 
 @callback(
-    Output(
-        {"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL},
-        "data",
-        allow_duplicate=True,
-    ),
+    Output("store-simulation-run", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-upload-runs-file-button", "type": ALL}, "contents"),
@@ -167,37 +228,56 @@ def save_runs(n_clicks: int, simulation_runs: list) -> None:
     prevent_initial_call=True,
 )
 def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load simulation runs from file.
+
+    Args:
+        list_of_contents (list):
+            The list of file contents.
+        list_of_names (list):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if list_of_contents is None or len(list_of_contents) == 0:
+        return no_update
+
+    if list_of_contents[0] is None or list_of_contents[0] == 0:
+        return no_update
+
     _, content_string = list_of_contents[0].split(",")
     decoded = base64.b64decode(content_string).decode("utf-8")
     from io import StringIO
 
-    workflow_urls = pd.read_csv(StringIO(decoded)).to_dict("records")
-
+    simulation_runs = pd.read_csv(StringIO(decoded)).to_dict("records")
     toast_message = f"Loading run history from: {list_of_names[0]}"
-    return [workflow_urls], True, toast_message
+    return simulation_runs, True, toast_message
 
 
 @callback(
-    Output(
-        {"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL},
-        "data",
-        allow_duplicate=True,
-    ),
+    Output("store-simulation-run", "data", allow_duplicate=True),
     [Input({"index": f"{PAGE_ID}-clear-runs-button", "type": ALL}, "n_clicks")],
     prevent_initial_call=True,
 )
-def clear_runs(n_clicks: int) -> list:
+def clear_runs(n_clicks: int | list[int]) -> list:
     """Clear the simulation runs table.
 
     Args:
-        n_clicks (int):
+        n_clicks (int | list[int]):
             The number of times that the button has been clicked.
 
     Returns:
         list:
             An empty list.
     """
-    return [[]]
+    if n_clicks is None or len(n_clicks) == 0:  # type: ignore
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
+        return no_update
+
+    return []
 
 
 @callback(
@@ -209,6 +289,24 @@ def clear_runs(n_clicks: int) -> list:
     prevent_initial_call=True,
 )
 def load_params(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load the simulation parameters from file.
+
+    Args:
+        list_of_contents (list):
+            The list of file contents.
+        list_of_names (list):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if list_of_contents is None or len(list_of_contents) == 0:
+        return no_update
+
+    if list_of_contents[0] is None or list_of_contents[0] == 0:
+        return no_update
+
     _, content_string = list_of_contents[0].split(",")
     decoded = base64.b64decode(content_string)
     input_dict = yaml.safe_load(decoded.decode("utf-8"))
@@ -225,17 +323,13 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output(
-        {"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL},
-        "data",
-        allow_duplicate=True,
-    ),
+    Output("store-simulation-run", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-results-toast", "is_open"),
     Output(f"{PAGE_ID}-results-toast", "children"),
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
-    State({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
+    State("store-simulation-run", "data"),
     prevent_initial_call=True,
 )
 def run_root_model(
@@ -256,9 +350,11 @@ def run_root_model(
     Returns:
         dcc.Graph: The visualised root model.
     """
-    n_click: int = n_clicks[0]
-    if n_click == 0:
-        return None
+    if n_clicks is None or len(n_clicks) == 0:
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:
+        return no_update
 
     form_inputs = {}
     app = get_app()
@@ -272,7 +368,7 @@ def run_root_model(
 
     simulation_uuid = get_simulation_uuid()
     flow_data = run_deployment(
-        "simulation/run_simulation_flow",
+        f"{TASK}/run_{TASK}_flow",
         parameters=dict(input_parameters=form_inputs, simulation_uuid=simulation_uuid),
         flow_run_name=f"run-{simulation_uuid}",
         timeout=0,
@@ -282,20 +378,13 @@ def run_root_model(
     flow_name = flow_data.name
     simulation_tag = form_inputs["simulation_tag"]
 
-    simulation_runs = simulation_runs[0]
-
-    import os
-
-    app_prefect_host = os.environ.get("APP_PREFECT_USER_HOST")
-    if app_prefect_host is None:
-        app_prefect_host = "http://localhost:4200"
+    app_prefect_host = os.environ.get("APP_PREFECT_USER_HOST", "http://localhost:4200")
     prefect_flow_url = f"{app_prefect_host}/flow-runs/flow-run/{flow_run_id}"
 
-    task = "simulation"
     simulation_runs.append(
         {
             "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{flow_name}</a>",
-            "task": task,
+            "task": TASK,
             "date": get_datetime_now(),
             "tag": simulation_tag,
         }
@@ -305,7 +394,8 @@ def run_root_model(
     Running simulation workflow: {flow_name}
     Simulation tag: {simulation_tag}
     """
-    return [simulation_runs], True, toast_message
+
+    return simulation_runs, True, toast_message
 
 
 ######################################

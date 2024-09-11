@@ -60,24 +60,36 @@ def define_ui(app: Dash) -> None:
         )
     )
 
-    app.layout = dcc.Loading(
-        id="loading_page_content",
-        children=[
-            html.Div(
-                dbc.Row(
-                    [
-                        dbc.Card(
-                            app_navbar,
-                            style={"padding-bottom": "0.5em", "borderRadius": "0"},
+    app.layout = html.Div(
+        [
+            dcc.Store(id="store-simulation-run", storage_type="session", data=[]),
+            dcc.Loading(
+                id="loading_page_content",
+                children=[
+                    html.Div(
+                        dbc.Row(
+                            [
+                                dbc.Card(
+                                    app_navbar,
+                                    style={
+                                        "padding-bottom": "0.5em",
+                                        "borderRadius": "0",
+                                    },
+                                ),
+                                page_container,
+                            ]
                         ),
-                        page_container,
-                    ]
-                ),
-                id="app-contents",
+                        id="app-contents",
+                    ),
+                ],
+                color="primary",
+                fullscreen=False,
+                delay_show=500,
+                delay_hide=500,
+                type="circle",
             ),
         ],
-        color="primary",
-        fullscreen=True,
+        id="app-wrapper",
     )
 
 

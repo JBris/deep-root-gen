@@ -353,17 +353,18 @@ components:
     children:
       - id: simulation-runs-table
         label: Simulation Runs
-        help: A table of simulation runs.
+        help: A table of simulation runs
         class_name: dash.dash_table.DataTable
         handler: data_table
         kwargs:
           filter_action: native
           sort_action: native
           sort_mode: multi
-          column_selectable: multi
-          row_selectable: multi
+          column_selectable: false
+          row_selectable: false
           page_action: native
           page_current: 0
           page_size: 10
-          editable: true
+          editable: false
           persistence: true
+          style_as_list_view: true

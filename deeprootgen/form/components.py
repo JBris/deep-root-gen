@@ -89,22 +89,35 @@ def build_common_components(
                 }
 
             if component_spec.handler == "data_table":
+                component_instance.markdown_options = {"html": True}
+                component_instance.persisted_props = ["columns.name", "data"]
+                component_instance.filter_options = {
+                    "placeholder_text": "Filter",
+                    "case": "insensitive",
+                }
+
+                table_style = {"textAlign": "left"}
+                component_instance.style_data = table_style
+                component_instance.style_cell = table_style
+                component_instance.style_header = table_style
+                component_instance.style_filter = table_style
+
                 if (
                     component_data is not None
                     and component_data.get(component_spec.id) is not None
                 ):
                     table_df = component_data[component_spec.id]
                     component_instance.data = table_df.to_dict("records")
+
                     component_instance.columns = [
                         {
-                            "name": i,
+                            "name": i.title(),
                             "id": i,
                             "selectable": True,
                             "presentation": "markdown",
                         }
                         for i in table_df.columns
                     ]
-                    component_instance.markdown_options = {"html": True}
 
         row.append(dbc.Col([component_label, component_tooltip, component_instance]))
 
@@ -275,16 +288,34 @@ def build_common_layout(
             [
                 html.Div(
                     dbc.Col(
-                        dbc.Card(
-                            sidebar_components,
-                            style={"borderRadius": "0"},
-                        ),
+                        dbc.Fade(
+                            id=f"{page_id}-sidebar-fade",
+                            is_in=False,
+                            appear=True,
+                            timeout=1000,
+                            style={"transition": "opacity 1000ms ease"},
+                            children=dbc.Card(
+                                sidebar_components,
+                                style={"borderRadius": "0"},
+                            ),
+                        )
                     ),
                     style={"width": "40%", "padding-right": "0"},
                 ),
                 html.Div(
-                    dbc.Col(dbc.Card(output_components, style={"borderRadius": "0"})),
-                    style={"width": "60%", "padding-left": "0"},
+                    dbc.Col(
+                        dbc.Fade(
+                            id=f"{page_id}-output-fade",
+                            is_in=False,
+                            appear=True,
+                            timeout=1500,
+                            style={"transition": "opacity 1500ms ease"},
+                            children=dbc.Card(
+                                output_components, style={"borderRadius": "0"}
+                            ),
+                        )
+                    ),
+                    style={"width": "60%", "padding-left": "0", "text-align": "center"},
                 ),
             ],
             id=page_id,
