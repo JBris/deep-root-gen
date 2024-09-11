@@ -8,7 +8,7 @@ workflows with Prefect.
 import os
 
 import mlflow
-from prefect.artifacts import create_link_artifact, create_markdown_artifact
+from prefect.artifacts import create_markdown_artifact
 
 
 def log_experiment_details(simulation_uuid: str) -> None:
@@ -26,23 +26,11 @@ def log_experiment_details(simulation_uuid: str) -> None:
     if app_url is None:
         app_url = "http://localhost:8000"
 
-    create_link_artifact(
-        key="deeprootgen-app-link",
-        link=app_url,
-        link_text="DeepRootGen",
-    )
-
     app_mlflow_host = os.environ.get("APP_MLFLOW_USER_HOST")
     if app_mlflow_host is None:
         app_mlflow_host = "http://localhost:5000"
     mlflow_experiment_url = (
         f"{app_mlflow_host}/#/experiments/{experiment_id}/runs/{run_id}"
-    )
-
-    create_link_artifact(
-        key="mlflow-link",
-        link=mlflow_experiment_url,
-        link_text="MLflow",
     )
 
     flow_description = f"""
@@ -60,7 +48,7 @@ Run ID: {run_id}
     """
 
     create_markdown_artifact(
-        key="flow-description",
+        key="root-simulation-run",
         markdown=flow_description,
-        description="Flow Description",
+        description="Root simulation run.",
     )

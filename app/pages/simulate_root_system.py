@@ -39,7 +39,7 @@ from deeprootgen.pipeline import get_datetime_now, get_simulation_uuid
 ######################################
 
 TASK = "simulation"
-PAGE_ID = "simulation-root-system-page"
+PAGE_ID = f"{TASK}-root-system-page"
 
 ######################################
 # Callbacks
@@ -210,9 +210,12 @@ def save_runs(n_clicks: int | list[int], simulation_runs: list) -> None:
     if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
         return no_update
 
+    if simulation_runs is None or len(simulation_runs) == 0:
+        return no_update
+
     df = pd.DataFrame(simulation_runs)
     date_now = get_datetime_now()
-    file_name = f"{date_now}-{PAGE_ID}-runs.csv"
+    file_name = f"{date_now}-root-simulation-runs.csv"
     outfile = osp.join("outputs", file_name)
     df.to_csv(outfile, index=False)
     s3_upload_file(outfile, file_name)

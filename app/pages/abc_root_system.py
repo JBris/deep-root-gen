@@ -39,7 +39,7 @@ from deeprootgen.pipeline import get_datetime_now, get_simulation_uuid
 ######################################
 
 TASK = "abc"
-PAGE_ID = "abc-root-system-page"
+PAGE_ID = f"{TASK}-root-system-page"
 
 ######################################
 # Callbacks
@@ -210,10 +210,12 @@ def save_runs(n_clicks: int | list[int], simulation_runs: list) -> None:
     if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
         return no_update
 
-    simulation_runs = simulation_runs[0]
+    if simulation_runs is None or len(simulation_runs) == 0:
+        return no_update
+
     df = pd.DataFrame(simulation_runs)
     date_now = get_datetime_now()
-    file_name = f"{date_now}-{PAGE_ID}-runs.csv"
+    file_name = f"{date_now}-root-simulation-runs.csv"
     outfile = osp.join("outputs", file_name)
     df.to_csv(outfile, index=False)
     s3_upload_file(outfile, file_name)
@@ -251,10 +253,9 @@ def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
     decoded = base64.b64decode(content_string).decode("utf-8")
     from io import StringIO
 
-    workflow_urls = pd.read_csv(StringIO(decoded)).to_dict("records")
-
+    simulation_runs = pd.read_csv(StringIO(decoded)).to_dict("records")
     toast_message = f"Loading run history from: {list_of_names[0]}"
-    return workflow_urls, True, toast_message
+    return simulation_runs, True, toast_message
 
 
 @callback(
@@ -396,6 +397,7 @@ def run_root_model(
     Running simulation workflow: {flow_name}
     Simulation tag: {simulation_tag}
     """
+
     return simulation_runs, True, toast_message
 
 
@@ -403,8 +405,9 @@ def run_root_model(
 # Layout
 ######################################
 
+
 register_page(
-    __name__, name="Approximate Bayesian Computation", top_nav=True, path="/abc"
+    __name__, name="Approximate Bayesian Computation", top_nav=True, path=f"/{TASK}"
 )
 
 
@@ -434,7 +437,7 @@ def layout() -> html.Div:
 
     if form_model.components[k]["collapsible"]:
         data_io_components = build_collapsible(
-            data_io_components, PAGE_ID, "Simulation"
+            data_io_components, PAGE_ID, "Calibration"
         )
 
     input_components = dbc.Col([parameter_components, data_io_components])

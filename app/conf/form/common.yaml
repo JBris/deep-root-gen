@@ -308,7 +308,7 @@ components:
         help: Run the simulation modelling procedure
         class_name: dash_bootstrap_components.Button 
         kwargs:
-          children: Run model
+          children: Run procedure
           color: primary
           className: me-1
       - id: save-param-button
@@ -331,7 +331,7 @@ components:
         help: Download the simulation run table as a csv file
         class_name: dash_bootstrap_components.Button 
         kwargs:
-          children: Save simulations
+          children: Save simulation runs
           color: primary
           className: me-1
       - id: upload-runs-file-button
@@ -340,13 +340,13 @@ components:
         class_name: dash.dcc.Upload
         handler: file_upload
         kwargs:
-          children: Load simulations
+          children: Load simulation runs
       - id: clear-runs-button
         label: Clear
         help: Clear the simulation run table 
         class_name: dash_bootstrap_components.Button 
         kwargs:
-          children: Clear simulations
+          children: Clear simulation runs
           color: primary
           className: me-1
   results:
