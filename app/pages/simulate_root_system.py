@@ -33,6 +33,7 @@ from deeprootgen.pipeline import (
 TASK = "simulation"
 PAGE_ID = f"{TASK}-root-system-page"
 FORM_NAME = "simulation_form"
+PROCEDURE = "simulation"
 
 ######################################
 # Callbacks
@@ -103,12 +104,12 @@ def toggle_parameters_collapse(n: int, is_open: bool) -> bool:
 
 
 @callback(
-    Output(f"{PAGE_ID}-simulation-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-simulation-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-simulation-collapse", "is_open")],
+    Output(f"{PAGE_ID}-{PROCEDURE}-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-{PROCEDURE}-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-{PROCEDURE}-collapse", "is_open")],
 )
-def toggle_simulation_collapse(n: int, is_open: bool) -> bool:
-    """Toggle the collapsible for simulation management.
+def toggle_procedure_collapse(n: int, is_open: bool) -> bool:
+    f"""Toggle the collapsible for {PROCEDURE} management.
 
     Args:
         n (int):
@@ -366,5 +367,6 @@ def layout() -> html.Div:
         page_description=page_description,
         parameter_form_name=FORM_NAME,
         simulation_form_name=FORM_NAME,
+        procedure=PROCEDURE.title(),
     )
     return layout

@@ -33,6 +33,7 @@ from deeprootgen.pipeline import (
 TASK = "snpe"
 PAGE_ID = f"{TASK}-root-system-page"
 FORM_NAME = "calibration_form"
+PROCEDURE = "calibration"
 
 ######################################
 # Callbacks
@@ -103,12 +104,12 @@ def toggle_parameters_collapse(n: int, is_open: bool) -> bool:
 
 
 @callback(
-    Output(f"{PAGE_ID}-simulation-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-simulation-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-simulation-collapse", "is_open")],
+    Output(f"{PAGE_ID}-{PROCEDURE}-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-{PROCEDURE}-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-{PROCEDURE}-collapse", "is_open")],
 )
-def toggle_simulation_collapse(n: int, is_open: bool) -> bool:
-    """Toggle the collapsible for simulation management.
+def toggle_procedure_collapse(n: int, is_open: bool) -> bool:
+    f"""Toggle the collapsible for {PROCEDURE} management.
 
     Args:
         n (int):
@@ -342,6 +343,28 @@ def run_root_model(
     return simulation_runs, True, toast_message
 
 
+@callback(
+    Output(f"{PAGE_ID}-statistics-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-statistics-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-statistics-collapse", "is_open")],
+)
+def toggle_statistics_collapse(n: int, is_open: bool) -> bool:
+    """Toggle the collapsible for statistics.
+
+    Args:
+        n (int):
+            The number of times that the button has been clicked.
+        is_open (bool):
+            Whether the collapsible is open.
+
+    Returns:
+        bool: The collapsible state.
+    """
+    if n:
+        return not is_open
+    return is_open
+
+
 ######################################
 # Layout
 ######################################
@@ -370,5 +393,6 @@ def layout() -> html.Div:
         page_id=PAGE_ID,
         page_description=page_description,
         parameter_form_name=FORM_NAME,
+        procedure=PROCEDURE.title(),
     )
     return layout

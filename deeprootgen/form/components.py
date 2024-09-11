@@ -366,6 +366,7 @@ def get_common_layout(
     page_description: str,
     parameter_form_name: str = "simulation_form",
     simulation_form_name: str = "simulation_form",
+    procedure: str = "Simulation",
 ) -> html.Div:
     """Get the common form layout for multiple dashboard pages.
 
@@ -380,6 +381,8 @@ def get_common_layout(
             The name of the parameter form components specification. Defaults to "simulation_form".
         simulation_form_name (str, optional):
             The name of the simulation form components specification. Defaults to "simulation_form".
+        procedure (str):
+            The simulation procedure.
 
     Returns:
         html.Div:
@@ -388,6 +391,7 @@ def get_common_layout(
     app = get_app()
     parameter_form = app.settings[parameter_form_name]
     simulation_form = app.settings[simulation_form_name]
+    input_components = []
 
     k = "parameters"
     parameter_components = build_common_components(
@@ -396,8 +400,21 @@ def get_common_layout(
 
     if parameter_form.components[k]["collapsible"]:
         parameter_components = build_collapsible(
-            parameter_components, page_id, "Parameters"
+            parameter_components, page_id, k.title()
         )
+    input_components.append(parameter_components)
+
+    if procedure == "Calibration":
+        k = "statistics"
+        calibration_components = build_common_components(
+            parameter_form.components[k]["children"], page_id, k
+        )
+
+        if parameter_form.components[k]["collapsible"]:
+            calibration_components = build_collapsible(
+                calibration_components, page_id, k.title()
+            )
+            input_components.append(calibration_components)
 
     k = "simulation"
     data_io_components = build_common_components(
@@ -405,11 +422,10 @@ def get_common_layout(
     )
 
     if simulation_form.components[k]["collapsible"]:
-        data_io_components = build_collapsible(
-            data_io_components, page_id, "Simulation"
-        )
+        data_io_components = build_collapsible(data_io_components, page_id, procedure)
+    input_components.append(data_io_components)
 
-    input_components = dbc.Col([parameter_components, data_io_components])
+    input_components = dbc.Col(input_components)
     simulation_run_df = get_out_table_df()
 
     simulation_results_data = {"simulation-runs-table": simulation_run_df}

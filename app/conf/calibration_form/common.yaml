@@ -3,43 +3,6 @@ components:
   parameters:
     collapsible: true
     children:
-      - id: upload-obs-data-file-button
-        label: Upload  
-        help: Upload observed data from a csv file
-        class_name: dash.dcc.Upload
-        handler: file_upload
-        kwargs:
-          children: Load observed data
-      - id: clear-obs-data-file-button
-        label: Clear
-        help: Clear the observed data from the upload component
-        class_name: dash_bootstrap_components.Button 
-        kwargs:
-          children: Clear upload data
-          color: primary
-          className: me-1
-      - id: select-summary-stats-dropdown
-        label: Select statistics  
-        help: Select summary statistics for comparing simulated and observed data
-        class_name: dash.dcc.Dropdown
-        handler: dropdown
-        kwargs:
-          multi: true
-          searchable: true
-          clearable: true
-          placeholder: Select summary statistics
-      - id: stat-by-soil-layer-switch
-        param: stat_by_soil_layer
-        label: Statistics by soil layer
-        help: Enable the calculation of summary statistics by soil layer within the voxel grid
-        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
-      - id: stat-by-soil-col-switch
-        param: stat_by_soil_column
-        label: Statistics by soil column
-        help: Enable the calculation of summary statistics by soil column within the voxel grid
-        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
       - id: max-order-range-slider
         param: max_order_interval
         label: Maximum order
@@ -359,3 +322,43 @@ components:
           type: text
           value: default
           persistence: true
+  statistics:
+    collapsible: true
+    children:
+      - id: upload-obs-data-file-button
+        label: Upload  
+        help: Upload observed data from a csv file
+        class_name: dash.dcc.Upload
+        handler: file_upload
+        kwargs:
+          children: Load observed data
+      - id: clear-obs-data-file-button
+        label: Clear
+        help: Clear the observed data from the upload component
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Clear upload data
+          color: primary
+          className: me-1
+      - id: select-summary-stats-dropdown
+        label: Select statistics  
+        help: Select summary statistics for comparing simulated and observed data
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select summary statistics
+      - id: stat-by-soil-layer-switch
+        param: stat_by_soil_layer
+        label: Statistics by soil layer
+        help: Enable the calculation of summary statistics by soil layer within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: stat-by-soil-col-switch
+        param: stat_by_soil_column
+        label: Statistics by soil column
+        help: Enable the calculation of summary statistics by soil column within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
