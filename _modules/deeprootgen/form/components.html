@@ -455,6 +455,7 @@
     <span class="n">page_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">parameter_form_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simulation_form&quot;</span><span class="p">,</span>
     <span class="n">simulation_form_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simulation_form&quot;</span><span class="p">,</span>
+    <span class="n">procedure</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Simulation&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the common form layout for multiple dashboard pages.</span>
 
@@ -469,6 +470,8 @@
 <span class="sd">            The name of the parameter form components specification. Defaults to &quot;simulation_form&quot;.</span>
 <span class="sd">        simulation_form_name (str, optional):</span>
 <span class="sd">            The name of the simulation form components specification. Defaults to &quot;simulation_form&quot;.</span>
+<span class="sd">        procedure (str):</span>
+<span class="sd">            The simulation procedure.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        html.Div:</span>
@@ -477,6 +480,7 @@
     <span class="n">app</span> <span class="o">=</span> <span class="n">get_app</span><span class="p">()</span>
     <span class="n">parameter_form</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="n">parameter_form_name</span><span class="p">]</span>
     <span class="n">simulation_form</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="n">simulation_form_name</span><span class="p">]</span>
+    <span class="n">input_components</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;parameters&quot;</span>
     <span class="n">parameter_components</span> <span class="o">=</span> <span class="n">build_common_components</span><span class="p">(</span>
@@ -485,8 +489,21 @@
 
     <span class="k">if</span> <span class="n">parameter_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;collapsible&quot;</span><span class="p">]:</span>
         <span class="n">parameter_components</span> <span class="o">=</span> <span class="n">build_collapsible</span><span class="p">(</span>
-            <span class="n">parameter_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="s2">&quot;Parameters&quot;</span>
+            <span class="n">parameter_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
         <span class="p">)</span>
+    <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter_components</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">procedure</span> <span class="o">==</span> <span class="s2">&quot;Calibration&quot;</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;statistics&quot;</span>
+        <span class="n">calibration_components</span> <span class="o">=</span> <span class="n">build_common_components</span><span class="p">(</span>
+            <span class="n">parameter_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">],</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">k</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">parameter_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;collapsible&quot;</span><span class="p">]:</span>
+            <span class="n">calibration_components</span> <span class="o">=</span> <span class="n">build_collapsible</span><span class="p">(</span>
+                <span class="n">calibration_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibration_components</span><span class="p">)</span>
 
     <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;simulation&quot;</span>
     <span class="n">data_io_components</span> <span class="o">=</span> <span class="n">build_common_components</span><span class="p">(</span>
@@ -494,11 +511,10 @@
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;collapsible&quot;</span><span class="p">]:</span>
-        <span class="n">data_io_components</span> <span class="o">=</span> <span class="n">build_collapsible</span><span class="p">(</span>
-            <span class="n">data_io_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="s2">&quot;Simulation&quot;</span>
-        <span class="p">)</span>
+        <span class="n">data_io_components</span> <span class="o">=</span> <span class="n">build_collapsible</span><span class="p">(</span><span class="n">data_io_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">procedure</span><span class="p">)</span>
+    <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_io_components</span><span class="p">)</span>
 
-    <span class="n">input_components</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">([</span><span class="n">parameter_components</span><span class="p">,</span> <span class="n">data_io_components</span><span class="p">])</span>
+    <span class="n">input_components</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span><span class="n">input_components</span><span class="p">)</span>
     <span class="n">simulation_run_df</span> <span class="o">=</span> <span class="n">get_out_table_df</span><span class="p">()</span>
 
     <span class="n">simulation_results_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;simulation-runs-table&quot;</span><span class="p">:</span> <span class="n">simulation_run_df</span><span class="p">}</span>
