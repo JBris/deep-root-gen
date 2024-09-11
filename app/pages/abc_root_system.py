@@ -4,13 +4,6 @@
 # Imports
 ######################################
 
-import base64
-import os
-import os.path as osp
-
-import dash_bootstrap_components as dbc
-import pandas as pd
-import yaml
 from dash import (
     ALL,
     Input,
@@ -23,16 +16,15 @@ from dash import (
     no_update,
     register_page,
 )
-from prefect.deployments import run_deployment
 
-from deeprootgen.form import (
-    build_collapsible,
-    build_common_components,
-    build_common_layout,
-    get_out_table_df,
+from deeprootgen.form import get_common_layout
+from deeprootgen.io import load_runs_from_file, s3_upload_file
+from deeprootgen.pipeline import (
+    dispatch_new_run,
+    load_form_parameters,
+    save_form_parameters,
+    save_simulation_runs,
 )
-from deeprootgen.io import s3_upload_file
-from deeprootgen.pipeline import get_datetime_now, get_simulation_uuid
 
 ######################################
 # Constants
@@ -40,6 +32,7 @@ from deeprootgen.pipeline import get_datetime_now, get_simulation_uuid
 
 TASK = "abc"
 PAGE_ID = f"{TASK}-root-system-page"
+FORM_NAME = "calibration_form"
 
 ######################################
 # Callbacks
@@ -174,17 +167,7 @@ def save_param(n_clicks: int | list[int], param_inputs: list) -> None:
     if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
         return no_update
 
-    inputs = {}
-    app = get_app()
-    form_model = app.settings["form"]
-    for i, input in enumerate(form_model.components["parameters"]["children"]):
-        k = input["param"]
-        inputs[k] = param_inputs[i]
-
-    file_name = f"{get_datetime_now()}-{PAGE_ID}.yaml"
-    outfile = osp.join("outputs", file_name)
-    with open(outfile, "w") as f:
-        yaml.dump(inputs, f, default_flow_style=False, sort_keys=False)
+    outfile, file_name = save_form_parameters(PAGE_ID, FORM_NAME, param_inputs)
     s3_upload_file(outfile, file_name)
     return dcc.send_file(outfile)
 
@@ -213,11 +196,7 @@ def save_runs(n_clicks: int | list[int], simulation_runs: list) -> None:
     if simulation_runs is None or len(simulation_runs) == 0:
         return no_update
 
-    df = pd.DataFrame(simulation_runs)
-    date_now = get_datetime_now()
-    file_name = f"{date_now}-root-simulation-runs.csv"
-    outfile = osp.join("outputs", file_name)
-    df.to_csv(outfile, index=False)
+    outfile, file_name = save_simulation_runs(simulation_runs)
     s3_upload_file(outfile, file_name)
     return dcc.send_file(outfile)
 
@@ -249,12 +228,9 @@ def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None or list_of_contents[0] == 0:
         return no_update
 
-    _, content_string = list_of_contents[0].split(",")
-    decoded = base64.b64decode(content_string).decode("utf-8")
-    from io import StringIO
-
-    simulation_runs = pd.read_csv(StringIO(decoded)).to_dict("records")
-    toast_message = f"Loading run history from: {list_of_names[0]}"
+    simulation_runs, toast_message = load_runs_from_file(
+        list_of_contents, list_of_names
+    )
     return simulation_runs, True, toast_message
 
 
@@ -310,18 +286,9 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None or list_of_contents[0] == 0:
         return no_update
 
-    _, content_string = list_of_contents[0].split(",")
-    decoded = base64.b64decode(content_string)
-    input_dict = yaml.safe_load(decoded.decode("utf-8"))
-
-    app = get_app()
-    form_model = app.settings["form"]
-    inputs = []
-    for input in form_model.components["parameters"]["children"]:
-        k = input["param"]
-        inputs.append(input_dict[k])
-
-    toast_message = f"Loading parameter specification from: {list_of_names[0]}"
+    inputs, toast_message = load_form_parameters(
+        list_of_contents, list_of_names, FORM_NAME
+    )
     return inputs, True, toast_message
 
 
@@ -361,7 +328,7 @@ def run_root_model(
 
     form_inputs = {}
     app = get_app()
-    form_model = app.settings["form"]
+    form_model = app.settings[FORM_NAME]
     for i, input in enumerate(form_model.components["parameters"]["children"]):
         k = input["param"]
         form_inputs[k] = form_values[i]
@@ -369,35 +336,9 @@ def run_root_model(
     enable_soil: bool = enable_soils[0]
     form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
 
-    simulation_uuid = get_simulation_uuid()
-    flow_data = run_deployment(
-        f"{TASK}/run_{TASK}_flow",
-        parameters=dict(input_parameters=form_inputs, simulation_uuid=simulation_uuid),
-        flow_run_name=f"run-{simulation_uuid}",
-        timeout=0,
+    simulation_runs, toast_message = dispatch_new_run(
+        TASK, form_inputs, simulation_runs
     )
-
-    flow_run_id = str(flow_data.id)
-    flow_name = flow_data.name
-    simulation_tag = form_inputs["simulation_tag"]
-
-    app_prefect_host = os.environ.get("APP_PREFECT_USER_HOST", "http://localhost:4200")
-    prefect_flow_url = f"{app_prefect_host}/flow-runs/flow-run/{flow_run_id}"
-
-    simulation_runs.append(
-        {
-            "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{flow_name}</a>",
-            "task": TASK,
-            "date": get_datetime_now(),
-            "tag": simulation_tag,
-        }
-    )
-
-    toast_message = f"""
-    Running simulation workflow: {flow_name}
-    Simulation tag: {simulation_tag}
-    """
-
     return simulation_runs, True, toast_message
 
 
@@ -417,52 +358,15 @@ def layout() -> html.Div:
     Returns:
         html.Div: The page layout.
     """
-    app = get_app()
-    form_model = app.settings["form"]
-
-    k = "parameters"
-    parameter_components = build_common_components(
-        form_model.components[k]["children"], PAGE_ID, k
-    )
-
-    if form_model.components[k]["collapsible"]:
-        parameter_components = build_collapsible(
-            parameter_components, PAGE_ID, "Parameters"
-        )
-
-    k = "simulation"
-    data_io_components = build_common_components(
-        form_model.components[k]["children"], PAGE_ID, k
-    )
-
-    if form_model.components[k]["collapsible"]:
-        data_io_components = build_collapsible(
-            data_io_components, PAGE_ID, "Calibration"
-        )
-
-    input_components = dbc.Col([parameter_components, data_io_components])
-    simulation_run_df = get_out_table_df()
-
-    simulation_results_data = {"simulation-runs-table": simulation_run_df}
-
-    k = "results"
-    simulation_results_components = build_common_components(
-        form_model.components[k]["children"],
-        PAGE_ID,
-        k,
-        simulation_results_data,
-        resize_component=False,
-    )
-
-    output_components = dbc.Row(
-        dbc.Col(simulation_results_components, style={"margin-left": "0.5em"})
-    )
-
+    title = "Run ABC"
     page_description = """
     Perform Bayesian parameter estimation for the root system architecture simulation against a target dataset
     """
-    layout = build_common_layout(
-        "Run ABC", PAGE_ID, input_components, output_components, page_description
-    )
 
+    layout = get_common_layout(
+        title=title,
+        page_id=PAGE_ID,
+        page_description=page_description,
+        parameter_form_name=FORM_NAME,
+    )
     return layout

@@ -10,7 +10,7 @@ from pydoc import locate
 
 import dash_bootstrap_components as dbc
 import pandas as pd
-from dash import dcc, html
+from dash import dcc, get_app, html
 
 
 def build_common_components(
@@ -296,7 +296,7 @@ def build_common_layout(
                             style={"transition": "opacity 1000ms ease"},
                             children=dbc.Card(
                                 sidebar_components,
-                                style={"borderRadius": "0"},
+                                style={"borderRadius": "0", "padding-top": "1em"},
                             ),
                         )
                     ),
@@ -311,7 +311,8 @@ def build_common_layout(
                             timeout=1500,
                             style={"transition": "opacity 1500ms ease"},
                             children=dbc.Card(
-                                output_components, style={"borderRadius": "0"}
+                                output_components,
+                                style={"borderRadius": "0", "padding-top": "1em"},
                             ),
                         )
                     ),
@@ -333,3 +334,58 @@ def get_out_table_df() -> pd.DataFrame:
     """
     out_df = pd.DataFrame([], columns=["workflow", "task", "date", "tag"])
     return out_df
+
+
+def get_common_layout(
+    title: str,
+    page_id: str,
+    page_description: str,
+    parameter_form_name: str = "simulation_form",
+    simulation_form_name: str = "simulation_form",
+) -> html.Div:
+    app = get_app()
+    parameter_form = app.settings[parameter_form_name]
+    simulation_form = app.settings[simulation_form_name]
+
+    k = "parameters"
+    parameter_components = build_common_components(
+        parameter_form.components[k]["children"], page_id, k
+    )
+
+    if parameter_form.components[k]["collapsible"]:
+        parameter_components = build_collapsible(
+            parameter_components, page_id, "Parameters"
+        )
+
+    k = "simulation"
+    data_io_components = build_common_components(
+        simulation_form.components[k]["children"], page_id, k
+    )
+
+    if simulation_form.components[k]["collapsible"]:
+        data_io_components = build_collapsible(
+            data_io_components, page_id, "Simulation"
+        )
+
+    input_components = dbc.Col([parameter_components, data_io_components])
+    simulation_run_df = get_out_table_df()
+
+    simulation_results_data = {"simulation-runs-table": simulation_run_df}
+
+    k = "results"
+    simulation_results_components = build_common_components(
+        simulation_form.components[k]["children"],
+        page_id,
+        k,
+        simulation_results_data,
+        resize_component=False,
+    )
+
+    output_components = dbc.Row(
+        dbc.Col(simulation_results_components, style={"margin-left": "0.5em"})
+    )
+
+    layout = build_common_layout(
+        title, page_id, input_components, output_components, page_description
+    )
+    return layout

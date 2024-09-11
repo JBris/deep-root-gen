@@ -4,9 +4,12 @@ This module defines utility functions for managing inputs and outputs for simula
 
 """
 
+import base64
 import os
+from io import StringIO
 
 import boto3
+import pandas as pd
 from adbnx_adapter import ADBNX_Adapter
 from arango import ArangoClient
 
@@ -88,3 +91,24 @@ def save_graph_to_db(
 
     adapter = ADBNX_Adapter(db)
     adapter.networkx_to_arangodb(collection, G, graph_definitions)
+
+
+def load_runs_from_file(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load the run history from a CSV file.
+
+    Args:
+        list_of_contents (list):
+            The list of file contents.
+        list_of_names (list):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The simulation runs and toast component message.
+    """
+    _, content_string = list_of_contents[0].split(",")
+    decoded = base64.b64decode(content_string).decode("utf-8")
+
+    simulation_runs = pd.read_csv(StringIO(decoded)).to_dict("records")
+    toast_message = f"Loading run history from: {list_of_names[0]}"
+    return simulation_runs, toast_message

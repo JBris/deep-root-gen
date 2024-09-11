@@ -5,6 +5,7 @@ tracking with MLflow.
 
 """
 
+import base64
 import os
 import os.path as osp
 import uuid
@@ -14,6 +15,8 @@ import mlflow
 import networkx as nx
 import pandas as pd
 import yaml
+from dash import get_app
+from prefect.deployments import run_deployment
 from ydata_profiling import ProfileReport
 
 from ..data_model import RootSimulationModel
@@ -192,3 +195,130 @@ def log_simulation(
     outfile = osp.join(OUT_DIR, f"{time_now}-{task}_graph_metrics.csv")
     metric_df.to_csv(outfile, index=False)
     mlflow.log_artifact(outfile)
+
+
+def load_form_parameters(
+    list_of_contents: list, list_of_names: list, form_name: str
+) -> tuple:
+    """Load form parameters from file to a list.
+
+    Args:
+        list_of_contents (list):
+            The uploaded list of contents.
+        list_of_names (list):
+            The list of file names.
+        form_name (str):
+            The current form name.
+
+    Returns:
+        tuple:
+            The form inputs and toast message.
+    """
+    _, content_string = list_of_contents[0].split(",")
+    decoded = base64.b64decode(content_string).decode("utf-8")
+    input_dict = yaml.safe_load(decoded)
+
+    app = get_app()
+    form_model = app.settings[form_name]
+    inputs = []
+    for input in form_model.components["parameters"]["children"]:
+        k = input["param"]
+        inputs.append(input_dict[k])
+
+    toast_message = f"Loading parameter specification from: {list_of_names[0]}"
+    return inputs, toast_message
+
+
+def save_form_parameters(page_id: str, form_name: str, param_inputs: list) -> tuple:
+    """Write the current form parameters to file.
+
+    Args:
+        page_id (str):
+            The current page ID.
+        form_name (str):
+            The name of the form component definitions.
+        param_inputs (list):
+            The list of parameter inputs.
+
+    Returns:
+        tuple:
+            The output file and file name.
+    """
+    inputs = {}
+    app = get_app()
+    form_model = app.settings[form_name]
+    for i, input in enumerate(form_model.components["parameters"]["children"]):
+        k = input["param"]
+        inputs[k] = param_inputs[i]
+
+    file_name = f"{get_datetime_now()}-{page_id}.yaml"
+    outfile = osp.join(OUT_DIR, file_name)
+    with open(outfile, "w") as f:
+        yaml.dump(inputs, f, default_flow_style=False, sort_keys=False)
+
+    return outfile, file_name
+
+
+def save_simulation_runs(simulation_runs: list) -> tuple:
+    """Save the current simulation runs to file.
+
+    Args:
+        simulation_runs (list):
+            The list of simulation run data.
+
+    Returns:
+        tuple:
+            The output file and file name.
+    """
+    df = pd.DataFrame(simulation_runs)
+    date_now = get_datetime_now()
+    file_name = f"{date_now}-root-simulation-runs.csv"
+    outfile = osp.join("outputs", file_name)
+    df.to_csv(outfile, index=False)
+    return outfile, file_name
+
+
+def dispatch_new_run(task: str, form_inputs: dict, simulation_runs: list) -> tuple:
+    """Dispatch a new simulation run.
+
+    Args:
+        task (str):
+            The name of the current task for the experiment.
+        form_inputs (dict):
+            The dictionary of form input data to pass as simulation parameters.
+        simulation_runs (list):
+            The list of simulation run data.
+
+    Returns:
+        tuple:
+            The output file and file name.
+    """
+    simulation_uuid = get_simulation_uuid()
+    flow_data = run_deployment(
+        f"{task}/run_{task}_flow",
+        parameters=dict(input_parameters=form_inputs, simulation_uuid=simulation_uuid),
+        flow_run_name=f"run-{simulation_uuid}",
+        timeout=0,
+    )
+
+    app_prefect_host = os.environ.get("APP_PREFECT_USER_HOST", "http://localhost:4200")
+    flow_run_id = str(flow_data.id)
+    prefect_flow_url = f"{app_prefect_host}/flow-runs/flow-run/{flow_run_id}"
+    flow_name = flow_data.name
+    simulation_tag = form_inputs["simulation_tag"]
+
+    simulation_runs.append(
+        {
+            "workflow": f"<a href='{prefect_flow_url}' target='_blank'>{flow_name}</a>",
+            "task": task,
+            "date": get_datetime_now(),
+            "tag": simulation_tag,
+        }
+    )
+
+    toast_message = f"""
+    Running simulation workflow: {flow_name}
+    Simulation tag: {simulation_tag}
+    """
+
+    return simulation_runs, toast_message
