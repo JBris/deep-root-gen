@@ -205,6 +205,22 @@
     <span class="n">floor_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.4</span>
     <span class="n">ceiling_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.9</span></div>
 
+
+
+<div class="viewcode-block" id="ParameterIntervalModel">
+<a class="viewcode-back" href="../../../api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.ParameterIntervalModel">[docs]</a>
+<span class="k">class</span> <span class="nc">ParameterIntervalModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The parameter specification data model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        BaseModel (BaseModel):</span>
+<span class="sd">            The Pydantic Base model class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">lower_bound</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span></div>
+
 </pre></div>
 
            </div>
