@@ -52,7 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="form.html">Form</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Input/Output</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.io.simulation_data">Simulation Data</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.io.simulation_data.load_runs_from_file"><code class="docutils literal notranslate"><span class="pre">load_runs_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.io.simulation_data.load_data_from_file"><code class="docutils literal notranslate"><span class="pre">load_data_from_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.io.simulation_data.s3_upload_file"><code class="docutils literal notranslate"><span class="pre">s3_upload_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.io.simulation_data.save_graph_to_db"><code class="docutils literal notranslate"><span class="pre">save_graph_to_db()</span></code></a></li>
 </ul>
@@ -62,6 +62,7 @@
 <li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spatial.html">Spatial</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">Statistics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelogs/changelog.html">Changelog</a></li>
@@ -99,8 +100,8 @@
 <p>Contains utilities for managing simulation data.</p>
 <p>This module defines utility functions for managing inputs and outputs for simulation data.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="deeprootgen.io.simulation_data.load_runs_from_file">
-<span class="sig-prename descclassname"><span class="pre">deeprootgen.io.simulation_data.</span></span><span class="sig-name descname"><span class="pre">load_runs_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_contents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/deeprootgen/io/simulation_data.html#load_runs_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.io.simulation_data.load_runs_from_file" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="deeprootgen.io.simulation_data.load_data_from_file">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.io.simulation_data.</span></span><span class="sig-name descname"><span class="pre">load_data_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_contents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/deeprootgen/io/simulation_data.html#load_data_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.io.simulation_data.load_data_from_file" title="Link to this definition"></a></dt>
 <dd><p>Load the run history from a CSV file.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">

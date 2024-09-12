@@ -178,6 +178,9 @@
                     <span class="s2">&quot;borderWidth&quot;</span><span class="p">:</span> <span class="s2">&quot;1px&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;borderStyle&quot;</span><span class="p">:</span> <span class="s2">&quot;dashed&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;textAlign&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text-overflow&quot;</span><span class="p">:</span> <span class="s2">&quot;ellipsis&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;overflow&quot;</span><span class="p">:</span> <span class="s2">&quot;hidden&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;white-space&quot;</span><span class="p">:</span> <span class="s2">&quot;nowrap&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
 
             <span class="k">if</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">handler</span> <span class="o">==</span> <span class="s2">&quot;data_table&quot;</span><span class="p">:</span>
@@ -294,6 +297,8 @@
     <span class="n">input_components</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
     <span class="n">output_components</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
     <span class="n">layout_description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">left_sticky</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">right_sticky</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a common form layout for interacting with the root model.</span>
 
@@ -308,6 +313,10 @@
 <span class="sd">            The list of modelling output components.</span>
 <span class="sd">        layout_description (str):</span>
 <span class="sd">            A description of the layout to add as page tooltip.</span>
+<span class="sd">        left_sticky (bool, optional):</span>
+<span class="sd">            Whether the left side of the page should be sticky. Defaults to False.</span>
+<span class="sd">        right_sticky (bool, optional):</span>
+<span class="sd">            Whether the right side of the page should be sticky. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        html.Div:</span>
@@ -363,7 +372,7 @@
         <span class="n">dbc</span><span class="o">.</span><span class="n">Toast</span><span class="p">(</span>
             <span class="s2">&quot;&quot;</span><span class="p">,</span>
             <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">-load-toast&quot;</span><span class="p">,</span>
-            <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Load Notification&quot;</span><span class="p">,</span>
+            <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Data Notification&quot;</span><span class="p">,</span>
             <span class="n">is_open</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">dismissable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span>
@@ -382,6 +391,23 @@
         <span class="p">),</span>
         <span class="n">external_links_collapsible</span><span class="p">,</span>
     <span class="p">]</span>
+
+    <span class="n">sticky_style</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;max-height&quot;</span><span class="p">:</span> <span class="s2">&quot;100vh&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">left_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;40%&quot;</span><span class="p">,</span> <span class="s2">&quot;padding-right&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">}</span>
+    <span class="n">right_style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;60%&quot;</span><span class="p">,</span> <span class="s2">&quot;padding-left&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">left_sticky</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">sticky_style</span><span class="p">:</span>
+            <span class="n">left_style</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">sticky_style</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">right_sticky</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">sticky_style</span><span class="p">:</span>
+            <span class="n">right_style</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">sticky_style</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
     <span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
         <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
             <span class="p">[</span>
@@ -399,7 +425,7 @@
                             <span class="p">),</span>
                         <span class="p">)</span>
                     <span class="p">),</span>
-                    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;40%&quot;</span><span class="p">,</span> <span class="s2">&quot;padding-right&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">},</span>
+                    <span class="n">style</span><span class="o">=</span><span class="n">left_style</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
                     <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
@@ -415,14 +441,7 @@
                             <span class="p">),</span>
                         <span class="p">)</span>
                     <span class="p">),</span>
-                    <span class="n">style</span><span class="o">=</span><span class="p">{</span>
-                        <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;60%&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;padding-left&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;max-height&quot;</span><span class="p">:</span> <span class="s2">&quot;100vh&quot;</span><span class="p">,</span>
-                    <span class="p">},</span>
+                    <span class="n">style</span><span class="o">=</span><span class="n">right_style</span><span class="p">,</span>
                 <span class="p">),</span>
             <span class="p">],</span>
             <span class="nb">id</span><span class="o">=</span><span class="n">page_id</span><span class="p">,</span>
@@ -456,6 +475,8 @@
     <span class="n">simulation_form_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simulation_form&quot;</span><span class="p">,</span>
     <span class="n">procedure</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Simulation&quot;</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simulation&quot;</span><span class="p">,</span>
+    <span class="n">left_sticky</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">right_sticky</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the common form layout for multiple dashboard pages.</span>
 
@@ -474,6 +495,10 @@
 <span class="sd">            The simulation procedure.</span>
 <span class="sd">        task (str):</span>
 <span class="sd">            The simulation task.</span>
+<span class="sd">        left_sticky (bool, optional):</span>
+<span class="sd">            Whether the left side of the page should be sticky. Defaults to False.</span>
+<span class="sd">        right_sticky (bool, optional):</span>
+<span class="sd">            Whether the right side of the page should be sticky. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        html.Div:</span>
@@ -484,8 +509,8 @@
     <span class="n">simulation_form</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="n">simulation_form_name</span><span class="p">]</span>
     <span class="n">input_components</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">if</span> <span class="n">procedure</span> <span class="o">==</span> <span class="s2">&quot;Calibration&quot;</span><span class="p">:</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>
+    <span class="k">if</span> <span class="n">parameter_form</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">calibration_components</span> <span class="o">=</span> <span class="n">build_common_components</span><span class="p">(</span>
             <span class="n">parameter_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">],</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">k</span>
         <span class="p">)</span>
@@ -520,13 +545,16 @@
             <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibration_components</span><span class="p">)</span>
 
     <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;simulation&quot;</span>
-    <span class="n">data_io_components</span> <span class="o">=</span> <span class="n">build_common_components</span><span class="p">(</span>
-        <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">],</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">k</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data_io_components</span> <span class="o">=</span> <span class="n">build_common_components</span><span class="p">(</span>
+            <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">],</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">k</span>
+        <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;collapsible&quot;</span><span class="p">]:</span>
-        <span class="n">data_io_components</span> <span class="o">=</span> <span class="n">build_collapsible</span><span class="p">(</span><span class="n">data_io_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">procedure</span><span class="p">)</span>
-    <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_io_components</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;collapsible&quot;</span><span class="p">]:</span>
+            <span class="n">data_io_components</span> <span class="o">=</span> <span class="n">build_collapsible</span><span class="p">(</span>
+                <span class="n">data_io_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">procedure</span>
+            <span class="p">)</span>
+        <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_io_components</span><span class="p">)</span>
 
     <span class="n">input_components</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span><span class="n">input_components</span><span class="p">)</span>
     <span class="n">simulation_run_df</span> <span class="o">=</span> <span class="n">get_out_table_df</span><span class="p">()</span>
@@ -547,7 +575,13 @@
     <span class="p">)</span>
 
     <span class="n">layout</span> <span class="o">=</span> <span class="n">build_common_layout</span><span class="p">(</span>
-        <span class="n">title</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">input_components</span><span class="p">,</span> <span class="n">output_components</span><span class="p">,</span> <span class="n">page_description</span>
+        <span class="n">title</span><span class="p">,</span>
+        <span class="n">page_id</span><span class="p">,</span>
+        <span class="n">input_components</span><span class="p">,</span>
+        <span class="n">output_components</span><span class="p">,</span>
+        <span class="n">page_description</span><span class="p">,</span>
+        <span class="n">left_sticky</span><span class="p">,</span>
+        <span class="n">right_sticky</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">layout</span></div>
 
