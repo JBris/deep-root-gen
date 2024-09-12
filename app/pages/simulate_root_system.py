@@ -18,7 +18,7 @@ from dash import (
 )
 
 from deeprootgen.form import get_common_layout
-from deeprootgen.io import load_runs_from_file, s3_upload_file
+from deeprootgen.io import load_data_from_file, s3_upload_file
 from deeprootgen.pipeline import (
     dispatch_new_run,
     load_form_parameters,
@@ -229,7 +229,7 @@ def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None or list_of_contents[0] == 0:
         return no_update
 
-    simulation_runs, toast_message = load_runs_from_file(
+    simulation_runs, toast_message = load_data_from_file(
         list_of_contents, list_of_names
     )
     return simulation_runs, True, toast_message

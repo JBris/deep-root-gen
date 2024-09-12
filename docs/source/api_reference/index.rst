@@ -10,3 +10,4 @@ API Reference
     model.rst
     spatial.rst
     pipeline.rst
+    statistics.rst

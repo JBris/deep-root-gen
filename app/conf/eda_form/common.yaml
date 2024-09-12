@@ -1,0 +1,133 @@
+_target_: deeprootgen.data_model.FormModel
+components:
+  parameters:
+    collapsible: true
+    children:
+      - id: select-x-axis-dropdown
+        param: x_axis_column
+        label: X axis
+        help: Select the column for the x axis
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: list
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select x axis
+      - id: select-y-axis-dropdown
+        param: y_axis_column
+        label: Y axis
+        help: Select the column for the y axis
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: list
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select y axis
+      - id: select-group-by-dropdown
+        param: group_by_column
+        label: Group by
+        help: Select the column to group data by
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: list
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select group by
+      - id: select-left-summary-stats-dropdown
+        param: left_summary_statistics
+        label: Left summary statistic
+        help: Select summary statistics for the left visualisation
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_summary_statistics
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select left summary statistic
+      - id: select-right-summary-stats-dropdown
+        param: right_summary_statistics
+        label: Right summary statistic
+        help: Select summary statistics for the right visualisation
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_summary_statistics
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select right summary statistic
+  data:
+    collapsible: true
+    children:
+      - id: upload-obs-data-file-button
+        label: Upload  
+        help: Upload observed data from a csv file
+        class_name: dash.dcc.Upload
+        handler: file_upload
+        kwargs:
+          children: Load observed data
+      - id: clear-obs-data-file-button
+        label: Clear
+        help: Clear the observed data 
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Clear data
+          color: primary
+          className: me-1
+  results:
+    children:
+      - id: scatter-xy-plot
+        label: Scatter 
+        help: Scatter plot for the data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: heatmap-xy-plot
+        label: Heatmap 
+        help: Heatmap plot for the data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: histogram-x-plot
+        label: X histogram
+        help: Histogram for data on the x axis
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: histogram-y-plot
+        label: Y histogram
+        help: Histogram for data on the y axis
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: box-x-plot
+        label: X box
+        help: Box plot for data on the x axis
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: box-y-plot
+        label: Y box
+        help: Box plot for data on the y axis
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: left-summary-statistic-plot
+        label: Left summary statistic
+        help: Visualisation for summary statistic data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: right-summary-statistic-plot
+        label: Right summary statistic
+        help: Visualisation for summary statistic data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto

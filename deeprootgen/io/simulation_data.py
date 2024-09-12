@@ -93,7 +93,7 @@ def save_graph_to_db(
     adapter.networkx_to_arangodb(collection, G, graph_definitions)
 
 
-def load_runs_from_file(list_of_contents: list, list_of_names: list) -> tuple:
+def load_data_from_file(list_of_contents: list, list_of_names: list) -> tuple:
     """Load the run history from a CSV file.
 
     Args:
@@ -110,5 +110,5 @@ def load_runs_from_file(list_of_contents: list, list_of_names: list) -> tuple:
     decoded = base64.b64decode(content_string).decode("utf-8")
 
     simulation_runs = pd.read_csv(StringIO(decoded)).to_dict("records")
-    toast_message = f"Loading run history from: {list_of_names[0]}"
+    toast_message = f"Loading data from: {list_of_names[0]}"
     return simulation_runs, toast_message

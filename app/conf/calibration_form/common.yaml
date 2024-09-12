@@ -316,10 +316,10 @@ components:
           children: Load observed data
       - id: clear-obs-data-file-button
         label: Clear
-        help: Clear the observed data from the upload component
+        help: Clear the observed data 
         class_name: dash_bootstrap_components.Button 
         kwargs:
-          children: Clear upload data
+          children: Clear data
           color: primary
           className: me-1
   abc:

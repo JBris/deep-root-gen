@@ -3,6 +3,26 @@
 This module defines utility functions for distance metrics that can be used to compare simulated and observational data.
 """
 
+from pydoc import locate
+from typing import Callable
+
+
+def get_distance_metric_func(distance_metric: str) -> Callable:
+    """Get the distance metric function by name.
+
+    Args:
+        distance_metric (str):
+            The distance metric name.
+
+    Returns:
+        Callable:
+            The distance metric function.
+    """
+    distance_metric = distance_metric.replace("_", " ").title().replace(" ", "")
+    module = "deeprootgen.statistics.distance_metrics"
+    func: Callable = locate(f"{module}.{distance_metric}")  # type: ignore
+    return func
+
 
 def get_distance_metrics() -> list[dict]:
     """Get a list of available distance metrics and labels.

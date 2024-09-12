@@ -101,6 +101,9 @@ def build_common_components(
                     "borderWidth": "1px",
                     "borderStyle": "dashed",
                     "textAlign": "center",
+                    "text-overflow": "ellipsis",
+                    "overflow": "hidden",
+                    "white-space": "nowrap",
                 }
 
             if component_spec.handler == "data_table":
@@ -211,6 +214,8 @@ def build_common_layout(
     input_components: list,
     output_components: list,
     layout_description: str,
+    left_sticky: bool = False,
+    right_sticky: bool = True,
 ) -> html.Div:
     """Build a common form layout for interacting with the root model.
 
@@ -225,6 +230,10 @@ def build_common_layout(
             The list of modelling output components.
         layout_description (str):
             A description of the layout to add as page tooltip.
+        left_sticky (bool, optional):
+            Whether the left side of the page should be sticky. Defaults to False.
+        right_sticky (bool, optional):
+            Whether the right side of the page should be sticky. Defaults to True.
 
     Returns:
         html.Div:
@@ -280,7 +289,7 @@ def build_common_layout(
         dbc.Toast(
             "",
             id=f"{page_id}-load-toast",
-            header="Load Notification",
+            header="Data Notification",
             is_open=False,
             dismissable=True,
             icon="primary",
@@ -299,6 +308,23 @@ def build_common_layout(
         ),
         external_links_collapsible,
     ]
+
+    sticky_style = {
+        "position": "sticky",
+        "top": "0",
+        "max-height": "100vh",
+    }
+    left_style = {"width": "40%", "padding-right": "0"}
+    right_style = {"width": "60%", "padding-left": "0", "text-align": "center"}
+
+    if left_sticky:
+        for k in sticky_style:
+            left_style[k] = sticky_style[k]
+
+    if right_sticky:
+        for k in sticky_style:
+            right_style[k] = sticky_style[k]
+
     layout = html.Div(
         dbc.Row(
             [
@@ -316,7 +342,7 @@ def build_common_layout(
                             ),
                         )
                     ),
-                    style={"width": "40%", "padding-right": "0"},
+                    style=left_style,
                 ),
                 html.Div(
                     dbc.Col(
@@ -332,14 +358,7 @@ def build_common_layout(
                             ),
                         )
                     ),
-                    style={
-                        "width": "60%",
-                        "padding-left": "0",
-                        "text-align": "center",
-                        "position": "sticky",
-                        "top": "0",
-                        "max-height": "100vh",
-                    },
+                    style=right_style,
                 ),
             ],
             id=page_id,
@@ -367,6 +386,8 @@ def get_common_layout(
     simulation_form_name: str = "simulation_form",
     procedure: str = "Simulation",
     task: str = "simulation",
+    left_sticky: bool = False,
+    right_sticky: bool = True,
 ) -> html.Div:
     """Get the common form layout for multiple dashboard pages.
 
@@ -385,6 +406,10 @@ def get_common_layout(
             The simulation procedure.
         task (str):
             The simulation task.
+        left_sticky (bool, optional):
+            Whether the left side of the page should be sticky. Defaults to False.
+        right_sticky (bool, optional):
+            Whether the right side of the page should be sticky. Defaults to True.
 
     Returns:
         html.Div:
@@ -395,8 +420,8 @@ def get_common_layout(
     simulation_form = app.settings[simulation_form_name]
     input_components = []
 
-    if procedure == "Calibration":
-        k = "data"
+    k = "data"
+    if parameter_form.components.get(k) is not None:
         calibration_components = build_common_components(
             parameter_form.components[k]["children"], page_id, k
         )
@@ -431,13 +456,16 @@ def get_common_layout(
             input_components.append(calibration_components)
 
     k = "simulation"
-    data_io_components = build_common_components(
-        simulation_form.components[k]["children"], page_id, k
-    )
+    if simulation_form.components.get(k) is not None:
+        data_io_components = build_common_components(
+            simulation_form.components[k]["children"], page_id, k
+        )
 
-    if simulation_form.components[k]["collapsible"]:
-        data_io_components = build_collapsible(data_io_components, page_id, procedure)
-    input_components.append(data_io_components)
+        if simulation_form.components[k]["collapsible"]:
+            data_io_components = build_collapsible(
+                data_io_components, page_id, procedure
+            )
+        input_components.append(data_io_components)
 
     input_components = dbc.Col(input_components)
     simulation_run_df = get_out_table_df()
@@ -458,6 +486,12 @@ def get_common_layout(
     )
 
     layout = build_common_layout(
-        title, page_id, input_components, output_components, page_description
+        title,
+        page_id,
+        input_components,
+        output_components,
+        page_description,
+        left_sticky,
+        right_sticky,
     )
     return layout
