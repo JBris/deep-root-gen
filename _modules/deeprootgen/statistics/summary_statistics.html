@@ -100,7 +100,7 @@
 <div class="viewcode-block" id="SummaryStatisticBase.calculate">
 <a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.calculate">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the summary statistic.</span>
 
 <span class="sd">        Args:</span>
@@ -112,6 +112,27 @@
 <span class="sd">                Error raised for the unimplemented abstract method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;calculate() method not implemented.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SummaryStatisticBase.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.get_xy_comparison_data">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;get_xy_comparison_data() method not implemented.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SummaryStatisticBase.get_number_of_roots">
@@ -217,6 +238,28 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Cumulative root fraction&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DepthDistribution.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.DepthDistribution.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">bins_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">)</span>
+        <span class="n">bins_count</span> <span class="o">=</span> <span class="n">bins_count</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">bins_count</span></div>
 </div>
 
 
@@ -275,6 +318,28 @@
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Cumulative root fraction&quot;</span><span class="p">,</span>
             <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Horizontal root distance (cm)&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RadialDistribution.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RadialDistribution.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">bins_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">)</span>
+        <span class="n">bins_count</span> <span class="o">=</span> <span class="n">bins_count</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">bins_count</span></div>
 </div>
 
 
@@ -325,6 +390,28 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total root volume (cm^3)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TotalVolume.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalVolume.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -378,6 +465,28 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average root volume (cm^3)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AverageVolume.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageVolume.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -425,6 +534,28 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total root length (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TotalLength.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalLength.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -475,6 +606,28 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average root length (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AverageLength.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageLength.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -522,6 +675,28 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total root diameter (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TotalDiameter.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalDiameter.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -572,6 +747,28 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average root diameter (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AverageDiameter.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageDiameter.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
