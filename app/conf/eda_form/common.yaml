@@ -131,9 +131,15 @@ components:
         class_name: dash.dcc.Graph 
         kwargs:
           responsive: auto
-      - id: xy-summary-statistic-plot
-        label: XY summary statistics
-        help: Visualisation for X and Y summary statistic data
+      - id: scatter-statistics-plot
+        label: Statistics scatter
+        help: Scatter plot for X and Y summary statistic data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: heatmap-statistics-plot
+        label: Statistics heatmap
+        help: Heatmap plot for X and Y summary statistic data
         class_name: dash.dcc.Graph 
         kwargs:
           responsive: auto

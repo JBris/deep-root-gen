@@ -532,7 +532,8 @@ def update_y_statistic_plot(
 
 
 @callback(
-    Output({"index": f"{PAGE_ID}-xy-summary-statistic-plot", "type": ALL}, "figure"),
+    Output({"index": f"{PAGE_ID}-scatter-statistics-plot", "type": ALL}, "figure"),
+    Output({"index": f"{PAGE_ID}-heatmap-statistics-plot", "type": ALL}, "figure"),
     Input(
         {"index": f"{PAGE_ID}-select-x-summary-stats-dropdown", "type": ALL},
         "value",
@@ -546,7 +547,7 @@ def update_y_statistic_plot(
 )
 def update_xy_statistic_plot(
     x_summary_stats: list | None, y_summary_stats: list | None, eda_data: list | None
-) -> list | None:
+) -> tuple | None:
     """Update the y summary statistic plot state.
 
     Args:
@@ -558,7 +559,7 @@ def update_xy_statistic_plot(
             The list of observed data.
 
     Returns:
-        list | None:
+        tuple | None:
             The updated plot state.
     """
     if eda_data is None or len(eda_data) == 0:
@@ -567,12 +568,12 @@ def update_xy_statistic_plot(
     if x_summary_stats is None or len(x_summary_stats) == 0:
         return no_update
     if x_summary_stats[0] is None:
-        return [{}]
+        return [{}], [{}]
 
     if y_summary_stats is None or len(y_summary_stats) == 0:
         return no_update
     if y_summary_stats[0] is None:
-        return [{}]
+        return [{}], [{}]
 
     x_summary_stat = x_summary_stats[0]
     y_summary_stat = y_summary_stats[0]
@@ -594,7 +595,13 @@ def update_xy_statistic_plot(
         y=y_data,
     ).update_layout(xaxis_title=x_label, yaxis_title=y_label)
 
-    return [scatter_plot]
+    heatmap = px.density_heatmap(
+        title=f"{y_label.title()} against {x_label.title()}",
+        x=x_data,
+        y=y_data,
+    ).update_layout(xaxis_title=x_label, yaxis_title=y_label)
+
+    return [scatter_plot], [heatmap]
 
 
 ######################################
