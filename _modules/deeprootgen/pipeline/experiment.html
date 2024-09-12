@@ -293,7 +293,7 @@
 <div class="viewcode-block" id="load_form_parameters">
 <a class="viewcode-back" href="../../../api_reference/pipeline.html#deeprootgen.pipeline.experiment.load_form_parameters">[docs]</a>
 <span class="k">def</span> <span class="nf">load_form_parameters</span><span class="p">(</span>
-    <span class="n">list_of_contents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_of_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">form_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">list_of_contents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_of_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">form_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load form parameters from file to a list.</span>
 
@@ -304,6 +304,8 @@
 <span class="sd">            The list of file names.</span>
 <span class="sd">        form_name (str):</span>
 <span class="sd">            The current form name.</span>
+<span class="sd">        task (str, optional):</span>
+<span class="sd">            The current simulation task.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        tuple:</span>
@@ -315,10 +317,21 @@
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">get_app</span><span class="p">()</span>
     <span class="n">form_model</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="n">form_name</span><span class="p">]</span>
-    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">form_inputs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">form_model</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">]:</span>
         <span class="n">k</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">]</span>
-        <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">form_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">form_inputs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">form_inputs</span><span class="p">]</span>
+        <span class="n">calibration_inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">form_model</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">]:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">]</span>
+            <span class="n">calibration_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibration_inputs</span><span class="p">)</span>
 
     <span class="n">toast_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Loading parameter specification from: </span><span class="si">{</span><span class="n">list_of_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">toast_message</span></div>
@@ -327,7 +340,13 @@
 
 <div class="viewcode-block" id="save_form_parameters">
 <a class="viewcode-back" href="../../../api_reference/pipeline.html#deeprootgen.pipeline.experiment.save_form_parameters">[docs]</a>
-<span class="k">def</span> <span class="nf">save_form_parameters</span><span class="p">(</span><span class="n">page_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">form_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">param_inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">save_form_parameters</span><span class="p">(</span>
+    <span class="n">page_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">form_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">param_inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">calibration_inputs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write the current form parameters to file.</span>
 
 <span class="sd">    Args:</span>
@@ -337,6 +356,10 @@
 <span class="sd">            The name of the form component definitions.</span>
 <span class="sd">        param_inputs (list):</span>
 <span class="sd">            The list of parameter inputs.</span>
+<span class="sd">        task (str, optional):</span>
+<span class="sd">            The current simulation task. Defaults to &#39;&#39;.</span>
+<span class="sd">        calibration_inputs (list | None, optional):</span>
+<span class="sd">            The list of calibration parameter inputs. Defaults to None</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        tuple:</span>
@@ -348,6 +371,11 @@
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="nb">input</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form_model</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">]):</span>
         <span class="n">k</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">]</span>
         <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">calibration_inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="nb">input</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form_model</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">]):</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;param&quot;</span><span class="p">]</span>
+            <span class="n">inputs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">calibration_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">get_datetime_now</span><span class="p">()</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">page_id</span><span class="si">}</span><span class="s2">.yaml&quot;</span>
     <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
