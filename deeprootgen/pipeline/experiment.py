@@ -198,7 +198,7 @@ def log_simulation(
 
 
 def load_form_parameters(
-    list_of_contents: list, list_of_names: list, form_name: str
+    list_of_contents: list, list_of_names: list, form_name: str, task: str = ""
 ) -> tuple:
     """Load form parameters from file to a list.
 
@@ -209,6 +209,8 @@ def load_form_parameters(
             The list of file names.
         form_name (str):
             The current form name.
+        task (str, optional):
+            The current simulation task.
 
     Returns:
         tuple:
@@ -220,16 +222,33 @@ def load_form_parameters(
 
     app = get_app()
     form_model = app.settings[form_name]
-    inputs = []
+
+    form_inputs = []
     for input in form_model.components["parameters"]["children"]:
         k = input["param"]
-        inputs.append(input_dict[k])
+        form_inputs.append(input_dict[k])
+
+    if task == "":
+        inputs = form_inputs
+    else:
+        inputs = [form_inputs]
+        calibration_inputs = []
+        for input in form_model.components[task]["children"]:
+            k = input["param"]
+            calibration_inputs.append(input_dict[k])
+        inputs.append(calibration_inputs)
 
     toast_message = f"Loading parameter specification from: {list_of_names[0]}"
     return inputs, toast_message
 
 
-def save_form_parameters(page_id: str, form_name: str, param_inputs: list) -> tuple:
+def save_form_parameters(
+    page_id: str,
+    form_name: str,
+    param_inputs: list,
+    task: str = "",
+    calibration_inputs: list | None = None,
+) -> tuple:
     """Write the current form parameters to file.
 
     Args:
@@ -239,6 +258,10 @@ def save_form_parameters(page_id: str, form_name: str, param_inputs: list) -> tu
             The name of the form component definitions.
         param_inputs (list):
             The list of parameter inputs.
+        task (str, optional):
+            The current simulation task. Defaults to ''.
+        calibration_inputs (list | None, optional):
+            The list of calibration parameter inputs. Defaults to None
 
     Returns:
         tuple:
@@ -250,6 +273,11 @@ def save_form_parameters(page_id: str, form_name: str, param_inputs: list) -> tu
     for i, input in enumerate(form_model.components["parameters"]["children"]):
         k = input["param"]
         inputs[k] = param_inputs[i]
+
+    if calibration_inputs is not None:
+        for i, input in enumerate(form_model.components[task]["children"]):
+            k = input["param"]
+            inputs[k] = calibration_inputs[i]
 
     file_name = f"{get_datetime_now()}-{page_id}.yaml"
     outfile = osp.join(OUT_DIR, file_name)

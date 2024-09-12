@@ -368,5 +368,6 @@ def layout() -> html.Div:
         parameter_form_name=FORM_NAME,
         simulation_form_name=FORM_NAME,
         procedure=PROCEDURE.title(),
+        task=TASK,
     )
     return layout

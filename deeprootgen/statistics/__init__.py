@@ -1,1 +1,2 @@
+from .distance_metrics import get_distance_metrics
 from .summary_statistics import get_summary_statistics

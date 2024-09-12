@@ -151,9 +151,12 @@ def toggle_external_links_collapse(n: int, is_open: bool) -> bool:
     Output(f"{PAGE_ID}-download-params", "data"),
     [Input({"index": f"{PAGE_ID}-save-param-button", "type": ALL}, "n_clicks")],
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
+    State({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
     prevent_initial_call=True,
 )
-def save_param(n_clicks: int | list[int], param_inputs: list) -> None:
+def save_param(
+    n_clicks: int | list[int], param_inputs: list, calibration_inputs: list
+) -> None:
     """Save parameter form values.
 
     Args:
@@ -161,6 +164,8 @@ def save_param(n_clicks: int | list[int], param_inputs: list) -> None:
             The number of times that the button has been clicked.
         param_inputs (list):
             The parameter input data.
+        calibration_inputs (list):
+            The calibration parameter input data.
     """
     if n_clicks is None or len(n_clicks) == 0:  # type: ignore
         return no_update
@@ -168,7 +173,9 @@ def save_param(n_clicks: int | list[int], param_inputs: list) -> None:
     if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
         return no_update
 
-    outfile, file_name = save_form_parameters(PAGE_ID, FORM_NAME, param_inputs)
+    outfile, file_name = save_form_parameters(
+        PAGE_ID, FORM_NAME, param_inputs, TASK, calibration_inputs
+    )
     s3_upload_file(outfile, file_name)
     return dcc.send_file(outfile)
 
@@ -262,6 +269,7 @@ def clear_runs(n_clicks: int | list[int]) -> list:
 
 @callback(
     Output({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
+    Output({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-upload-param-file-button", "type": ALL}, "contents"),
@@ -288,9 +296,11 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
         return no_update
 
     inputs, toast_message = load_form_parameters(
-        list_of_contents, list_of_names, FORM_NAME
+        list_of_contents, list_of_names, FORM_NAME, TASK
     )
-    return inputs, True, toast_message
+
+    parameter_inputs, calibration_inputs = inputs
+    return parameter_inputs, calibration_inputs, True, toast_message
 
 
 @callback(
@@ -344,12 +354,34 @@ def run_root_model(
 
 
 @callback(
-    Output(f"{PAGE_ID}-statistics-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-statistics-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-statistics-collapse", "is_open")],
+    Output(f"{PAGE_ID}-data-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-data-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-data-collapse", "is_open")],
 )
 def toggle_statistics_collapse(n: int, is_open: bool) -> bool:
     """Toggle the collapsible for statistics.
+
+    Args:
+        n (int):
+            The number of times that the button has been clicked.
+        is_open (bool):
+            Whether the collapsible is open.
+
+    Returns:
+        bool: The collapsible state.
+    """
+    if n:
+        return not is_open
+    return is_open
+
+
+@callback(
+    Output(f"{PAGE_ID}-calibration-parameters-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-calibration-parameters-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-calibration-parameters-collapse", "is_open")],
+)
+def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
+    """Toggle the collapsible for the calibrations parameters.
 
     Args:
         n (int):
@@ -389,5 +421,6 @@ def layout() -> html.Div:
         page_description=page_description,
         parameter_form_name=FORM_NAME,
         procedure=PROCEDURE.title(),
+        task=TASK,
     )
     return layout

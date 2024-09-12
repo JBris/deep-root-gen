@@ -12,8 +12,6 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 from dash import dcc, get_app, html
 
-from deeprootgen.statistics import get_summary_statistics
-
 
 def build_common_components(
     component_specs: list,
@@ -81,7 +79,8 @@ def build_common_components(
 
         if hasattr(component_spec, "handler"):
             if component_spec.handler == "dropdown":
-                summary_statistics = get_summary_statistics()
+                options_func = locate(component_spec.options_func)
+                summary_statistics = options_func()  # type: ignore
                 component_instance.options = summary_statistics
 
             if component_spec.handler == "range_slider":
@@ -367,6 +366,7 @@ def get_common_layout(
     parameter_form_name: str = "simulation_form",
     simulation_form_name: str = "simulation_form",
     procedure: str = "Simulation",
+    task: str = "simulation",
 ) -> html.Div:
     """Get the common form layout for multiple dashboard pages.
 
@@ -383,6 +383,8 @@ def get_common_layout(
             The name of the simulation form components specification. Defaults to "simulation_form".
         procedure (str):
             The simulation procedure.
+        task (str):
+            The simulation task.
 
     Returns:
         html.Div:
@@ -393,26 +395,38 @@ def get_common_layout(
     simulation_form = app.settings[simulation_form_name]
     input_components = []
 
+    if procedure == "Calibration":
+        k = "data"
+        calibration_components = build_common_components(
+            parameter_form.components[k]["children"], page_id, k
+        )
+
+        if parameter_form.components[k].get("collapsible"):
+            calibration_components = build_collapsible(
+                calibration_components, page_id, k.title()
+            )
+            input_components.append(calibration_components)
+
     k = "parameters"
     parameter_components = build_common_components(
         parameter_form.components[k]["children"], page_id, k
     )
 
-    if parameter_form.components[k]["collapsible"]:
+    if parameter_form.components[k].get("collapsible"):
         parameter_components = build_collapsible(
             parameter_components, page_id, k.title()
         )
     input_components.append(parameter_components)
 
     if procedure == "Calibration":
-        k = "statistics"
+        k = task
         calibration_components = build_common_components(
             parameter_form.components[k]["children"], page_id, k
         )
 
-        if parameter_form.components[k]["collapsible"]:
+        if parameter_form.components[k].get("collapsible"):
             calibration_components = build_collapsible(
-                calibration_components, page_id, k.title()
+                calibration_components, page_id, "Calibration Parameters"
             )
             input_components.append(calibration_components)
 

@@ -15,10 +15,9 @@ components:
         kwargs:
           min: 1
           max: 5
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: root-ratio-range-slider
         param: root_ratio_interval
         label: Root ratio
@@ -31,10 +30,9 @@ components:
         kwargs:
           min: 0
           max: 1
-          step: 0.1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: fine-root-threshold-range-slider
         param: fine_root_threshold_interval
         label: Fine root threshold
@@ -47,10 +45,9 @@ components:
         kwargs:
           min: 0
           max: 0.1
-          step: 0.01
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: outer-primary-root-num-range-slider
         param: outer_root_num_interval
         label: Number of outer roots
@@ -63,10 +60,9 @@ components:
         kwargs:
           min: 0
           max: 20
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: inner-primary-root-num-range-slider
         param: inner_root_num_interval
         label: Number of inner roots
@@ -79,10 +75,9 @@ components:
         kwargs:
           min: 0
           max: 20
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: min-length-primary-root-range-slider
         param: min_primary_length_interval
         label: Primary root minimum length
@@ -90,15 +85,14 @@ components:
         data_type: float
         class_name: dash.dcc.RangeSlider
         handler: range_slider
-        min_value: 18
-        max_value: 22
+        min_value: 15
+        max_value: 30
         kwargs:
           min: 1
           max: 50
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: max-length-primary-root-range-slider
         param: max_primary_length_interval
         label: Primary root maximum length
@@ -111,10 +105,9 @@ components:
         kwargs:
           min: 1
           max: 50
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: base-diameter-root-range-slider
         param: base_diameter_interval
         label: Base root diameter
@@ -122,15 +115,14 @@ components:
         data_type: float
         class_name: dash.dcc.RangeSlider
         handler: range_slider
-        min_value: 0.09
-        max_value: 0.13
+        min_value: 0.05
+        max_value: 0.2
         kwargs:
           min: 0.001
-          max: 1
-          step: 0.01
+          max: 0.5
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: root-apex-range-slider
         param: apex_diameter_interval
         label: Apex diameter
@@ -139,14 +131,13 @@ components:
         class_name: dash.dcc.RangeSlider
         handler: range_slider
         min_value: 0.01
-        max_value: 0.03
+        max_value: 0.1
         kwargs:
           min: 0.01
-          max: 1
-          step: 0.01
+          max: 0.2
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: diameter-reduction-factor-range-slider
         param: diameter_reduction_interval
         label: Diameter reduction
@@ -159,10 +150,9 @@ components:
         kwargs:
           min: 0
           max: 1
-          step: 0.1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: min-num-secondary-roots-range-slider
         param: min_sec_root_num_interval
         label: Minimum number of secondary roots
@@ -175,10 +165,9 @@ components:
         kwargs:
           min: 0
           max: 10
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: max-num-secondary-roots-range-slider
         param: max_sec_root_num_interval
         label: Maximum number of secondary roots
@@ -186,15 +175,14 @@ components:
         data_type: integer
         class_name: dash.dcc.RangeSlider
         handler: range_slider
-        min_value: 3
-        max_value: 5
+        min_value: 2
+        max_value: 10
         kwargs:
           min: 0
           max: 20
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: secondary-root-growth-range-slider
         param: growth_sec_root_interval
         label: Secondary root growth rate
@@ -207,10 +195,9 @@ components:
         kwargs:
           min: 0
           max: 1
-          step: 0.1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: min-length-secondary-root-range-slider
         param: min_sec_root_length_interval
         label: Secondary root minimum length
@@ -223,10 +210,9 @@ components:
         kwargs:
           min: 1
           max: 250
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: max-length-secondary-root-range-slider
         param: max_sec_root_length_interval
         label: Secondary root maximum length
@@ -234,15 +220,14 @@ components:
         data_type: float
         class_name: dash.dcc.RangeSlider
         handler: range_slider
-        min_value: 200
-        max_value: 240
+        min_value: 150
+        max_value: 250
         kwargs:
           min: 1
           max: 500
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: segments-per-root-range-slider
         param: segments_per_root_interval
         label: Segments per root
@@ -250,15 +235,14 @@ components:
         data_type: integer
         class_name: dash.dcc.RangeSlider
         handler: range_slider
-        min_value: 30
-        max_value: 70
+        min_value: 20
+        max_value: 50
         kwargs:
           min: 1
-          max: 500
-          step: 1
+          max: 200
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: root-length-reduction-range-slider
         param: length_reduction_interval
         label: Length reduction
@@ -271,10 +255,9 @@ components:
         kwargs:
           min: 0
           max: 1
-          step: 0.1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: root-vary-range-slider
         param: root_vary_interval
         label: Root segment variance
@@ -282,15 +265,14 @@ components:
         data_type: float
         class_name: dash.dcc.RangeSlider
         handler: range_slider
-        min_value: 20
-        max_value: 40
+        min_value: 10
+        max_value: 60
         kwargs:
           min: 0
           max: 360
-          step: 1
           persistence: true
-          pushable: true
-          allowCross: true
+          pushable: false
+          allowCross: false
       - id: random-seed-input
         param: random_seed
         label: Random seed
@@ -322,7 +304,7 @@ components:
           type: text
           value: default
           persistence: true
-  statistics:
+  data:
     collapsible: true
     children:
       - id: upload-obs-data-file-button
@@ -340,11 +322,49 @@ components:
           children: Clear upload data
           color: primary
           className: me-1
+  abc:
+    collapsible: true
+    children:
+      - id: draws-input
+        param: draws
+        label: Samples
+        help: The number of samples to take for each chain of the Sequential Monte Carlo sampler
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 10
+          persistence: true
+      - id: chains-input
+        param: chains
+        label: Chains
+        help: The number of chains for the Sequential Monte Carlo sampler
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 4
+          persistence: true
+      - id: cores-input
+        param: cores
+        label: Cores
+        help: The number of CPU cores to run the chains on. '-1' runs all chains in parallel.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: -1
+          step: 1
+          value: 1
+          persistence: true
       - id: select-summary-stats-dropdown
-        label: Select statistics  
+        param: summary_statistics
+        label: Summary statistics  
         help: Select summary statistics for comparing simulated and observed data
         class_name: dash.dcc.Dropdown
         handler: dropdown
+        options_func: deeprootgen.statistics.get_summary_statistics
         kwargs:
           multi: true
           searchable: true
@@ -362,3 +382,217 @@ components:
         help: Enable the calculation of summary statistics by soil column within the voxel grid
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
         kwargs: {}
+      - id: distance-dropdown
+        param: distance_metric
+        label: Distance metric
+        help: The distance metric to calculate the dissimilarity value
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_distance_metrics
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select distance metric
+      - id: epsilon-input
+        param: epsilon
+        label: Epsilon
+        help: The dissimilarity threshold for the Approximate Bayesian Computation procedure
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true
+  optimisation:
+    collapsible: true
+    children:
+      - id: n-trials-input
+        param: n_trials
+        label: Trials
+        help: The number of trials to perform for the Tree-structured Parzen Estimator optimiser  
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 10
+          persistence: true
+      - id: n-startup-trials-input
+        param: n_startup_trials 
+        label: Startup trials
+        help: The number of startup trials for the Tree-structured Parzen Estimator optimiser  
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 10
+          persistence: true
+      - id: n-candidates-ei-input
+        param: n_ei_candidates  
+        label: Number of candidates
+        help: The number of candidate samples for calculating the expected improvement for the Tree-structured Parzen Estimator optimiser  
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 24
+          persistence: true
+      - id: n-jobs-input
+        param: n_jobs 
+        label: Number of parallel trials
+        help: The number of trials to run in parallel. '-1' runs all trials in parallel.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number 
+          min: -1
+          step: 1
+          value: 1
+          persistence: true
+      - id: select-summary-stats-dropdown
+        param: summary_statistics
+        label: Summary statistics  
+        help: Select summary statistics for comparing simulated and observed data
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_summary_statistics
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select summary statistics
+      - id: stat-by-soil-layer-switch
+        param: stat_by_soil_layer
+        label: Statistics by soil layer
+        help: Enable the calculation of summary statistics by soil layer within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: stat-by-soil-col-switch
+        param: stat_by_soil_column
+        label: Statistics by soil column
+        help: Enable the calculation of summary statistics by soil column within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: distance-dropdown
+        param: distance_metric
+        label: Distance metric
+        help: The distance metric to calculate the dissimilarity value
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_distance_metrics
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select distance metric
+  sensitivity_analysis:
+    collapsible: true
+    children:
+      - id: n-samples-input
+        param: n_samples
+        label: Samples
+        help: The number of samples for the Sobol sensitivity analysis
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 2
+          value: 8
+          persistence: true
+      - id: select-summary-stats-dropdown
+        param: summary_statistics
+        label: Summary statistics  
+        help: Select summary statistics for comparing simulated and observed data
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_summary_statistics
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select summary statistics
+      - id: stat-by-soil-layer-switch
+        param: stat_by_soil_layer
+        label: Statistics by soil layer
+        help: Enable the calculation of summary statistics by soil layer within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: stat-by-soil-col-switch
+        param: stat_by_soil_column
+        label: Statistics by soil column
+        help: Enable the calculation of summary statistics by soil column within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        kwargs: {}
+      - id: distance-dropdown
+        param: distance_metric
+        label: Distance metric
+        help: The distance metric to calculate the dissimilarity value
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_distance_metrics
+        kwargs:
+          multi: false
+          searchable: true
+          clearable: true
+          placeholder: Select distance metric
+  snpe:
+    collapsible: true
+    children:
+      - id: num-simulations-snpe-input
+        param: n_simulations
+        label: Number of simulations
+        help: The number of simulations to run for training the Sequential Neural Posterior Estimation model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 10
+          persistence: true
+      - id: draws-input
+        param: pp_samples
+        label: Posterior predictive samples
+        help: The number of samples to take from the posterior predictive distribution of the Sequential Neural Posterior Estimation model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 10
+          persistence: true
+      - id: num-hidden-features-input
+        param: nn_num_hidden_features
+        label: Number of hidden features
+        help: The number of hidden features for the neural spline flow density estimator
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 120
+          persistence: true
+      - id: num-transforms-input
+        param: nn_num_transforms
+        label: Number of transforms
+        help: The number of transformations for the neural spline flow density estimator
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 10
+          persistence: true
+      - id: sbc-samples-input
+        param: sbc_draws
+        label: Calibration samples
+        help: The number of samples to take for simulation-based calibration of the Sequential Neural Posterior Estimation model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 10
+          persistence: true
