@@ -39,10 +39,10 @@ components:
           searchable: true
           clearable: true
           placeholder: Select group by
-      - id: select-left-summary-stats-dropdown
-        param: left_summary_statistics
-        label: Left summary statistic
-        help: Select summary statistics for the left visualisation
+      - id: select-x-summary-stats-dropdown
+        param: x_summary_statistics
+        label: X summary statistic
+        help: Select summary statistics for the X axis visualisation
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_summary_statistics
@@ -51,10 +51,10 @@ components:
           searchable: true
           clearable: true
           placeholder: Select left summary statistic
-      - id: select-right-summary-stats-dropdown
-        param: right_summary_statistics
-        label: Right summary statistic
-        help: Select summary statistics for the right visualisation
+      - id: select-y-summary-stats-dropdown
+        param: y_summary_statistics
+        label: Y summary statistic
+        help: Select summary statistics for the y visualisation
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_summary_statistics
@@ -83,18 +83,6 @@ components:
           className: me-1
   results:
     children:
-      - id: scatter-xy-plot
-        label: Scatter 
-        help: Scatter plot for the data
-        class_name: dash.dcc.Graph 
-        kwargs:
-          responsive: auto
-      - id: heatmap-xy-plot
-        label: Heatmap 
-        help: Heatmap plot for the data
-        class_name: dash.dcc.Graph 
-        kwargs:
-          responsive: auto
       - id: histogram-x-plot
         label: X histogram
         help: Histogram for data on the x axis
@@ -119,15 +107,33 @@ components:
         class_name: dash.dcc.Graph 
         kwargs:
           responsive: auto
-      - id: left-summary-statistic-plot
-        label: Left summary statistic
+      - id: scatter-xy-plot
+        label: Scatter 
+        help: Scatter plot for the data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: heatmap-xy-plot
+        label: Heatmap 
+        help: Heatmap plot for the data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: x-summary-statistic-plot
+        label: X summary statistic
         help: Visualisation for summary statistic data
         class_name: dash.dcc.Graph 
         kwargs:
           responsive: auto
-      - id: right-summary-statistic-plot
-        label: Right summary statistic
+      - id: y-summary-statistic-plot
+        label: Y summary statistic
         help: Visualisation for summary statistic data
+        class_name: dash.dcc.Graph 
+        kwargs:
+          responsive: auto
+      - id: xy-summary-statistic-plot
+        label: XY summary statistics
+        help: Visualisation for X and Y summary statistic data
         class_name: dash.dcc.Graph 
         kwargs:
           responsive: auto

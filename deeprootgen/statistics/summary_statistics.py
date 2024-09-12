@@ -21,7 +21,7 @@ class SummaryStatisticBase(ABC):
     """The summary statistic abstract class."""
 
     @abstractmethod
-    def calculate(df: pd.DataFrame) -> float | np.ndarray:
+    def calculate(self, df: pd.DataFrame) -> float | np.ndarray:
         """Calculate the summary statistic.
 
         Args:
@@ -33,6 +33,24 @@ class SummaryStatisticBase(ABC):
                 Error raised for the unimplemented abstract method.
         """
         raise NotImplementedError("calculate() method not implemented.")
+
+    @abstractmethod
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        raise NotImplementedError("get_xy_comparison_data() method not implemented.")
 
     def get_number_of_roots(self, df: pd.DataFrame) -> int:
         """Get the number of roots in the root system.
@@ -124,6 +142,25 @@ class DepthDistribution(SummaryStatisticBase):
             xaxis_title="Cumulative root fraction", yaxis_title="Soil depth (cm)"
         )
 
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        _, bins_count = self.calculate(df, n_elements)
+        bins_count = bins_count[:n_elements]
+        return bins_count
+
 
 class RadialDistribution(SummaryStatisticBase):
     """The RadialDistribution summary statistic."""
@@ -173,6 +210,25 @@ class RadialDistribution(SummaryStatisticBase):
             yaxis_title="Horizontal root distance (cm)",
         )
 
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        _, bins_count = self.calculate(df, n_elements)
+        bins_count = bins_count[:n_elements]
+        return bins_count
+
 
 class TotalVolume(SummaryStatisticBase):
     """The TotalVolume summary statistic."""
@@ -213,6 +269,25 @@ class TotalVolume(SummaryStatisticBase):
         ).update_layout(
             xaxis_title="Total root volume (cm^3)", yaxis_title="Soil depth (cm)"
         )
+
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
 
 
 class AverageVolume(SummaryStatisticBase):
@@ -258,6 +333,25 @@ class AverageVolume(SummaryStatisticBase):
             xaxis_title="Average root volume (cm^3)", yaxis_title="Soil depth (cm)"
         )
 
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
+
 
 class TotalLength(SummaryStatisticBase):
     """The TotalLength summary statistic."""
@@ -295,6 +389,25 @@ class TotalLength(SummaryStatisticBase):
         ).update_layout(
             xaxis_title="Total root length (cm)", yaxis_title="Soil depth (cm)"
         )
+
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
 
 
 class AverageLength(SummaryStatisticBase):
@@ -337,6 +450,25 @@ class AverageLength(SummaryStatisticBase):
             xaxis_title="Average root length (cm)", yaxis_title="Soil depth (cm)"
         )
 
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
+
 
 class TotalDiameter(SummaryStatisticBase):
     """The TotalDiameter summary statistic."""
@@ -374,6 +506,25 @@ class TotalDiameter(SummaryStatisticBase):
         ).update_layout(
             xaxis_title="Total root diameter (cm)", yaxis_title="Soil depth (cm)"
         )
+
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
 
 
 class AverageDiameter(SummaryStatisticBase):
@@ -415,6 +566,25 @@ class AverageDiameter(SummaryStatisticBase):
         ).update_layout(
             xaxis_title="Average root diameter (cm)", yaxis_title="Soil depth (cm)"
         )
+
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
 
 
 def get_summary_statistic_func(summary_statistic: str) -> Callable:

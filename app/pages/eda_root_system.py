@@ -455,17 +455,17 @@ def update_y_plots(
 
 
 @callback(
-    Output({"index": f"{PAGE_ID}-left-summary-statistic-plot", "type": ALL}, "figure"),
+    Output({"index": f"{PAGE_ID}-x-summary-statistic-plot", "type": ALL}, "figure"),
     Input(
-        {"index": f"{PAGE_ID}-select-left-summary-stats-dropdown", "type": ALL}, "value"
+        {"index": f"{PAGE_ID}-select-x-summary-stats-dropdown", "type": ALL}, "value"
     ),
     State("store-eda-data", "data"),
     prevent_initial_call=True,
 )
-def update_left_statistic_plot(
+def update_x_statistic_plot(
     summary_stats: list | None, eda_data: list | None
 ) -> list | None:
-    """Update the left summary statistic plot state.
+    """Update the x summary statistic plot state.
 
     Args:
         summary_stats (list | None):
@@ -493,18 +493,18 @@ def update_left_statistic_plot(
 
 
 @callback(
-    Output({"index": f"{PAGE_ID}-right-summary-statistic-plot", "type": ALL}, "figure"),
+    Output({"index": f"{PAGE_ID}-y-summary-statistic-plot", "type": ALL}, "figure"),
     Input(
-        {"index": f"{PAGE_ID}-select-right-summary-stats-dropdown", "type": ALL},
+        {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
         "value",
     ),
     State("store-eda-data", "data"),
     prevent_initial_call=True,
 )
-def update_right_statistic_plot(
+def update_y_statistic_plot(
     summary_stats: list | None, eda_data: list | None
 ) -> list | None:
-    """Update the right summary statistic plot state.
+    """Update the y summary statistic plot state.
 
     Args:
         summary_stats (list | None):
@@ -529,6 +529,72 @@ def update_right_statistic_plot(
     summary_statistic_instance = summary_statistic_func()
     summary_stat_plot = summary_statistic_instance.visualise(df)
     return [summary_stat_plot]
+
+
+@callback(
+    Output({"index": f"{PAGE_ID}-xy-summary-statistic-plot", "type": ALL}, "figure"),
+    Input(
+        {"index": f"{PAGE_ID}-select-x-summary-stats-dropdown", "type": ALL},
+        "value",
+    ),
+    Input(
+        {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
+        "value",
+    ),
+    State("store-eda-data", "data"),
+    prevent_initial_call=True,
+)
+def update_xy_statistic_plot(
+    x_summary_stats: list | None, y_summary_stats: list | None, eda_data: list | None
+) -> list | None:
+    """Update the y summary statistic plot state.
+
+    Args:
+        x_summary_stats (list | None):
+            The list of summary statistics for the x axis.
+        y_summary_stats (list | None):
+            The list of summary statistics for the x axis.
+        eda_data (list | None):
+            The list of observed data.
+
+    Returns:
+        list | None:
+            The updated plot state.
+    """
+    if eda_data is None or len(eda_data) == 0:
+        return no_update
+
+    if x_summary_stats is None or len(x_summary_stats) == 0:
+        return no_update
+    if x_summary_stats[0] is None:
+        return [{}]
+
+    if y_summary_stats is None or len(y_summary_stats) == 0:
+        return no_update
+    if y_summary_stats[0] is None:
+        return [{}]
+
+    x_summary_stat = x_summary_stats[0]
+    y_summary_stat = y_summary_stats[0]
+
+    x_summary_statistic_func = get_summary_statistic_func(x_summary_stat)
+    x_summary_statistic_instance = x_summary_statistic_func()
+    y_summary_statistic_func = get_summary_statistic_func(y_summary_stat)
+    y_summary_statistic_instance = y_summary_statistic_func()
+
+    df = pd.DataFrame(eda_data).query("order > 0")
+    x_data = x_summary_statistic_instance.get_xy_comparison_data(df, 10)
+    y_data = y_summary_statistic_instance.get_xy_comparison_data(df, 10)
+
+    x_label = x_summary_stat.replace("_", " ").title()
+    y_label = y_summary_stat.replace("_", " ").title()
+    scatter_plot = px.scatter(
+        title=f"{y_label} against {x_label}",
+        x=x_data,
+        y=y_data,
+    ).update_layout(xaxis_title=x_label, yaxis_title=y_label)
+
+    return [scatter_plot]
 
 
 ######################################
