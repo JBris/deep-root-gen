@@ -63,6 +63,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.statistics.summary_statistics">Summary Statistics</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageDiameter"><code class="docutils literal notranslate"><span class="pre">AverageDiameter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageLength"><code class="docutils literal notranslate"><span class="pre">AverageLength</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight"><code class="docutils literal notranslate"><span class="pre">AverageRootWeight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength"><code class="docutils literal notranslate"><span class="pre">AverageSpecificRootLength</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageVolume"><code class="docutils literal notranslate"><span class="pre">AverageVolume</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.ConvexHullArea"><code class="docutils literal notranslate"><span class="pre">ConvexHullArea</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.ConvexHullVolume"><code class="docutils literal notranslate"><span class="pre">ConvexHullVolume</span></code></a></li>
@@ -71,6 +73,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.SummaryStatisticBase"><code class="docutils literal notranslate"><span class="pre">SummaryStatisticBase</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalDiameter"><code class="docutils literal notranslate"><span class="pre">TotalDiameter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalLength"><code class="docutils literal notranslate"><span class="pre">TotalLength</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight"><code class="docutils literal notranslate"><span class="pre">TotalRootWeight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength"><code class="docutils literal notranslate"><span class="pre">TotalSpecificRootLength</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalVolume"><code class="docutils literal notranslate"><span class="pre">TotalVolume</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.get_summary_statistic_func"><code class="docutils literal notranslate"><span class="pre">get_summary_statistic_func()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.get_summary_statistics"><code class="docutils literal notranslate"><span class="pre">get_summary_statistics()</span></code></a></li>
@@ -152,7 +156,7 @@
 <p>This module defines utility functions for producing summary statistics that can be used to compare simulated and observational data.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageDiameter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageDiameter</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageDiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageDiameter" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageDiameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageDiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageDiameter" title="Link to this definition"></a></dt>
 <dd><p>The AverageDiameter summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageDiameter.calculate">
@@ -166,26 +170,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The average root diameter.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageDiameter.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageDiameter.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageDiameter.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>
@@ -214,7 +198,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageLength">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageLength</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageLength" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageLength" title="Link to this definition"></a></dt>
 <dd><p>The AverageLength summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageLength.calculate">
@@ -228,26 +212,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The average root length.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageLength.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageLength.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageLength.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>
@@ -275,8 +239,92 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageRootWeight">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageRootWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageRootWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight" title="Link to this definition"></a></dt>
+<dd><p>The AverageRootWeight statistic.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageRootWeight.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageRootWeight.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight.calculate" title="Link to this definition"></a></dt>
+<dd><p>Caculate the average root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float:</dt><dd><p>The average root weight.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageRootWeight.visualise">
+<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageRootWeight.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight.visualise" title="Link to this definition"></a></dt>
+<dd><p>Visualise the average root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>go.Figure:</dt><dd><p>The visualisation of the average root weight.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageSpecificRootLength">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageSpecificRootLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageSpecificRootLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength" title="Link to this definition"></a></dt>
+<dd><p>The AverageSpecificRootLength statistic.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageSpecificRootLength.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageSpecificRootLength.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength.calculate" title="Link to this definition"></a></dt>
+<dd><p>Caculate the average specific root length.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float:</dt><dd><p>The average specific root length.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageSpecificRootLength.visualise">
+<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageSpecificRootLength.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength.visualise" title="Link to this definition"></a></dt>
+<dd><p>Visualise the average specific root length.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>go.Figure:</dt><dd><p>The visualisation of the average specific root length.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageVolume">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageVolume</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageVolume" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageVolume" title="Link to this definition"></a></dt>
 <dd><p>The AverageVolume summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageVolume.calculate">
@@ -290,26 +338,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The average root volume.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageVolume.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageVolume.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageVolume.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>
@@ -338,7 +366,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.ConvexHullArea">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">ConvexHullArea</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#ConvexHullArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.ConvexHullArea" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">ConvexHullArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#ConvexHullArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.ConvexHullArea" title="Link to this definition"></a></dt>
 <dd><p>The ConvexHullArea statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.ConvexHullArea.calculate">
@@ -352,26 +380,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The area of the convex hull.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.ConvexHullArea.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#ConvexHullArea.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.ConvexHullArea.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>
@@ -400,7 +408,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.ConvexHullVolume">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">ConvexHullVolume</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#ConvexHullVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.ConvexHullVolume" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">ConvexHullVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#ConvexHullVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.ConvexHullVolume" title="Link to this definition"></a></dt>
 <dd><p>The ConvexHullVolume statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.ConvexHullVolume.calculate">
@@ -414,26 +422,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The volume of the convex hull.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.ConvexHullVolume.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#ConvexHullVolume.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.ConvexHullVolume.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>
@@ -462,7 +450,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.DepthDistribution">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">DepthDistribution</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#DepthDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.DepthDistribution" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">DepthDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#DepthDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.DepthDistribution" title="Link to this definition"></a></dt>
 <dd><p>The DepthDistribution summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.DepthDistribution.calculate">
@@ -528,7 +516,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.RadialDistribution">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">RadialDistribution</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#RadialDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.RadialDistribution" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">RadialDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#RadialDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.RadialDistribution" title="Link to this definition"></a></dt>
 <dd><p>The RadialDistribution summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.RadialDistribution.calculate">
@@ -594,7 +582,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.SummaryStatisticBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">SummaryStatisticBase</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#SummaryStatisticBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.SummaryStatisticBase" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">SummaryStatisticBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#SummaryStatisticBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.SummaryStatisticBase" title="Link to this definition"></a></dt>
 <dd><p>The summary statistic abstract class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.SummaryStatisticBase.calculate">
@@ -654,7 +642,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.SummaryStatisticBase.get_xy_comparison_data">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#SummaryStatisticBase.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.get_xy_comparison_data" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#SummaryStatisticBase.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.get_xy_comparison_data" title="Link to this definition"></a></dt>
 <dd><p>Get summary statistic data for comparing against another summary statistic.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
@@ -676,7 +664,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalDiameter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalDiameter</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalDiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalDiameter" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalDiameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalDiameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalDiameter" title="Link to this definition"></a></dt>
 <dd><p>The TotalDiameter summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalDiameter.calculate">
@@ -690,26 +678,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The total root diameter.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalDiameter.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalDiameter.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalDiameter.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>
@@ -738,7 +706,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalLength">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalLength</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalLength" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalLength" title="Link to this definition"></a></dt>
 <dd><p>The TotalLength summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalLength.calculate">
@@ -752,26 +720,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The total root length.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalLength.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalLength.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalLength.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>
@@ -799,8 +747,92 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalRootWeight">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalRootWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalRootWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight" title="Link to this definition"></a></dt>
+<dd><p>The TotalRootWeight statistic.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalRootWeight.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalRootWeight.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight.calculate" title="Link to this definition"></a></dt>
+<dd><p>Caculate the total root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float:</dt><dd><p>The total root weight.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalRootWeight.visualise">
+<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalRootWeight.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight.visualise" title="Link to this definition"></a></dt>
+<dd><p>Visualise the total root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>go.Figure:</dt><dd><p>The visualisation of the total root weight.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalSpecificRootLength">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalSpecificRootLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalSpecificRootLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength" title="Link to this definition"></a></dt>
+<dd><p>The TotalSpecificRootLength statistic.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalSpecificRootLength.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalSpecificRootLength.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength.calculate" title="Link to this definition"></a></dt>
+<dd><p>Caculate the total specific root length.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float:</dt><dd><p>The total specific root length.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalSpecificRootLength.visualise">
+<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalSpecificRootLength.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength.visualise" title="Link to this definition"></a></dt>
+<dd><p>Visualise the total specific root length.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>go.Figure:</dt><dd><p>The visualisation of the total specific root length.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalVolume">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalVolume</span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalVolume" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalVolume" title="Link to this definition"></a></dt>
 <dd><p>The TotalVolume summary statistic.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalVolume.calculate">
@@ -814,26 +846,6 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>float:</dt><dd><p>The total root volume.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalVolume.get_xy_comparison_data">
-<span class="sig-name descname"><span class="pre">get_xy_comparison_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalVolume.get_xy_comparison_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalVolume.get_xy_comparison_data" title="Link to this definition"></a></dt>
-<dd><p>Get summary statistic data for comparing against another summary statistic.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-<dt>n_elements (int, optional):</dt><dd><p>The number of elements for the comparison. Defaults to 10.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>np.ndarray:</dt><dd><p>The comparison data.</p>
 </dd>
 </dl>
 </dd>

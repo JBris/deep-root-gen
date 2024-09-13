@@ -98,6 +98,10 @@
 <span class="k">class</span> <span class="nc">SummaryStatisticBase</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The summary statistic abstract class.&quot;&quot;&quot;</span>
 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;SummaryStatisticBase constructor.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
 <div class="viewcode-block" id="SummaryStatisticBase.calculate">
 <a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.calculate">[docs]</a>
     <span class="nd">@abstractmethod</span>
@@ -117,7 +121,6 @@
 
 <div class="viewcode-block" id="SummaryStatisticBase.get_xy_comparison_data">
 <a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.get_xy_comparison_data">[docs]</a>
-    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -133,7 +136,9 @@
 <span class="sd">            np.ndarray:</span>
 <span class="sd">                The comparison data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;get_xy_comparison_data() method not implemented.&quot;</span><span class="p">)</span></div>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
 
 
 <div class="viewcode-block" id="SummaryStatisticBase.get_number_of_roots">
@@ -391,28 +396,6 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total root volume (cm^3)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TotalVolume.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalVolume.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame):</span>
-<span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -466,28 +449,6 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average root volume (cm^3)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="AverageVolume.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageVolume.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame):</span>
-<span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -535,28 +496,6 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total root length (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TotalLength.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalLength.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame):</span>
-<span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -607,28 +546,6 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average root length (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="AverageLength.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageLength.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame):</span>
-<span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -676,28 +593,6 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total root diameter (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TotalDiameter.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalDiameter.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame):</span>
-<span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -748,28 +643,257 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average root diameter (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="AverageDiameter.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageDiameter.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<div class="viewcode-block" id="TotalSpecificRootLength">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength">[docs]</a>
+<span class="k">class</span> <span class="nc">TotalSpecificRootLength</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The TotalSpecificRootLength statistic.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;TotalSpecificRootLength constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root_tissue_density (float):</span>
+<span class="sd">                The root tissue density of the root system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span> <span class="o">=</span> <span class="n">root_tissue_density</span>
+
+<div class="viewcode-block" id="TotalSpecificRootLength.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength.calculate">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the total specific root length.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            df (pd.DataFrame):</span>
 <span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
+<span class="sd">            float:</span>
+<span class="sd">                The total specific root length.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">height</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">volume</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span>
+        <span class="n">specific_root_length</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">mass</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">specific_root_length</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">total</span></div>
+
+
+<div class="viewcode-block" id="TotalSpecificRootLength.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength.visualise">[docs]</a>
+    <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the total specific root length.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            go.Figure:</span>
+<span class="sd">                The visualisation of the total specific root length.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">total_length</span><span class="p">,</span> <span class="n">soil_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Total specific root length by soil layer&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">total_length</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">soil_layers</span><span class="p">),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total specific root length (cm)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AverageSpecificRootLength">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength">[docs]</a>
+<span class="k">class</span> <span class="nc">AverageSpecificRootLength</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The AverageSpecificRootLength statistic.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;AverageSpecificRootLength constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root_tissue_density (float):</span>
+<span class="sd">                The root tissue density of the root system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span> <span class="o">=</span> <span class="n">root_tissue_density</span>
+
+<div class="viewcode-block" id="AverageSpecificRootLength.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength.calculate">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the average specific root length.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float:</span>
+<span class="sd">                The average specific root length.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">height</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">volume</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span>
+        <span class="n">specific_root_length</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">mass</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">specific_root_length</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_roots</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">average</span> <span class="o">=</span> <span class="n">total</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">average</span></div>
+
+
+<div class="viewcode-block" id="AverageSpecificRootLength.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength.visualise">[docs]</a>
+    <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the average specific root length.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            go.Figure:</span>
+<span class="sd">                The visualisation of the average specific root length.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">average_length</span><span class="p">,</span> <span class="n">soil_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Average specific root length by soil layer&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">average_length</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">soil_layers</span><span class="p">),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average specific root length (cm)&quot;</span><span class="p">,</span>
+            <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TotalRootWeight">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalRootWeight">[docs]</a>
+<span class="k">class</span> <span class="nc">TotalRootWeight</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The TotalRootWeight statistic.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;TotalRootWeight constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root_tissue_density (float):</span>
+<span class="sd">                The root tissue density of the root system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span> <span class="o">=</span> <span class="n">root_tissue_density</span>
+
+<div class="viewcode-block" id="TotalRootWeight.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalRootWeight.calculate">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the total root weight.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float:</span>
+<span class="sd">                The total root weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">height</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">volume</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mass</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">total</span></div>
+
+
+<div class="viewcode-block" id="TotalRootWeight.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalRootWeight.visualise">[docs]</a>
+    <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the total root weight.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            go.Figure:</span>
+<span class="sd">                The visualisation of the total root weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">total_weight</span><span class="p">,</span> <span class="n">soil_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Total root weight by soil layer&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">total_weight</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">soil_layers</span><span class="p">),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Total root weight (g)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AverageRootWeight">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageRootWeight">[docs]</a>
+<span class="k">class</span> <span class="nc">AverageRootWeight</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The AverageRootWeight statistic.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;AverageRootWeight constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root_tissue_density (float):</span>
+<span class="sd">                The root tissue density of the root system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span> <span class="o">=</span> <span class="n">root_tissue_density</span>
+
+<div class="viewcode-block" id="AverageRootWeight.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageRootWeight.calculate">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the average root weight.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float:</span>
+<span class="sd">                The average root weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">height</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">volume</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mass</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_roots</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">average</span> <span class="o">=</span> <span class="n">total</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">average</span></div>
+
+
+<div class="viewcode-block" id="AverageRootWeight.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageRootWeight.visualise">[docs]</a>
+    <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the average root weight.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            go.Figure:</span>
+<span class="sd">                The visualisation of the average root weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">average_weight</span><span class="p">,</span> <span class="n">soil_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Average root weight by soil layer&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">average_weight</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">soil_layers</span><span class="p">),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Average root weight (g)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
+        <span class="p">)</span></div>
 </div>
 
 
@@ -819,28 +943,6 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Convex hull area (cm^2)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ConvexHullArea.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullArea.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame):</span>
-<span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -890,28 +992,6 @@
         <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
             <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Convex hull volume (cm^3)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ConvexHullVolume.get_xy_comparison_data">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullVolume.get_xy_comparison_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            df (pd.DataFrame):</span>
-<span class="sd">                The dataframe of root data.</span>
-<span class="sd">            n_elements (int, optional):</span>
-<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            np.ndarray:</span>
-<span class="sd">                The comparison data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">comparison_data</span></div>
 </div>
 
 
@@ -953,6 +1033,10 @@
         <span class="s2">&quot;average_length&quot;</span><span class="p">,</span>
         <span class="s2">&quot;total_diameter&quot;</span><span class="p">,</span>
         <span class="s2">&quot;average_diameter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;total_specific_root_length&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;average_specific_root_length&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;total_root_weight&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;average_root_weight&quot;</span><span class="p">,</span>
         <span class="s2">&quot;convex_hull_area&quot;</span><span class="p">,</span>
         <span class="s2">&quot;convex_hull_volume&quot;</span><span class="p">,</span>
     <span class="p">]</span>
