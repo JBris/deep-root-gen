@@ -88,6 +88,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
 <span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">ConvexHull</span>
 
 <span class="n">px</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;ggplot2&quot;</span>
 
@@ -704,7 +705,7 @@
 <div class="viewcode-block" id="AverageDiameter">
 <a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageDiameter">[docs]</a>
 <span class="k">class</span> <span class="nc">AverageDiameter</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The AverageDiametersummary statistic.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The AverageDiameter summary statistic.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AverageDiameter.calculate">
 <a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageDiameter.calculate">[docs]</a>
@@ -773,6 +774,148 @@
 
 
 
+<div class="viewcode-block" id="ConvexHullArea">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullArea">[docs]</a>
+<span class="k">class</span> <span class="nc">ConvexHullArea</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The ConvexHullArea statistic.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConvexHullArea.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullArea.calculate">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the area of the convex hull.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float:</span>
+<span class="sd">                The area of the convex hull.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">coordinates</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hull</span><span class="o">.</span><span class="n">area</span></div>
+
+
+<div class="viewcode-block" id="ConvexHullArea.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullArea.visualise">[docs]</a>
+    <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the area of the convex hull.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            go.Figure:</span>
+<span class="sd">                The visualisation of the area of the convex hull.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">areas</span><span class="p">,</span> <span class="n">soil_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Convex hull area by soil layer&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">areas</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">soil_layers</span><span class="p">),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Convex hull area (cm^2)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConvexHullArea.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullArea.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConvexHullVolume">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullVolume">[docs]</a>
+<span class="k">class</span> <span class="nc">ConvexHullVolume</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The ConvexHullVolume statistic.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConvexHullVolume.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullVolume.calculate">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the volume of the convex hull.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float:</span>
+<span class="sd">                The volume of the convex hull.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">coordinates</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hull</span><span class="o">.</span><span class="n">volume</span></div>
+
+
+<div class="viewcode-block" id="ConvexHullVolume.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullVolume.visualise">[docs]</a>
+    <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the volume of the convex hull.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            go.Figure:</span>
+<span class="sd">                The visualisation of the volume of the convex hull.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">areas</span><span class="p">,</span> <span class="n">soil_layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Convex hull volume by soil layer&quot;</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">areas</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">soil_layers</span><span class="p">),</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Convex hull volume (cm^3)&quot;</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Soil depth (cm)&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConvexHullVolume.get_xy_comparison_data">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullVolume.get_xy_comparison_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_xy_comparison_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get summary statistic data for comparing against another summary statistic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame):</span>
+<span class="sd">                The dataframe of root data.</span>
+<span class="sd">            n_elements (int, optional):</span>
+<span class="sd">                The number of elements for the comparison. Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The comparison data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">comparison_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_statistic_per_layer</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">comparison_data</span> <span class="o">=</span> <span class="n">comparison_data</span><span class="p">[:</span><span class="n">n_elements</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">comparison_data</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="get_summary_statistic_func">
 <a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.get_summary_statistic_func">[docs]</a>
 <span class="k">def</span> <span class="nf">get_summary_statistic_func</span><span class="p">(</span><span class="n">summary_statistic</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
@@ -810,6 +953,8 @@
         <span class="s2">&quot;average_length&quot;</span><span class="p">,</span>
         <span class="s2">&quot;total_diameter&quot;</span><span class="p">,</span>
         <span class="s2">&quot;average_diameter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;convex_hull_area&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;convex_hull_volume&quot;</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="n">summary_statistic_list</span> <span class="o">=</span> <span class="p">[]</span>

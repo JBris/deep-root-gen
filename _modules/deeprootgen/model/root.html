@@ -218,6 +218,7 @@
         <span class="n">lengths</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">coordinates</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">root_type</span><span class="p">:</span> <span class="n">RootTypeModel</span><span class="p">,</span>
+        <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">new_organ</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RootNode</span><span class="p">:</span>
@@ -234,6 +235,8 @@
 <span class="sd">                The 3D coordinates.</span>
 <span class="sd">            root_type (RootTypeModel):</span>
 <span class="sd">                The root type data model.</span>
+<span class="sd">            root_tissue_density (float):</span>
+<span class="sd">                The root tissue density (g/cm3)</span>
 <span class="sd">            i (int):</span>
 <span class="sd">                The current array index.</span>
 <span class="sd">            new_organ (bool, optional):</span>
@@ -253,7 +256,7 @@
             <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">,</span>
             <span class="n">diameter</span><span class="o">=</span><span class="n">diameter</span><span class="p">,</span>
             <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">,</span>
-            <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;marker&quot;</span><span class="p">,</span>
+            <span class="n">root_tissue_density</span><span class="o">=</span><span class="n">root_tissue_density</span><span class="p">,</span>
             <span class="n">root_type</span><span class="o">=</span><span class="n">root_type</span><span class="o">.</span><span class="n">root_type</span><span class="p">,</span>
             <span class="n">order_type</span><span class="o">=</span><span class="n">root_type</span><span class="o">.</span><span class="n">order_type</span><span class="p">,</span>
             <span class="n">position_type</span><span class="o">=</span><span class="n">root_type</span><span class="o">.</span><span class="n">position_type</span><span class="p">,</span>
@@ -313,9 +316,7 @@
 <div class="viewcode-block" id="RootOrgan.construct_root">
 <a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.root.RootOrgan.construct_root">[docs]</a>
     <span class="k">def</span> <span class="nf">construct_root</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">segments_per_root</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">apex_diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">segments_per_root</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">apex_diameter</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">RootNode</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct all root segments for the root organ.</span>
 
@@ -324,6 +325,8 @@
 <span class="sd">                The number of segments for a single root organ.</span>
 <span class="sd">            apex_diameter (int):</span>
 <span class="sd">                The diameter of the root apex.</span>
+<span class="sd">            root_tissue_density (float):</span>
+<span class="sd">                The root tissue density (g/cm3)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            List[RootNode]:</span>
@@ -339,6 +342,7 @@
             <span class="n">lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">,</span>
             <span class="n">coordinates</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span>
             <span class="n">root_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_type</span><span class="p">,</span>
+            <span class="n">root_tissue_density</span><span class="o">=</span><span class="n">root_tissue_density</span><span class="p">,</span>
             <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">new_organ</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
@@ -351,6 +355,7 @@
                 <span class="n">lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">,</span>
                 <span class="n">coordinates</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span>
                 <span class="n">root_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_type</span><span class="p">,</span>
+                <span class="n">root_tissue_density</span><span class="o">=</span><span class="n">root_tissue_density</span><span class="p">,</span>
                 <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
                 <span class="n">new_organ</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
@@ -421,12 +426,14 @@
             <span class="n">position_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_type</span><span class="o">.</span><span class="n">position_type</span><span class="p">,</span>
         <span class="p">)</span>
 
+        <span class="n">root_tissue_density</span> <span class="o">=</span> <span class="n">parent_data</span><span class="o">.</span><span class="n">root_tissue_density</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_child_node</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent_node</span><span class="p">,</span>
             <span class="n">diameters</span><span class="o">=</span><span class="n">diameters</span><span class="p">,</span>
             <span class="n">lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">,</span>
             <span class="n">coordinates</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span>
             <span class="n">root_type</span><span class="o">=</span><span class="n">root_type</span><span class="p">,</span>
+            <span class="n">root_tissue_density</span><span class="o">=</span><span class="n">root_tissue_density</span><span class="p">,</span>
             <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">new_organ</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
@@ -439,6 +446,7 @@
                 <span class="n">lengths</span><span class="o">=</span><span class="n">lengths</span><span class="p">,</span>
                 <span class="n">coordinates</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span>
                 <span class="n">root_type</span><span class="o">=</span><span class="n">root_type</span><span class="p">,</span>
+                <span class="n">root_tissue_density</span><span class="o">=</span><span class="n">root_tissue_density</span><span class="p">,</span>
                 <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
                 <span class="n">new_organ</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
@@ -1042,7 +1050,9 @@
                 <span class="n">simulation_tag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_tag</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">organ</span><span class="o">.</span><span class="n">construct_root</span><span class="p">(</span><span class="n">segments_per_root</span><span class="p">,</span> <span class="n">apex_diameter</span><span class="p">)</span>
+            <span class="n">organ</span><span class="o">.</span><span class="n">construct_root</span><span class="p">(</span>
+                <span class="n">segments_per_root</span><span class="p">,</span> <span class="n">apex_diameter</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">root_tissue_density</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">organs</span><span class="p">[</span><span class="n">order</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">organ</span><span class="p">)</span>
 
         <span class="n">root_type</span> <span class="o">=</span> <span class="n">RootTypeModel</span><span class="p">(</span>
@@ -1058,7 +1068,9 @@
                 <span class="n">simulation_tag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_tag</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">organ</span><span class="o">.</span><span class="n">construct_root</span><span class="p">(</span><span class="n">segments_per_root</span><span class="p">,</span> <span class="n">apex_diameter</span><span class="p">)</span>
+            <span class="n">organ</span><span class="o">.</span><span class="n">construct_root</span><span class="p">(</span>
+                <span class="n">segments_per_root</span><span class="p">,</span> <span class="n">apex_diameter</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">root_tissue_density</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">organs</span><span class="p">[</span><span class="n">order</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">organ</span><span class="p">)</span>
 
         <span class="n">min_sec_root_num</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">min_sec_root_num</span>
