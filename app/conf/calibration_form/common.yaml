@@ -4,7 +4,7 @@ components:
     collapsible: true
     children:
       - id: max-order-range-slider
-        param: max_order_interval
+        param: max_order
         label: Maximum order
         help: The interval for the maximum root order
         data_type: integer
@@ -19,7 +19,7 @@ components:
           pushable: false
           allowCross: false
       - id: root-ratio-range-slider
-        param: root_ratio_interval
+        param: root_ratio
         label: Root ratio
         help: The interval for ratio between structural and fine roots
         data_type: float
@@ -34,7 +34,7 @@ components:
           pushable: false
           allowCross: false
       - id: fine-root-threshold-range-slider
-        param: fine_root_threshold_interval
+        param: fine_root_threshold
         label: Fine root threshold
         help: The interval for the threshold for classifying a root as a fine root, rather than a structural root (cm)
         data_type: float
@@ -49,7 +49,7 @@ components:
           pushable: false
           allowCross: false
       - id: outer-primary-root-num-range-slider
-        param: outer_root_num_interval
+        param: outer_root_num
         label: Number of outer roots
         help: The interval for the number of outer primary roots to be generated
         data_type: integer
@@ -64,7 +64,7 @@ components:
           pushable: false
           allowCross: false
       - id: inner-primary-root-num-range-slider
-        param: inner_root_num_interval
+        param: inner_root_num
         label: Number of inner roots
         help: The interval for the number of inner primary roots to be generated
         data_type: integer
@@ -79,7 +79,7 @@ components:
           pushable: false
           allowCross: false
       - id: min-length-primary-root-range-slider
-        param: min_primary_length_interval
+        param: min_primary_length
         label: Primary root minimum length
         help: The interval for the minimum length of each primary root (cm)
         data_type: float
@@ -94,7 +94,7 @@ components:
           pushable: false
           allowCross: false
       - id: max-length-primary-root-range-slider
-        param: max_primary_length_interval
+        param: max_primary_length
         label: Primary root maximum length
         help: The interval for the maximum length of each primary root (cm)
         data_type: float
@@ -109,7 +109,7 @@ components:
           pushable: false
           allowCross: false
       - id: base-diameter-root-range-slider
-        param: base_diameter_interval
+        param: base_diameter
         label: Base root diameter
         help: The interval for the base diameter of the first segment of each root (cm)
         data_type: float
@@ -124,7 +124,7 @@ components:
           pushable: false
           allowCross: false
       - id: root-apex-range-slider
-        param: apex_diameter_interval
+        param: apex_diameter
         label: Apex diameter
         help: The interval for the diameter of the root apex (cm)
         data_type: float
@@ -139,7 +139,7 @@ components:
           pushable: false
           allowCross: false
       - id: diameter-reduction-factor-range-slider
-        param: diameter_reduction_interval
+        param: diameter_reduction
         label: Diameter reduction
         help: The interval for the diameter reduction factor for subsequent root segments.
         data_type: float
@@ -154,7 +154,7 @@ components:
           pushable: false
           allowCross: false
       - id: min-num-secondary-roots-range-slider
-        param: min_sec_root_num_interval
+        param: min_sec_root_num
         label: Minimum number of secondary roots
         help: The interval for the minimum number of secondary roots to be generated
         data_type: integer
@@ -169,7 +169,7 @@ components:
           pushable: false
           allowCross: false
       - id: max-num-secondary-roots-range-slider
-        param: max_sec_root_num_interval
+        param: max_sec_root_num
         label: Maximum number of secondary roots
         help: The interval for the maximum number of secondary roots to be generated
         data_type: integer
@@ -184,7 +184,7 @@ components:
           pushable: false
           allowCross: false
       - id: secondary-root-growth-range-slider
-        param: growth_sec_root_interval
+        param: growth_sec_root
         label: Secondary root growth rate
         help: The interval for the growth rate for the number of secondary roots per root order
         data_type: float
@@ -199,7 +199,7 @@ components:
           pushable: false
           allowCross: false
       - id: min-length-secondary-root-range-slider
-        param: min_sec_root_length_interval
+        param: min_sec_root_length
         label: Secondary root minimum length
         help: The interval for the minimum length of each secondary root (cm)
         data_type: float
@@ -214,7 +214,7 @@ components:
           pushable: false
           allowCross: false
       - id: max-length-secondary-root-range-slider
-        param: max_sec_root_length_interval
+        param: max_sec_root_length
         label: Secondary root maximum length
         help: The interval for the maximum length of each secondary root (cm)
         data_type: float
@@ -229,7 +229,7 @@ components:
           pushable: false
           allowCross: false
       - id: segments-per-root-range-slider
-        param: segments_per_root_interval
+        param: segments_per_root
         label: Segments per root
         help: The interval for the number of segments per root
         data_type: integer
@@ -244,7 +244,7 @@ components:
           pushable: false
           allowCross: false
       - id: root-length-reduction-range-slider
-        param: length_reduction_interval
+        param: length_reduction
         label: Length reduction
         help: The interval for the root length reduction factor
         data_type: float
@@ -259,7 +259,7 @@ components:
           pushable: false
           allowCross: false
       - id: root-vary-range-slider
-        param: root_vary_interval
+        param: root_vary
         label: Root segment variance
         help: The interval for the random variation in degrees of subsequent root segments along x, y, and z axes
         data_type: float
@@ -274,7 +274,7 @@ components:
           pushable: false
           allowCross: false
       - id: interbranch-distance-slider
-        param: interbranch_distance_interval
+        param: interbranch_distance
         label: Interbranch distance
         help: The interval for the interbranch distance between roots
         data_type: float
@@ -289,7 +289,7 @@ components:
           pushable: false
           allowCross: false
       - id: mechanical-constraints-slider
-        param: mechanical_constraints_interval
+        param: mechanical_constraints
         label: Mechanical constraints
         help: The interval for the mechanical constraints of the roots (radial degrees/cm)
         data_type: float
@@ -304,7 +304,7 @@ components:
           pushable: false
           allowCross: false
       - id: root-tissue-density-slider
-        param: root_tissue_density_interval
+        param: root_tissue_density
         label: Root tissue density
         help: The interval for the root tissue density (g/cm3)
         data_type: float
@@ -319,7 +319,7 @@ components:
           pushable: false
           allowCross: false
       - id: gravitropism-slider
-        param: gravitropism_interval
+        param: gravitropism
         label: Gravitropism factor
         help: The gravitropism factor for root development
         data_type: float

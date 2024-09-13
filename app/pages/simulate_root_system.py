@@ -63,9 +63,11 @@ def fade_in(is_in: bool) -> tuple:
 
 @callback(
     Output({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
+    Output({"index": f"{PAGE_ID}-save-runs-button", "type": ALL}, "disabled"),
+    Output({"index": f"{PAGE_ID}-clear-runs-button", "type": ALL}, "disabled"),
     Input("store-simulation-run", "data"),
 )
-def update_table(runs: list | None) -> list | None:
+def update_table(runs: list | None) -> tuple | None:
     """Update the simulation run table.
 
     Args:
@@ -73,12 +75,15 @@ def update_table(runs: list | None) -> list | None:
             The list of simulation runs.
 
     Returns:
-        list | None:
-            The updated list of simulation runs.
+        tuple | None:
+            The updated form state.
     """
     if runs is None:
         return no_update
-    return [runs]
+    if len(runs) == 0:
+        return [runs], [True], [True]
+
+    return [runs], [False], [False]
 
 
 @callback(
@@ -229,7 +234,7 @@ def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None or list_of_contents[0] == 0:
         return no_update
 
-    simulation_runs, toast_message = load_data_from_file(
+    simulation_runs, _, toast_message = load_data_from_file(
         list_of_contents, list_of_names
     )
     return simulation_runs, True, toast_message

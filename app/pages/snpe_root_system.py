@@ -62,9 +62,11 @@ def fade_in(is_in: bool) -> tuple:
 
 @callback(
     Output({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
+    Output({"index": f"{PAGE_ID}-save-runs-button", "type": ALL}, "disabled"),
+    Output({"index": f"{PAGE_ID}-clear-runs-button", "type": ALL}, "disabled"),
     Input("store-simulation-run", "data"),
 )
-def update_table(runs: list | None) -> list | None:
+def update_table(runs: list | None) -> tuple | None:
     """Update the simulation run table.
 
     Args:
@@ -72,12 +74,15 @@ def update_table(runs: list | None) -> list | None:
             The list of simulation runs.
 
     Returns:
-        list | None:
-            The updated list of simulation runs.
+        tuple | None:
+            The updated form state.
     """
     if runs is None:
         return no_update
-    return [runs]
+    if len(runs) == 0:
+        return [runs], [True], [True]
+
+    return [runs], [False], [False]
 
 
 @callback(
@@ -235,7 +240,7 @@ def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None or list_of_contents[0] == 0:
         return no_update
 
-    simulation_runs, toast_message = load_data_from_file(
+    simulation_runs, _, toast_message = load_data_from_file(
         list_of_contents, list_of_names
     )
     return simulation_runs, True, toast_message
@@ -427,11 +432,11 @@ def update_observed_data_state(observed_data: dict | None) -> tuple:
     if observed_data is None:
         return button_contents, [True]
 
-    eda_label = observed_data.get("label")
-    if eda_label is None:
+    observed_label = observed_data.get("label")
+    if observed_label is None:
         return button_contents, [True]
 
-    return [eda_label], [False]
+    return [observed_label], [False]
 
 
 @callback(
@@ -442,7 +447,7 @@ def update_observed_data_state(observed_data: dict | None) -> tuple:
     State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
     prevent_initial_call=True,
 )
-def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
+def load_observed_data(list_of_contents: list, list_of_names: list) -> tuple:
     """Load observed data from file.
 
     Args:
@@ -461,9 +466,11 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None:
         return no_update
 
-    loaded_data, toast_message = load_data_from_file(list_of_contents, list_of_names)
-    eda_data = {"label": list_of_names[0], "values": loaded_data}
-    return eda_data, True, toast_message
+    loaded_data, content_string, toast_message = load_data_from_file(
+        list_of_contents, list_of_names
+    )
+    observed_data = {"label": list_of_names[0], "values": loaded_data}
+    return observed_data, True, toast_message
 
 
 @callback(
@@ -477,13 +484,13 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
     State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
-def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
-    """Clear observation data from the page.
+def clear_observed_data(n_clicks: int | list[int], observed_data: dict) -> tuple:
+    """Clear observed data from the page.
 
     Args:
         n_clicks (int | list[int]):
             The number of form clicks.
-        eda_data (dict):
+        observed_data (dict):
             The exploratory data analysis data.
 
     Returns:
@@ -496,11 +503,11 @@ def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
     if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
         return no_update
 
-    eda_label = eda_data.get("label")
-    if eda_data is None or eda_label is None:
+    observed_label = observed_data.get("label")
+    if observed_data is None or observed_label is None:
         return no_update
 
-    toast_message = f"Clearing: {eda_label}"
+    toast_message = f"Clearing: {observed_label}"
     return {}, [None], True, toast_message
 
 

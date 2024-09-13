@@ -507,6 +507,7 @@ def build_calibration_parameters(
     calibration_values: list,
     observed_data: list[dict] | None = None,
     summary_statistics: list[dict] | None = None,
+    observed_data_content: str = "",
     stat_by_layer: bool = False,
     stat_by_col: bool = False,
 ) -> dict | None:
@@ -525,6 +526,8 @@ def build_calibration_parameters(
             The list of observed root data. Defaults to None.
         summary_statistics: (list[dict] | None, optional):
             The list of observed summary statistic data. Defaults to None.
+        observed_data_content (str, optional):
+            The raw content string for the observed root data. Defaults to "".
         stat_by_layer (bool, optional):
             Whether to calculate statistics by soil layer. Defaults to False.
         stat_by_col (bool, optional ):
@@ -567,5 +570,8 @@ def build_calibration_parameters(
 
     form_inputs["statistics_comparison"]["stat_by_soil_layer"] = stat_by_layer
     form_inputs["statistics_comparison"]["stat_by_soil_column"] = stat_by_col
+    form_inputs["observed_data"] = observed_data  # type: ignore
+    form_inputs["summary_statistics"] = summary_statistics  # type: ignore
+    form_inputs["observed_data_content"] = observed_data_content  # type: ignore
 
     return form_inputs

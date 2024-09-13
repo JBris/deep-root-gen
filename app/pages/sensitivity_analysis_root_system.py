@@ -62,9 +62,11 @@ def fade_in(is_in: bool) -> tuple:
 
 @callback(
     Output({"index": f"{PAGE_ID}-simulation-runs-table", "type": ALL}, "data"),
+    Output({"index": f"{PAGE_ID}-save-runs-button", "type": ALL}, "disabled"),
+    Output({"index": f"{PAGE_ID}-clear-runs-button", "type": ALL}, "disabled"),
     Input("store-simulation-run", "data"),
 )
-def update_table(runs: list | None) -> list | None:
+def update_table(runs: list | None) -> tuple | None:
     """Update the simulation run table.
 
     Args:
@@ -72,12 +74,15 @@ def update_table(runs: list | None) -> list | None:
             The list of simulation runs.
 
     Returns:
-        list | None:
-            The updated list of simulation runs.
+        tuple | None:
+            The updated form state.
     """
     if runs is None:
         return no_update
-    return [runs]
+    if len(runs) == 0:
+        return [runs], [True], [True]
+
+    return [runs], [False], [False]
 
 
 @callback(
@@ -235,7 +240,7 @@ def load_runs(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None or list_of_contents[0] == 0:
         return no_update
 
-    simulation_runs, toast_message = load_data_from_file(
+    simulation_runs, _, toast_message = load_data_from_file(
         list_of_contents, list_of_names
     )
     return simulation_runs, True, toast_message
@@ -300,6 +305,149 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
 
     parameter_inputs, calibration_inputs = inputs
     return parameter_inputs, calibration_inputs, True, toast_message
+
+
+@callback(
+    Output(f"{PAGE_ID}-data-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-data-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-data-collapse", "is_open")],
+)
+def toggle_data_collapse(n: int, is_open: bool) -> bool:
+    """Toggle the collapsible for statistics.
+
+    Args:
+        n (int):
+            The number of times that the button has been clicked.
+        is_open (bool):
+            Whether the collapsible is open.
+
+    Returns:
+        bool: The collapsible state.
+    """
+    if n:
+        return not is_open
+    return is_open
+
+
+@callback(
+    Output(f"{PAGE_ID}-calibration-parameters-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-calibration-parameters-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-calibration-parameters-collapse", "is_open")],
+)
+def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
+    """Toggle the collapsible for the calibrations parameters.
+
+    Args:
+        n (int):
+            The number of times that the button has been clicked.
+        is_open (bool):
+            Whether the collapsible is open.
+
+    Returns:
+        bool: The collapsible state.
+    """
+    if n:
+        return not is_open
+    return is_open
+
+
+@callback(
+    Output(
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "children"
+    ),
+    Output({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "disabled"),
+    Input("store-summary-data", "data"),
+)
+def update_summary_data_state(summary_data: dict | None) -> tuple:
+    """Update the state of the summary data.
+
+    Args:
+        summary_data (dict | None):
+            The summary data.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    button_contents = ["Load observed data"]
+    if summary_data is None:
+        return button_contents, [True]
+
+    summary_label = summary_data.get("label")
+    if summary_label is None:
+        return button_contents, [True]
+
+    return [summary_label], [False]
+
+
+@callback(
+    Output("store-summary-data", "data", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
+    State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
+    prevent_initial_call=True,
+)
+def load_summary_data(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load summary data from file.
+
+    Args:
+        list_of_contents (list):
+            The list of file contents.
+        list_of_names (list):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if list_of_contents is None or len(list_of_contents) == 0:
+        return no_update
+
+    if list_of_contents[0] is None:
+        return no_update
+
+    loaded_data, _, toast_message = load_data_from_file(list_of_contents, list_of_names)
+    summary_data = {"label": list_of_names[0], "values": loaded_data}
+    return summary_data, True, toast_message
+
+
+@callback(
+    Output("store-summary-data", "data", allow_duplicate=True),
+    Output(
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"
+    ),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
+    State("store-summary-data", "data"),
+    prevent_initial_call=True,
+)
+def clear_summary_data(n_clicks: int | list[int], summary_data: dict) -> tuple:
+    """Clear summary data from the page.
+
+    Args:
+        n_clicks (int | list[int]):
+            The number of form clicks.
+        summary_data (dict):
+            The exploratory data analysis data.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if n_clicks is None or len(n_clicks) == 0:  # type: ignore
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
+        return no_update
+
+    summary_label = summary_data.get("label")
+    if summary_data is None or summary_label is None:
+        return no_update
+
+    toast_message = f"Clearing: {summary_label}"
+    return {}, [None], True, toast_message
 
 
 @callback(
@@ -372,50 +520,6 @@ def run_root_model(
         TASK, form_inputs, simulation_runs
     )
     return simulation_runs, True, toast_message
-
-
-@callback(
-    Output(f"{PAGE_ID}-data-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-data-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-data-collapse", "is_open")],
-)
-def toggle_data_collapse(n: int, is_open: bool) -> bool:
-    """Toggle the collapsible for statistics.
-
-    Args:
-        n (int):
-            The number of times that the button has been clicked.
-        is_open (bool):
-            Whether the collapsible is open.
-
-    Returns:
-        bool: The collapsible state.
-    """
-    if n:
-        return not is_open
-    return is_open
-
-
-@callback(
-    Output(f"{PAGE_ID}-calibration-parameters-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-calibration-parameters-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-calibration-parameters-collapse", "is_open")],
-)
-def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
-    """Toggle the collapsible for the calibrations parameters.
-
-    Args:
-        n (int):
-            The number of times that the button has been clicked.
-        is_open (bool):
-            Whether the collapsible is open.
-
-    Returns:
-        bool: The collapsible state.
-    """
-    if n:
-        return not is_open
-    return is_open
 
 
 ######################################

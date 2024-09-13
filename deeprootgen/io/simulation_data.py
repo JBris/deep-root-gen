@@ -104,11 +104,11 @@ def load_data_from_file(list_of_contents: list, list_of_names: list) -> tuple:
 
     Returns:
         tuple:
-            The simulation runs and toast component message.
+            The loaded data and toast component message.
     """
     _, content_string = list_of_contents[0].split(",")
     decoded = base64.b64decode(content_string).decode("utf-8")
 
     simulation_runs = pd.read_csv(StringIO(decoded)).to_dict("records")
     toast_message = f"Loading data from: {list_of_names[0]}"
-    return simulation_runs, toast_message
+    return simulation_runs, content_string, toast_message

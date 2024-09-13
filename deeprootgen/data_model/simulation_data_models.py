@@ -198,6 +198,7 @@ class RootCalibrationModel(BaseModel):
     calibration_parameters: Dict[str, bool | float | int | str]
     summary_statistics: Optional[List[SummaryStatisticsModel]] = None
     observed_data: Optional[List[RootNodeModel]] = None
+    observed_data_content: Optional[str] = ""
     statistics_comparison: Optional[StatisticsComparisonModel] = None
     origin_min: Optional[float] = 1e-3
     origin_max: Optional[float] = 1e-2

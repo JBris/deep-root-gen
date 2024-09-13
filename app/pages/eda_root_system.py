@@ -212,7 +212,7 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None:
         return no_update
 
-    loaded_data, toast_message = load_data_from_file(list_of_contents, list_of_names)
+    loaded_data, _, toast_message = load_data_from_file(list_of_contents, list_of_names)
     eda_data = {"label": list_of_names[0], "values": loaded_data}
     return eda_data, True, toast_message
 
