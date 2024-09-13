@@ -486,8 +486,12 @@ def update_x_statistic_plot(
 
     summary_stat = summary_stats[0]
     df = pd.DataFrame(eda_data).query("order > 0")
+    if len(df) == 0:
+        return no_update
+
+    kwargs = dict(root_tissue_density=df.root_tissue_density.iloc[0])
     summary_statistic_func = get_summary_statistic_func(summary_stat)
-    summary_statistic_instance = summary_statistic_func()
+    summary_statistic_instance = summary_statistic_func(**kwargs)
     summary_stat_plot = summary_statistic_instance.visualise(df)
     return [summary_stat_plot]
 
@@ -525,8 +529,12 @@ def update_y_statistic_plot(
 
     summary_stat = summary_stats[0]
     df = pd.DataFrame(eda_data).query("order > 0")
+    if len(df) == 0:
+        return no_update
+
+    kwargs = dict(root_tissue_density=df.root_tissue_density.iloc[0])
     summary_statistic_func = get_summary_statistic_func(summary_stat)
-    summary_statistic_instance = summary_statistic_func()
+    summary_statistic_instance = summary_statistic_func(**kwargs)
     summary_stat_plot = summary_statistic_instance.visualise(df)
     return [summary_stat_plot]
 
@@ -575,18 +583,20 @@ def update_xy_statistic_plot(
     if y_summary_stats[0] is None:
         return [{}], [{}]
 
+    df = pd.DataFrame(eda_data).query("order > 0")
+    if len(df) == 0:
+        return no_update
+
+    kwargs = dict(root_tissue_density=df.root_tissue_density.iloc[0])
     x_summary_stat = x_summary_stats[0]
     y_summary_stat = y_summary_stats[0]
-
     x_summary_statistic_func = get_summary_statistic_func(x_summary_stat)
-    x_summary_statistic_instance = x_summary_statistic_func()
+    x_summary_statistic_instance = x_summary_statistic_func(**kwargs)
     y_summary_statistic_func = get_summary_statistic_func(y_summary_stat)
-    y_summary_statistic_instance = y_summary_statistic_func()
+    y_summary_statistic_instance = y_summary_statistic_func(**kwargs)
 
-    df = pd.DataFrame(eda_data).query("order > 0")
     x_data = x_summary_statistic_instance.get_xy_comparison_data(df, 10)
     y_data = y_summary_statistic_instance.get_xy_comparison_data(df, 10)
-
     x_label = x_summary_stat.replace("_", " ").title()
     y_label = y_summary_stat.replace("_", " ").title()
     scatter_plot = px.scatter(

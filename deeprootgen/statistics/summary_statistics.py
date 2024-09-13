@@ -21,6 +21,10 @@ px.defaults.template = "ggplot2"
 class SummaryStatisticBase(ABC):
     """The summary statistic abstract class."""
 
+    def __init__(self, **_) -> None:
+        """SummaryStatisticBase constructor."""
+        super().__init__()
+
     @abstractmethod
     def calculate(self, df: pd.DataFrame) -> float | np.ndarray:
         """Calculate the summary statistic.
@@ -35,7 +39,6 @@ class SummaryStatisticBase(ABC):
         """
         raise NotImplementedError("calculate() method not implemented.")
 
-    @abstractmethod
     def get_xy_comparison_data(
         self, df: pd.DataFrame, n_elements: int = 10
     ) -> np.ndarray:
@@ -51,7 +54,9 @@ class SummaryStatisticBase(ABC):
             np.ndarray:
                 The comparison data.
         """
-        raise NotImplementedError("get_xy_comparison_data() method not implemented.")
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
 
     def get_number_of_roots(self, df: pd.DataFrame) -> int:
         """Get the number of roots in the root system.
@@ -271,25 +276,6 @@ class TotalVolume(SummaryStatisticBase):
             xaxis_title="Total root volume (cm^3)", yaxis_title="Soil depth (cm)"
         )
 
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
-
-        Returns:
-            np.ndarray:
-                The comparison data.
-        """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
-
 
 class AverageVolume(SummaryStatisticBase):
     """The AverageVolume summary statistic."""
@@ -334,25 +320,6 @@ class AverageVolume(SummaryStatisticBase):
             xaxis_title="Average root volume (cm^3)", yaxis_title="Soil depth (cm)"
         )
 
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
-
-        Returns:
-            np.ndarray:
-                The comparison data.
-        """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
-
 
 class TotalLength(SummaryStatisticBase):
     """The TotalLength summary statistic."""
@@ -390,25 +357,6 @@ class TotalLength(SummaryStatisticBase):
         ).update_layout(
             xaxis_title="Total root length (cm)", yaxis_title="Soil depth (cm)"
         )
-
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
-
-        Returns:
-            np.ndarray:
-                The comparison data.
-        """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
 
 
 class AverageLength(SummaryStatisticBase):
@@ -451,25 +399,6 @@ class AverageLength(SummaryStatisticBase):
             xaxis_title="Average root length (cm)", yaxis_title="Soil depth (cm)"
         )
 
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
-
-        Returns:
-            np.ndarray:
-                The comparison data.
-        """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
-
 
 class TotalDiameter(SummaryStatisticBase):
     """The TotalDiameter summary statistic."""
@@ -507,25 +436,6 @@ class TotalDiameter(SummaryStatisticBase):
         ).update_layout(
             xaxis_title="Total root diameter (cm)", yaxis_title="Soil depth (cm)"
         )
-
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
-
-        Returns:
-            np.ndarray:
-                The comparison data.
-        """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
 
 
 class AverageDiameter(SummaryStatisticBase):
@@ -568,24 +478,220 @@ class AverageDiameter(SummaryStatisticBase):
             xaxis_title="Average root diameter (cm)", yaxis_title="Soil depth (cm)"
         )
 
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
+
+class TotalSpecificRootLength(SummaryStatisticBase):
+    """The TotalSpecificRootLength statistic."""
+
+    def __init__(self, root_tissue_density: float, **_) -> None:
+        """TotalSpecificRootLength constructor.
+
+        Args:
+            root_tissue_density (float):
+                The root tissue density of the root system.
+        """
+        self.root_tissue_density = root_tissue_density
+
+    def calculate(self, df: pd.DataFrame) -> float:
+        """Caculate the total specific root length.
 
         Args:
             df (pd.DataFrame):
                 The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
 
         Returns:
-            np.ndarray:
-                The comparison data.
+            float:
+                The total specific root length.
         """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
+        radius = df.diameter / 2
+        height = df.length
+        volume = np.pi * radius**2 * height
+        mass = volume * self.root_tissue_density
+        specific_root_length = df.length / mass
+        total = sum(specific_root_length)
+        return total
+
+    def visualise(self, df: pd.DataFrame) -> go.Figure:
+        """Visualise the total specific root length.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            go.Figure:
+                The visualisation of the total specific root length.
+        """
+        total_length, soil_layers = self.calculate_statistic_per_layer(df)
+
+        return px.scatter(
+            title="Total specific root length by soil layer",
+            x=total_length,
+            y=abs(soil_layers),
+        ).update_layout(
+            xaxis_title="Total specific root length (cm)", yaxis_title="Soil depth (cm)"
+        )
+
+
+class AverageSpecificRootLength(SummaryStatisticBase):
+    """The AverageSpecificRootLength statistic."""
+
+    def __init__(self, root_tissue_density: float, **_) -> None:
+        """AverageSpecificRootLength constructor.
+
+        Args:
+            root_tissue_density (float):
+                The root tissue density of the root system.
+        """
+        self.root_tissue_density = root_tissue_density
+
+    def calculate(self, df: pd.DataFrame) -> float:
+        """Caculate the average specific root length.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            float:
+                The average specific root length.
+        """
+        radius = df.diameter / 2
+        height = df.length
+        volume = np.pi * radius**2 * height
+        mass = volume * self.root_tissue_density
+        specific_root_length = df.length / mass
+        total = sum(specific_root_length)
+        n = self.get_number_of_roots(df)
+        average = total / n
+        return average
+
+    def visualise(self, df: pd.DataFrame) -> go.Figure:
+        """Visualise the average specific root length.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            go.Figure:
+                The visualisation of the average specific root length.
+        """
+        average_length, soil_layers = self.calculate_statistic_per_layer(df)
+
+        return px.scatter(
+            title="Average specific root length by soil layer",
+            x=average_length,
+            y=abs(soil_layers),
+        ).update_layout(
+            xaxis_title="Average specific root length (cm)",
+            yaxis_title="Soil depth (cm)",
+        )
+
+
+class TotalRootWeight(SummaryStatisticBase):
+    """The TotalRootWeight statistic."""
+
+    def __init__(self, root_tissue_density: float, **_) -> None:
+        """TotalRootWeight constructor.
+
+        Args:
+            root_tissue_density (float):
+                The root tissue density of the root system.
+        """
+        self.root_tissue_density = root_tissue_density
+
+    def calculate(self, df: pd.DataFrame) -> float:
+        """Caculate the total root weight.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            float:
+                The total root weight.
+        """
+        radius = df.diameter / 2
+        height = df.length
+        volume = np.pi * radius**2 * height
+        mass = volume * self.root_tissue_density
+        total = sum(mass)
+        return total
+
+    def visualise(self, df: pd.DataFrame) -> go.Figure:
+        """Visualise the total root weight.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            go.Figure:
+                The visualisation of the total root weight.
+        """
+        total_weight, soil_layers = self.calculate_statistic_per_layer(df)
+
+        return px.scatter(
+            title="Total root weight by soil layer",
+            x=total_weight,
+            y=abs(soil_layers),
+        ).update_layout(
+            xaxis_title="Total root weight (g)", yaxis_title="Soil depth (cm)"
+        )
+
+
+class AverageRootWeight(SummaryStatisticBase):
+    """The AverageRootWeight statistic."""
+
+    def __init__(self, root_tissue_density: float, **_) -> None:
+        """AverageRootWeight constructor.
+
+        Args:
+            root_tissue_density (float):
+                The root tissue density of the root system.
+        """
+        self.root_tissue_density = root_tissue_density
+
+    def calculate(self, df: pd.DataFrame) -> float:
+        """Caculate the average root weight.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            float:
+                The average root weight.
+        """
+        radius = df.diameter / 2
+        height = df.length
+        volume = np.pi * radius**2 * height
+        mass = volume * self.root_tissue_density
+        total = sum(mass)
+        n = self.get_number_of_roots(df)
+        average = total / n
+        return average
+
+    def visualise(self, df: pd.DataFrame) -> go.Figure:
+        """Visualise the average root weight.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            go.Figure:
+                The visualisation of the average root weight.
+        """
+        average_weight, soil_layers = self.calculate_statistic_per_layer(df)
+
+        return px.scatter(
+            title="Average root weight by soil layer",
+            x=average_weight,
+            y=abs(soil_layers),
+        ).update_layout(
+            xaxis_title="Average root weight (g)", yaxis_title="Soil depth (cm)"
+        )
 
 
 class ConvexHullArea(SummaryStatisticBase):
@@ -627,25 +733,6 @@ class ConvexHullArea(SummaryStatisticBase):
             xaxis_title="Convex hull area (cm^2)", yaxis_title="Soil depth (cm)"
         )
 
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
-
-        Returns:
-            np.ndarray:
-                The comparison data.
-        """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
-
 
 class ConvexHullVolume(SummaryStatisticBase):
     """The ConvexHullVolume statistic."""
@@ -686,25 +773,6 @@ class ConvexHullVolume(SummaryStatisticBase):
             xaxis_title="Convex hull volume (cm^3)", yaxis_title="Soil depth (cm)"
         )
 
-    def get_xy_comparison_data(
-        self, df: pd.DataFrame, n_elements: int = 10
-    ) -> np.ndarray:
-        """Get summary statistic data for comparing against another summary statistic.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-            n_elements (int, optional):
-                The number of elements for the comparison. Defaults to 10.
-
-        Returns:
-            np.ndarray:
-                The comparison data.
-        """
-        comparison_data, _ = self.calculate_statistic_per_layer(df)
-        comparison_data = comparison_data[:n_elements]
-        return comparison_data
-
 
 def get_summary_statistic_func(summary_statistic: str) -> Callable:
     """Get the summary statistic function by name.
@@ -738,6 +806,10 @@ def get_summary_statistics() -> list[dict]:
         "average_length",
         "total_diameter",
         "average_diameter",
+        "total_specific_root_length",
+        "average_specific_root_length",
+        "total_root_weight",
+        "average_root_weight",
         "convex_hull_area",
         "convex_hull_volume",
     ]
