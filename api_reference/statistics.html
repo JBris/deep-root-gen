@@ -63,9 +63,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.statistics.summary_statistics">Summary Statistics</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageDiameter"><code class="docutils literal notranslate"><span class="pre">AverageDiameter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageLength"><code class="docutils literal notranslate"><span class="pre">AverageLength</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight"><code class="docutils literal notranslate"><span class="pre">AverageRootWeight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength"><code class="docutils literal notranslate"><span class="pre">AverageSpecificRootLength</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageVolume"><code class="docutils literal notranslate"><span class="pre">AverageVolume</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.AverageWeight"><code class="docutils literal notranslate"><span class="pre">AverageWeight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.ConvexHullArea"><code class="docutils literal notranslate"><span class="pre">ConvexHullArea</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.ConvexHullVolume"><code class="docutils literal notranslate"><span class="pre">ConvexHullVolume</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.DepthDistribution"><code class="docutils literal notranslate"><span class="pre">DepthDistribution</span></code></a></li>
@@ -73,9 +73,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.SummaryStatisticBase"><code class="docutils literal notranslate"><span class="pre">SummaryStatisticBase</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalDiameter"><code class="docutils literal notranslate"><span class="pre">TotalDiameter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalLength"><code class="docutils literal notranslate"><span class="pre">TotalLength</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight"><code class="docutils literal notranslate"><span class="pre">TotalRootWeight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength"><code class="docutils literal notranslate"><span class="pre">TotalSpecificRootLength</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalVolume"><code class="docutils literal notranslate"><span class="pre">TotalVolume</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.TotalWeight"><code class="docutils literal notranslate"><span class="pre">TotalWeight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.get_summary_statistic_func"><code class="docutils literal notranslate"><span class="pre">get_summary_statistic_func()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.summary_statistics.get_summary_statistics"><code class="docutils literal notranslate"><span class="pre">get_summary_statistics()</span></code></a></li>
 </ul>
@@ -239,48 +239,6 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageRootWeight">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageRootWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageRootWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight" title="Link to this definition"></a></dt>
-<dd><p>The AverageRootWeight statistic.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageRootWeight.calculate">
-<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageRootWeight.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight.calculate" title="Link to this definition"></a></dt>
-<dd><p>Caculate the average root weight.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>float:</dt><dd><p>The average root weight.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageRootWeight.visualise">
-<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageRootWeight.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageRootWeight.visualise" title="Link to this definition"></a></dt>
-<dd><p>Visualise the average root weight.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>go.Figure:</dt><dd><p>The visualisation of the average root weight.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageSpecificRootLength">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageSpecificRootLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageSpecificRootLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength" title="Link to this definition"></a></dt>
 <dd><p>The AverageSpecificRootLength statistic.</p>
@@ -356,6 +314,48 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>go.Figure:</dt><dd><p>The visualisation of the average root volume.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageWeight">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">AverageWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageWeight" title="Link to this definition"></a></dt>
+<dd><p>The AverageWeight statistic.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageWeight.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageWeight.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageWeight.calculate" title="Link to this definition"></a></dt>
+<dd><p>Caculate the average root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float:</dt><dd><p>The average root weight.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.AverageWeight.visualise">
+<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#AverageWeight.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.AverageWeight.visualise" title="Link to this definition"></a></dt>
+<dd><p>Visualise the average root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>go.Figure:</dt><dd><p>The visualisation of the average root weight.</p>
 </dd>
 </dl>
 </dd>
@@ -747,48 +747,6 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalRootWeight">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalRootWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalRootWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight" title="Link to this definition"></a></dt>
-<dd><p>The TotalRootWeight statistic.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalRootWeight.calculate">
-<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalRootWeight.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight.calculate" title="Link to this definition"></a></dt>
-<dd><p>Caculate the total root weight.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>float:</dt><dd><p>The total root weight.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalRootWeight.visualise">
-<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalRootWeight.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalRootWeight.visualise" title="Link to this definition"></a></dt>
-<dd><p>Visualise the total root weight.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
-</dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>go.Figure:</dt><dd><p>The visualisation of the total root weight.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalSpecificRootLength">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalSpecificRootLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalSpecificRootLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength" title="Link to this definition"></a></dt>
 <dd><p>The TotalSpecificRootLength statistic.</p>
@@ -864,6 +822,48 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>go.Figure:</dt><dd><p>The visualisation of the total root volume.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalWeight">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">TotalWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_tissue_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalWeight" title="Link to this definition"></a></dt>
+<dd><p>The TotalWeight statistic.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalWeight.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalWeight.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalWeight.calculate" title="Link to this definition"></a></dt>
+<dd><p>Caculate the total root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float:</dt><dd><p>The total root weight.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.statistics.summary_statistics.TotalWeight.visualise">
+<span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/summary_statistics.html#TotalWeight.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.summary_statistics.TotalWeight.visualise" title="Link to this definition"></a></dt>
+<dd><p>Visualise the total root weight.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>df (pd.DataFrame):</dt><dd><p>The dataframe of root data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>go.Figure:</dt><dd><p>The visualisation of the total root weight.</p>
 </dd>
 </dl>
 </dd>

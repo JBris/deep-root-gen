@@ -774,13 +774,13 @@
 
 
 
-<div class="viewcode-block" id="TotalRootWeight">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalRootWeight">[docs]</a>
-<span class="k">class</span> <span class="nc">TotalRootWeight</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The TotalRootWeight statistic.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TotalWeight">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalWeight">[docs]</a>
+<span class="k">class</span> <span class="nc">TotalWeight</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The TotalWeight statistic.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;TotalRootWeight constructor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;TotalWeight constructor.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            root_tissue_density (float):</span>
@@ -788,8 +788,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span> <span class="o">=</span> <span class="n">root_tissue_density</span>
 
-<div class="viewcode-block" id="TotalRootWeight.calculate">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalRootWeight.calculate">[docs]</a>
+<div class="viewcode-block" id="TotalWeight.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalWeight.calculate">[docs]</a>
     <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the total root weight.</span>
 
@@ -809,8 +809,8 @@
         <span class="k">return</span> <span class="n">total</span></div>
 
 
-<div class="viewcode-block" id="TotalRootWeight.visualise">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalRootWeight.visualise">[docs]</a>
+<div class="viewcode-block" id="TotalWeight.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalWeight.visualise">[docs]</a>
     <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the total root weight.</span>
 
@@ -835,13 +835,13 @@
 
 
 
-<div class="viewcode-block" id="AverageRootWeight">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageRootWeight">[docs]</a>
-<span class="k">class</span> <span class="nc">AverageRootWeight</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The AverageRootWeight statistic.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AverageWeight">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageWeight">[docs]</a>
+<span class="k">class</span> <span class="nc">AverageWeight</span><span class="p">(</span><span class="n">SummaryStatisticBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The AverageWeight statistic.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_tissue_density</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;AverageRootWeight constructor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;AverageWeight constructor.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            root_tissue_density (float):</span>
@@ -849,8 +849,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root_tissue_density</span> <span class="o">=</span> <span class="n">root_tissue_density</span>
 
-<div class="viewcode-block" id="AverageRootWeight.calculate">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageRootWeight.calculate">[docs]</a>
+<div class="viewcode-block" id="AverageWeight.calculate">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageWeight.calculate">[docs]</a>
     <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Caculate the average root weight.</span>
 
@@ -872,8 +872,8 @@
         <span class="k">return</span> <span class="n">average</span></div>
 
 
-<div class="viewcode-block" id="AverageRootWeight.visualise">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageRootWeight.visualise">[docs]</a>
+<div class="viewcode-block" id="AverageWeight.visualise">
+<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageWeight.visualise">[docs]</a>
     <span class="k">def</span> <span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualise the average root weight.</span>
 
@@ -1033,10 +1033,10 @@
         <span class="s2">&quot;average_length&quot;</span><span class="p">,</span>
         <span class="s2">&quot;total_diameter&quot;</span><span class="p">,</span>
         <span class="s2">&quot;average_diameter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;total_specific_root_length&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;average_specific_root_length&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;total_root_weight&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;average_root_weight&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;total_specific_root_length&quot;,</span>
+        <span class="c1"># &quot;average_specific_root_length&quot;,</span>
+        <span class="s2">&quot;total_weight&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;average_weight&quot;</span><span class="p">,</span>
         <span class="s2">&quot;convex_hull_area&quot;</span><span class="p">,</span>
         <span class="s2">&quot;convex_hull_volume&quot;</span><span class="p">,</span>
     <span class="p">]</span>
