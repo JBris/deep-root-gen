@@ -267,7 +267,12 @@ def update_axes(eda_data: list | None) -> tuple | None:
     if eda_data is None:
         return no_update
 
-    columns = pd.DataFrame(eda_data).columns
+    df_columns = pd.DataFrame(eda_data).columns
+    columns = []
+    for df_column in df_columns:
+        columns.append(
+            {"label": df_column.replace("_", " ").title(), "value": df_column}
+        )
     return [columns], [columns], [columns]
 
 
@@ -318,7 +323,7 @@ def update_xy_plots(
     y_axis = y_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_data)
+    df = pd.DataFrame(eda_data).query("order > 0")
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -328,14 +333,14 @@ def update_xy_plots(
         x=x_axis,
         y=y_axis,
         color=group_by,
-    ).update_layout(xaxis_title=x_axis, yaxis_title=y_axis)
+    ).update_layout(xaxis_title=x_axis.title(), yaxis_title=y_axis.title())
 
     heatmap = px.density_heatmap(
         title=f"{y_axis.title()} against {x_axis.title()}",
         data_frame=df,
         x=x_axis,
         y=y_axis,
-    ).update_layout(xaxis_title=x_axis, yaxis_title=y_axis)
+    ).update_layout(xaxis_title=x_axis.title(), yaxis_title=y_axis.title())
 
     return [scatter_plot], [heatmap]
 
@@ -378,7 +383,7 @@ def update_x_plots(
     x_axis = x_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_data)
+    df = pd.DataFrame(eda_data).query("order > 0")
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -386,12 +391,12 @@ def update_x_plots(
         title=x_axis.title(),
         data_frame=df,
         x=x_axis,
-    ).update_layout(xaxis_title=x_axis, yaxis_title="Count")
+    ).update_layout(xaxis_title=x_axis.title(), yaxis_title="Count")
 
     box_x = px.box(
         title=x_axis.title(), data_frame=df, y=x_axis, x=group_by
     ).update_layout(
-        yaxis_title=x_axis,
+        yaxis_title=x_axis.title(),
     )
 
     return [hist_x], [box_x]
@@ -435,7 +440,7 @@ def update_y_plots(
     y_axis = y_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_data)
+    df = pd.DataFrame(eda_data).query("order > 0")
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -443,12 +448,12 @@ def update_y_plots(
         title=y_axis.title(),
         data_frame=df,
         x=y_axis,
-    ).update_layout(xaxis_title=y_axis, yaxis_title="Count")
+    ).update_layout(xaxis_title=y_axis.title(), yaxis_title="Count")
 
     box_y = px.box(
         title=y_axis.title(), data_frame=df, y=y_axis, x=group_by
     ).update_layout(
-        yaxis_title=y_axis,
+        yaxis_title=y_axis.title(),
     )
 
     return [hist_y], [box_y]
@@ -600,13 +605,11 @@ def update_xy_statistic_plot(
     x_label = x_summary_stat.replace("_", " ").title()
     y_label = y_summary_stat.replace("_", " ").title()
     scatter_plot = px.scatter(
-        title=f"{y_label} against {x_label}",
         x=x_data,
         y=y_data,
     ).update_layout(xaxis_title=x_label, yaxis_title=y_label)
 
     heatmap = px.density_heatmap(
-        title=f"{y_label.title()} against {x_label.title()}",
         x=x_data,
         y=y_data,
     ).update_layout(xaxis_title=x_label, yaxis_title=y_label)

@@ -588,11 +588,11 @@ class AverageSpecificRootLength(SummaryStatisticBase):
         )
 
 
-class TotalRootWeight(SummaryStatisticBase):
-    """The TotalRootWeight statistic."""
+class TotalWeight(SummaryStatisticBase):
+    """The TotalWeight statistic."""
 
     def __init__(self, root_tissue_density: float, **_) -> None:
-        """TotalRootWeight constructor.
+        """TotalWeight constructor.
 
         Args:
             root_tissue_density (float):
@@ -640,11 +640,11 @@ class TotalRootWeight(SummaryStatisticBase):
         )
 
 
-class AverageRootWeight(SummaryStatisticBase):
-    """The AverageRootWeight statistic."""
+class AverageWeight(SummaryStatisticBase):
+    """The AverageWeight statistic."""
 
     def __init__(self, root_tissue_density: float, **_) -> None:
-        """AverageRootWeight constructor.
+        """AverageWeight constructor.
 
         Args:
             root_tissue_density (float):
@@ -806,10 +806,10 @@ def get_summary_statistics() -> list[dict]:
         "average_length",
         "total_diameter",
         "average_diameter",
-        "total_specific_root_length",
-        "average_specific_root_length",
-        "total_root_weight",
-        "average_root_weight",
+        # "total_specific_root_length",
+        # "average_specific_root_length",
+        "total_weight",
+        "average_weight",
         "convex_hull_area",
         "convex_hull_volume",
     ]

@@ -13,6 +13,7 @@ from datetime import datetime
 
 import mlflow
 import networkx as nx
+import numpy as np
 import pandas as pd
 import yaml
 from dash import get_app
@@ -197,17 +198,19 @@ def log_simulation(
     metric_df.to_csv(outfile, index=False)
     mlflow.log_artifact(outfile)
 
+    kwargs = dict(root_tissue_density=input_parameters.root_tissue_density)
     statistic_names = []
     statistic_values = []
     summary_statistics = get_summary_statistics()
     for summary_statistic in summary_statistics:
         statistic_name = summary_statistic["value"]
         statistic_func = get_summary_statistic_func(statistic_name)
-        statistic_instance = statistic_func()
+        statistic_instance = statistic_func(**kwargs)
         statistic_value = statistic_instance.calculate(node_df)
 
         if isinstance(statistic_value, tuple):
             continue
+
         statistic_names.append(statistic_name)
         statistic_values.append(statistic_value)
         mlflow.log_metric(statistic_name, statistic_value)
