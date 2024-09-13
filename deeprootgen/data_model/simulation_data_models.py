@@ -173,28 +173,28 @@ class RootCalibrationModel(BaseModel):
     """
 
     random_seed: int | None
-    max_order_interval: ParameterIntervalModel
-    root_ratio_interval: ParameterIntervalModel
-    fine_root_threshold_interval: ParameterIntervalModel
-    outer_root_num_interval: ParameterIntervalModel
-    inner_root_num_interval: ParameterIntervalModel
-    min_primary_length_interval: ParameterIntervalModel
-    max_primary_length_interval: ParameterIntervalModel
-    base_diameter_interval: ParameterIntervalModel
-    diameter_reduction_interval: ParameterIntervalModel
-    apex_diameter_interval: ParameterIntervalModel
-    min_sec_root_num_interval: ParameterIntervalModel
-    max_sec_root_num_interval: ParameterIntervalModel
-    growth_sec_root_interval: ParameterIntervalModel
-    min_sec_root_length_interval: ParameterIntervalModel
-    max_sec_root_length_interval: ParameterIntervalModel
-    segments_per_root_interval: ParameterIntervalModel
-    length_reduction_interval: ParameterIntervalModel
-    root_vary_interval: ParameterIntervalModel
-    interbranch_distance_interval: ParameterIntervalModel
-    mechanical_constraints_interval: ParameterIntervalModel
-    root_tissue_density_interval: ParameterIntervalModel
-    gravitropism_interval: ParameterIntervalModel
+    max_order: ParameterIntervalModel
+    root_ratio: ParameterIntervalModel
+    fine_root_threshold: ParameterIntervalModel
+    outer_root_num: ParameterIntervalModel
+    inner_root_num: ParameterIntervalModel
+    min_primary_length: ParameterIntervalModel
+    max_primary_length: ParameterIntervalModel
+    base_diameter: ParameterIntervalModel
+    diameter_reduction: ParameterIntervalModel
+    apex_diameter: ParameterIntervalModel
+    min_sec_root_num: ParameterIntervalModel
+    max_sec_root_num: ParameterIntervalModel
+    growth_sec_root: ParameterIntervalModel
+    min_sec_root_length: ParameterIntervalModel
+    max_sec_root_length: ParameterIntervalModel
+    segments_per_root: ParameterIntervalModel
+    length_reduction: ParameterIntervalModel
+    root_vary: ParameterIntervalModel
+    interbranch_distance: ParameterIntervalModel
+    mechanical_constraints: ParameterIntervalModel
+    root_tissue_density: ParameterIntervalModel
+    gravitropism: ParameterIntervalModel
     calibration_parameters: Dict[str, bool | float | int | str]
     summary_statistics: Optional[List[SummaryStatisticsModel]] = None
     observed_data: Optional[List[RootNodeModel]] = None

@@ -415,6 +415,7 @@ def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
         {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "children"
     ),
     Output({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "disabled"),
+    Output({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "disabled"),
     Input("store-observed-data", "data"),
 )
 def update_observed_data_state(observed_data: dict | None) -> tuple:
@@ -430,13 +431,13 @@ def update_observed_data_state(observed_data: dict | None) -> tuple:
     """
     button_contents = ["Load observed data"]
     if observed_data is None:
-        return button_contents, [True]
+        return button_contents, [True], [True]
 
     observed_label = observed_data.get("label")
     if observed_label is None:
-        return button_contents, [True]
+        return button_contents, [True], [True]
 
-    return [observed_label], [False]
+    return [observed_label], [False], [False]
 
 
 @callback(

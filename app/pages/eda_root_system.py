@@ -150,6 +150,7 @@ def update_table(runs: list | None) -> list | None:
     Output(
         {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "children"
     ),
+    Output({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "disabled"),
     Output({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "options"),
     Output({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "options"),
     Output({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "options"),
@@ -168,11 +169,11 @@ def update_eda_data_state(eda_data: dict) -> tuple:
     """
     button_contents = ["Load observed data"]
     if eda_data is None:
-        return button_contents, [[]], [[]], [[]]
+        return button_contents, [True], [[]], [[]], [[]]
 
     eda_label = eda_data.get("label")
     if eda_label is None:
-        return button_contents, [[]], [[]], [[]]
+        return button_contents, [True], [[]], [[]], [[]]
 
     eda_values = eda_data["values"]
     df_columns = pd.DataFrame(eda_values).columns
@@ -182,7 +183,7 @@ def update_eda_data_state(eda_data: dict) -> tuple:
             {"label": df_column.replace("_", " ").title(), "value": df_column}
         )
 
-    return [eda_label], [columns], [columns], [columns]
+    return [eda_label], [False], [columns], [columns], [columns]
 
 
 @callback(
