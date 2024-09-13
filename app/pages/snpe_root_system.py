@@ -308,65 +308,6 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output("store-simulation-run", "data", allow_duplicate=True),
-    Output(f"{PAGE_ID}-results-toast", "is_open"),
-    Output(f"{PAGE_ID}-results-toast", "children"),
-    Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
-    State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
-    State({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
-    State("store-simulation-run", "data"),
-    State("store-observed-data", "data"),
-    prevent_initial_call=True,
-)
-def run_root_model(
-    n_clicks: list,
-    parameter_values: list,
-    calibration_values: list,
-    simulation_runs: list,
-    observed_data: dict,
-) -> tuple:
-    """Run and plot the root model.
-
-    Args:
-        n_clicks (list):
-            Number of times the button has been clicked.
-        parameter_values (list):
-            The parameter form input data.
-        calibration_values (list):
-            The calibration parameter form input data.
-        simulation_runs (list):
-            A list of simulation run data.
-        observed_data: (dict):
-            The dictionary of observed root data.
-
-    Returns:
-        tuple:
-            The updated form state.
-    """
-    if n_clicks is None or len(n_clicks) == 0:
-        return no_update
-
-    if n_clicks[0] is None or n_clicks[0] == 0:
-        return no_update
-
-    observed_values = observed_data.get("values", None)
-    form_inputs = build_calibration_parameters(
-        FORM_NAME,
-        TASK,
-        parameter_values,
-        calibration_values,
-        observed_data=observed_values,
-    )
-    if form_inputs is None:
-        return no_update
-
-    simulation_runs, toast_message = dispatch_new_run(
-        TASK, form_inputs, simulation_runs
-    )
-    return simulation_runs, True, toast_message
-
-
-@callback(
     Output(f"{PAGE_ID}-data-collapse", "is_open"),
     [Input(f"{PAGE_ID}-data-collapse-button", "n_clicks")],
     [State(f"{PAGE_ID}-data-collapse", "is_open")],
@@ -442,6 +383,7 @@ def update_observed_data_state(observed_data: dict | None) -> tuple:
 
 @callback(
     Output("store-observed-data", "data", allow_duplicate=True),
+    Output("store-raw-observed-data", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
@@ -471,11 +413,12 @@ def load_observed_data(list_of_contents: list, list_of_names: list) -> tuple:
         list_of_contents, list_of_names
     )
     observed_data = {"label": list_of_names[0], "values": loaded_data}
-    return observed_data, True, toast_message
+    return observed_data, {"value": content_string}, True, toast_message
 
 
 @callback(
     Output("store-observed-data", "data", allow_duplicate=True),
+    Output("store-raw-observed-data", "data", allow_duplicate=True),
     Output(
         {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"
     ),
@@ -509,7 +452,69 @@ def clear_observed_data(n_clicks: int | list[int], observed_data: dict) -> tuple
         return no_update
 
     toast_message = f"Clearing: {observed_label}"
-    return {}, [None], True, toast_message
+    return {}, {}, [None], True, toast_message
+
+
+@callback(
+    Output("store-simulation-run", "data", allow_duplicate=True),
+    Output(f"{PAGE_ID}-results-toast", "is_open"),
+    Output(f"{PAGE_ID}-results-toast", "children"),
+    Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
+    State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
+    State({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
+    State("store-simulation-run", "data"),
+    State("store-raw-observed-data", "data"),
+    prevent_initial_call=True,
+)
+def run_root_model(
+    n_clicks: list,
+    parameter_values: list,
+    calibration_values: list,
+    simulation_runs: list,
+    observed_data: dict,
+) -> tuple:
+    """Run and plot the root model.
+
+    Args:
+        n_clicks (list):
+            Number of times the button has been clicked.
+        parameter_values (list):
+            The parameter form input data.
+        calibration_values (list):
+            The calibration parameter form input data.
+        simulation_runs (list):
+            A list of simulation run data.
+        observed_data: (dict):
+            The dictionary of raw and encoded observed root data.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if n_clicks is None or len(n_clicks) == 0:
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:
+        return no_update
+
+    observed_data_content = observed_data.get("value", "")
+    if observed_data_content == "":
+        return no_update
+
+    form_inputs = build_calibration_parameters(
+        FORM_NAME,
+        TASK,
+        parameter_values,
+        calibration_values,
+        observed_data_content=observed_data_content,
+    )
+    if form_inputs is None:
+        return no_update
+
+    simulation_runs, toast_message = dispatch_new_run(
+        TASK, form_inputs, simulation_runs
+    )
+    return simulation_runs, True, toast_message
 
 
 ######################################

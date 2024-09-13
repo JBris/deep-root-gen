@@ -505,6 +505,9 @@ def run_root_model(
     stat_by_col = stats_by_col[0]
 
     summary_statistics = summary_data.get("values", None)
+    if summary_statistics is None:
+        return no_update
+
     form_inputs = build_calibration_parameters(
         FORM_NAME,
         TASK,

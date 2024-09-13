@@ -188,6 +188,7 @@ def update_eda_data_state(eda_data: dict) -> tuple:
 
 @callback(
     Output("store-observed-data", "data", allow_duplicate=True),
+    Output("store-raw-observed-data", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
@@ -213,13 +214,16 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
     if list_of_contents[0] is None:
         return no_update
 
-    loaded_data, _, toast_message = load_data_from_file(list_of_contents, list_of_names)
+    loaded_data, content_string, toast_message = load_data_from_file(
+        list_of_contents, list_of_names
+    )
     eda_data = {"label": list_of_names[0], "values": loaded_data}
-    return eda_data, True, toast_message
+    return eda_data, {"value": content_string}, True, toast_message
 
 
 @callback(
     Output("store-observed-data", "data", allow_duplicate=True),
+    Output("store-raw-observed-data", "data", allow_duplicate=True),
     Output(
         {"type": f"{PAGE_ID}-parameters", "index": ALL}, "value", allow_duplicate=True
     ),
@@ -260,7 +264,7 @@ def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
     app = get_app()
     form_model = app.settings[FORM_NAME]
     clear_form = [None for _ in form_model.components["parameters"]["children"]]
-    return {}, clear_form, [None], True, toast_message
+    return {}, {}, clear_form, [None], True, toast_message
 
 
 @callback(
