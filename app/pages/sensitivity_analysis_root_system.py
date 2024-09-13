@@ -11,13 +11,12 @@ from dash import (
     State,
     callback,
     dcc,
-    get_app,
     html,
     no_update,
     register_page,
 )
 
-from deeprootgen.form import get_common_layout
+from deeprootgen.form import build_calibration_parameters, get_common_layout
 from deeprootgen.io import load_data_from_file, s3_upload_file
 from deeprootgen.pipeline import (
     dispatch_new_run,
@@ -309,27 +308,43 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
     Output(f"{PAGE_ID}-results-toast", "children"),
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
-    State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
+    State({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
+    State({"index": f"{PAGE_ID}-stat-by-soil-layer-switch", "type": ALL}, "on"),
+    State({"index": f"{PAGE_ID}-stat-by-soil-col-switch", "type": ALL}, "on"),
     State("store-simulation-run", "data"),
+    State("store-summary-data", "data"),
     prevent_initial_call=True,
 )
 def run_root_model(
-    n_clicks: list, form_values: list, enable_soils: list, simulation_runs: list
-) -> dcc.Graph:
+    n_clicks: list,
+    parameter_values: list,
+    calibration_values: list,
+    stats_by_layer: list[bool],
+    stats_by_col: list[bool],
+    simulation_runs: list,
+    summary_data: dict,
+) -> tuple:
     """Run and plot the root model.
 
     Args:
         n_clicks (list):
             Number of times the button has been clicked.
-        form_values (list):
-            The form input data.
-        enable_soils (list):
-            Enable visualisation of soil data.
+        parameter_values (list):
+            The parameter form input data.
+        calibration_values (list):
+            The calibration parameter form input data.
+        stats_by_layer (list):
+            Whether to calculate statistics by soil layer.
+        stats_by_col (list):
+            Whether to calculate statistics by soil column.
         simulation_runs (list):
             A list of simulation run data.
+        summary_data: (dict):
+            The dictionary of observed summary statistic data.
 
     Returns:
-        dcc.Graph: The visualised root model.
+        tuple:
+            The updated form state.
     """
     if n_clicks is None or len(n_clicks) == 0:
         return no_update
@@ -337,15 +352,21 @@ def run_root_model(
     if n_clicks[0] is None or n_clicks[0] == 0:
         return no_update
 
-    form_inputs = {}
-    app = get_app()
-    form_model = app.settings[FORM_NAME]
-    for i, input in enumerate(form_model.components["parameters"]["children"]):
-        k = input["param"]
-        form_inputs[k] = form_values[i]
+    stat_by_layer = stats_by_layer[0]
+    stat_by_col = stats_by_col[0]
 
-    enable_soil: bool = enable_soils[0]
-    form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
+    summary_statistics = summary_data.get("values", None)
+    form_inputs = build_calibration_parameters(
+        FORM_NAME,
+        TASK,
+        parameter_values,
+        calibration_values,
+        summary_statistics=summary_statistics,
+        stat_by_layer=stat_by_layer,
+        stat_by_col=stat_by_col,
+    )
+    if form_inputs is None:
+        return no_update
 
     simulation_runs, toast_message = dispatch_new_run(
         TASK, form_inputs, simulation_runs

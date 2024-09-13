@@ -135,17 +135,30 @@ class ParameterIntervalModel(BaseModel):
     data_type: str
 
 
-class StatisticsComparisonModel(BaseModel):
-    """
-    The data model for comparing synthetic and observed data.
+class SummaryStatisticsModel(BaseModel):
+    """The summary statistics data model.
 
     Args:
         BaseModel (BaseModel):
             The Pydantic Base model class.
     """
 
-    summary_statistics: List[str]
-    distance_metric: str
+    statistic_name: str
+    statistic_value: float
+    z_lower_bound: Optional[float] = 0.0
+    z_upper_bound: Optional[float] = 0.0
+
+
+class StatisticsComparisonModel(BaseModel):
+    """The data model for comparing synthetic and observed data.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    summary_statistics: Optional[List[str]] = None
+    distance_metric: Optional[str] = ""
     stat_by_soil_layer: Optional[bool] = False
     stat_by_soil_column: Optional[bool] = False
 
@@ -183,7 +196,9 @@ class RootCalibrationModel(BaseModel):
     root_tissue_density_interval: ParameterIntervalModel
     gravitropism_interval: ParameterIntervalModel
     calibration_parameters: Dict[str, bool | float | int | str]
-    statistics_comparison: StatisticsComparisonModel
+    summary_statistics: Optional[List[SummaryStatisticsModel]] = None
+    observed_data: Optional[List[RootNodeModel]] = None
+    statistics_comparison: Optional[StatisticsComparisonModel] = None
     origin_min: Optional[float] = 1e-3
     origin_max: Optional[float] = 1e-2
     enable_soil: Optional[bool] = False

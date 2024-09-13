@@ -11,13 +11,12 @@ from dash import (
     State,
     callback,
     dcc,
-    get_app,
     html,
     no_update,
     register_page,
 )
 
-from deeprootgen.form import get_common_layout
+from deeprootgen.form import build_calibration_parameters, get_common_layout
 from deeprootgen.io import load_data_from_file, s3_upload_file
 from deeprootgen.pipeline import (
     dispatch_new_run,
@@ -313,16 +312,18 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
     State({"index": f"{PAGE_ID}-stat-by-soil-layer-switch", "type": ALL}, "on"),
     State({"index": f"{PAGE_ID}-stat-by-soil-col-switch", "type": ALL}, "on"),
     State("store-simulation-run", "data"),
+    State("store-summary-data", "data"),
     prevent_initial_call=True,
 )
 def run_root_model(
     n_clicks: list,
     parameter_values: list,
     calibration_values: list,
-    stat_by_layer: list,
-    stat_by_col: list,
+    stats_by_layer: list[bool],
+    stats_by_col: list[bool],
     simulation_runs: list,
-) -> dcc.Graph:
+    summary_data: dict,
+) -> tuple:
     """Run and plot the root model.
 
     Args:
@@ -332,15 +333,18 @@ def run_root_model(
             The parameter form input data.
         calibration_values (list):
             The calibration parameter form input data.
-        stat_by_layer (list):
+        stats_by_layer (list):
             Whether to calculate statistics by soil layer.
-        stat_by_col (list):
+        stats_by_col (list):
             Whether to calculate statistics by soil column.
         simulation_runs (list):
             A list of simulation run data.
+        summary_data: (dict):
+            The dictionary of observed summary statistic data.
 
     Returns:
-        dcc.Graph: The visualised root model.
+        tuple:
+            The updated form state.
     """
     if n_clicks is None or len(n_clicks) == 0:
         return no_update
@@ -348,39 +352,21 @@ def run_root_model(
     if n_clicks[0] is None or n_clicks[0] == 0:
         return no_update
 
-    form_inputs = {}
-    app = get_app()
-    form_model = app.settings[FORM_NAME]
+    stat_by_layer = stats_by_layer[0]
+    stat_by_col = stats_by_col[0]
 
-    for i, input in enumerate(form_model.components["parameters"]["children"]):
-        k = input["param"]
-        if isinstance(parameter_values[i], list):
-            lower_bound, upper_bound = parameter_values[i]
-            form_inputs[k] = {
-                "lower_bound": lower_bound,
-                "upper_bound": upper_bound,
-                "data_type": input["data_type"],
-            }
-        else:
-            form_inputs[k] = parameter_values[i]
-
-    form_inputs["calibration_parameters"] = {}
-    form_inputs["statistics_comparison"] = {}
-
-    for i, input in enumerate(form_model.components[TASK]["children"]):
-        k = input["param"]
-        calibration_value = calibration_values[i]
-        if k == "distance_metric" or k == "distance_metric":
-            if calibration_value is None or len(calibration_value) == 0:
-                return no_update
-
-        if input.get("statistic_parameter"):
-            form_inputs["statistics_comparison"][k] = calibration_value
-        else:
-            form_inputs["calibration_parameters"][k] = calibration_value
-
-    form_inputs["statistics_comparison"]["stat_by_soil_layer"] = stat_by_layer[0]
-    form_inputs["statistics_comparison"]["stat_by_soil_column"] = stat_by_col[0]
+    summary_statistics = summary_data.get("values", None)
+    form_inputs = build_calibration_parameters(
+        FORM_NAME,
+        TASK,
+        parameter_values,
+        calibration_values,
+        summary_statistics=summary_statistics,
+        stat_by_layer=stat_by_layer,
+        stat_by_col=stat_by_col,
+    )
+    if form_inputs is None:
+        return no_update
 
     simulation_runs, toast_message = dispatch_new_run(
         TASK, form_inputs, simulation_runs
@@ -430,6 +416,90 @@ def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
     if n:
         return not is_open
     return is_open
+
+
+@callback(
+    Output("store-summary-data", "data", allow_duplicate=True),
+    Output(
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL},
+        "children",
+        allow_duplicate=True,
+    ),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
+    State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
+    prevent_initial_call=True,
+)
+def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load observed data from file.
+
+    Args:
+        list_of_contents (list):
+            The list of file contents.
+        list_of_names (list):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if list_of_contents is None or len(list_of_contents) == 0:
+        return no_update
+
+    if list_of_contents[0] is None:
+        return no_update
+
+    loaded_data, toast_message = load_data_from_file(list_of_contents, list_of_names)
+
+    summary_data = {"label": list_of_names[0], "values": loaded_data}
+    return summary_data, list_of_names, True, toast_message
+
+
+@callback(
+    Output("store-summary-data", "data", allow_duplicate=True),
+    Output(
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL},
+        "children",
+        allow_duplicate=True,
+    ),
+    Output(
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"
+    ),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
+    State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
+    prevent_initial_call=True,
+)
+def clear_observation_data(n_clicks: list[int], list_of_names: list[str]) -> tuple:
+    """Clear observation data from the page.
+
+    Args:
+        n_clicks (list[int]):
+            The number of form clicks.
+        list_of_names (list[str]):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if n_clicks is None or len(n_clicks) == 0:
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:
+        return no_update
+
+    if list_of_names is None or len(list_of_names) == 0:
+        return no_update
+
+    if list_of_names[0] is None:
+        return no_update
+
+    button_contents = "Load observed data"
+    toast_message = f"Clearing: {list_of_names[0]}"
+    return {}, [button_contents], [None], True, toast_message
 
 
 ######################################

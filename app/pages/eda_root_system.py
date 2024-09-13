@@ -201,11 +201,7 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
     ),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
-    [
-        Input(
-            {"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"
-        )
-    ],
+    Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
     State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
     prevent_initial_call=True,
 )

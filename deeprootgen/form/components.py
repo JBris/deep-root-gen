@@ -498,3 +498,74 @@ def get_common_layout(
         right_sticky,
     )
     return layout
+
+
+def build_calibration_parameters(
+    form_name: str,
+    task: str,
+    parameter_values: list,
+    calibration_values: list,
+    observed_data: list[dict] | None = None,
+    summary_statistics: list[dict] | None = None,
+    stat_by_layer: bool = False,
+    stat_by_col: bool = False,
+) -> dict | None:
+    """Build calibration parameters for workflow submission from form inputs.
+
+    Args:
+        form_name (str):
+            The name of the current form.
+        task (str):
+            The current simulation task.
+        parameter_values (list):
+            The parameter form input data.
+        calibration_values (list):
+            The calibration parameter form input data.
+        observed_data: (list[dict] | None, optional):
+            The list of observed root data. Defaults to None.
+        summary_statistics: (list[dict] | None, optional):
+            The list of observed summary statistic data. Defaults to None.
+        stat_by_layer (bool, optional):
+            Whether to calculate statistics by soil layer. Defaults to False.
+        stat_by_col (bool, optional ):
+            Whether to calculate statistics by soil column. Defaults to False.
+
+    Returns:
+        dict | None:
+            The calibration parameters for workflow submission
+    """
+    form_inputs = {}
+    app = get_app()
+    form_model = app.settings[form_name]
+
+    for i, input in enumerate(form_model.components["parameters"]["children"]):
+        k = input["param"]
+        if isinstance(parameter_values[i], list):
+            lower_bound, upper_bound = parameter_values[i]
+            form_inputs[k] = {
+                "lower_bound": lower_bound,
+                "upper_bound": upper_bound,
+                "data_type": input["data_type"],
+            }
+        else:
+            form_inputs[k] = parameter_values[i]
+
+    form_inputs["calibration_parameters"] = {}
+    form_inputs["statistics_comparison"] = {}
+
+    for i, input in enumerate(form_model.components[task]["children"]):
+        k = input["param"]
+        calibration_value = calibration_values[i]
+        if k == "summary_statistics" or k == "distance_metric":
+            if calibration_value is None or len(calibration_value) == 0:
+                return None
+
+        if input.get("statistic_parameter"):
+            form_inputs["statistics_comparison"][k] = calibration_value
+        else:
+            form_inputs["calibration_parameters"][k] = calibration_value
+
+    form_inputs["statistics_comparison"]["stat_by_soil_layer"] = stat_by_layer
+    form_inputs["statistics_comparison"]["stat_by_soil_column"] = stat_by_col
+
+    return form_inputs

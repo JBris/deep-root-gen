@@ -305,7 +305,7 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
 )
 def run_root_model(
     n_clicks: list, form_values: list, enable_soils: list, simulation_runs: list
-) -> dcc.Graph:
+) -> tuple:
     """Run and plot the root model.
 
     Args:
@@ -319,7 +319,8 @@ def run_root_model(
             A list of simulation run data.
 
     Returns:
-        dcc.Graph: The visualised root model.
+        tuple:
+            The updated form state.
     """
     if n_clicks is None or len(n_clicks) == 0:
         return no_update
