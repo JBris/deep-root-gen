@@ -228,19 +228,35 @@
 
 
 
-<div class="viewcode-block" id="StatisticsComparisonModel">
-<a class="viewcode-back" href="../../../api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.StatisticsComparisonModel">[docs]</a>
-<span class="k">class</span> <span class="nc">StatisticsComparisonModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The data model for comparing synthetic and observed data.</span>
+<div class="viewcode-block" id="SummaryStatisticsModel">
+<a class="viewcode-back" href="../../../api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.SummaryStatisticsModel">[docs]</a>
+<span class="k">class</span> <span class="nc">SummaryStatisticsModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The summary statistics data model.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        BaseModel (BaseModel):</span>
 <span class="sd">            The Pydantic Base model class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">summary_statistics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">distance_metric</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">statistic_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">statistic_value</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">z_lower_bound</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">z_upper_bound</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+
+
+<div class="viewcode-block" id="StatisticsComparisonModel">
+<a class="viewcode-back" href="../../../api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.StatisticsComparisonModel">[docs]</a>
+<span class="k">class</span> <span class="nc">StatisticsComparisonModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The data model for comparing synthetic and observed data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        BaseModel (BaseModel):</span>
+<span class="sd">            The Pydantic Base model class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">summary_statistics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">distance_metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">stat_by_soil_layer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">stat_by_soil_column</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
 
@@ -281,7 +297,9 @@
     <span class="n">root_tissue_density_interval</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
     <span class="n">gravitropism_interval</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
     <span class="n">calibration_parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span>
-    <span class="n">statistics_comparison</span><span class="p">:</span> <span class="n">StatisticsComparisonModel</span>
+    <span class="n">summary_statistics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">SummaryStatisticsModel</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">observed_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">RootNodeModel</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">statistics_comparison</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">StatisticsComparisonModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">origin_min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-3</span>
     <span class="n">origin_max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-2</span>
     <span class="n">enable_soil</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>

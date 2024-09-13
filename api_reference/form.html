@@ -51,6 +51,7 @@
 <li class="toctree-l2"><a class="reference internal" href="data_model.html">Data Model</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Form</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.form.components">Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.form.components.build_calibration_parameters"><code class="docutils literal notranslate"><span class="pre">build_calibration_parameters()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.form.components.build_collapsible"><code class="docutils literal notranslate"><span class="pre">build_collapsible()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.form.components.build_common_components"><code class="docutils literal notranslate"><span class="pre">build_common_components()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.form.components.build_common_layout"><code class="docutils literal notranslate"><span class="pre">build_common_layout()</span></code></a></li>
@@ -103,6 +104,38 @@
 <p>This module is composed of various utilities for form
 components. These include common components and
 components that are specific to a given page.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.form.components.build_calibration_parameters">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.form.components.</span></span><span class="sig-name descname"><span class="pre">build_calibration_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary_statistics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat_by_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stat_by_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/deeprootgen/form/components.html#build_calibration_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.form.components.build_calibration_parameters" title="Link to this definition"></a></dt>
+<dd><p>Build calibration parameters for workflow submission from form inputs.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>form_name (str):</dt><dd><p>The name of the current form.</p>
+</dd>
+<dt>task (str):</dt><dd><p>The current simulation task.</p>
+</dd>
+<dt>parameter_values (list):</dt><dd><p>The parameter form input data.</p>
+</dd>
+<dt>calibration_values (list):</dt><dd><p>The calibration parameter form input data.</p>
+</dd>
+<dt>observed_data: (list[dict] | None, optional):</dt><dd><p>The list of observed root data. Defaults to None.</p>
+</dd>
+<dt>summary_statistics: (list[dict] | None, optional):</dt><dd><p>The list of observed summary statistic data. Defaults to None.</p>
+</dd>
+<dt>stat_by_layer (bool, optional):</dt><dd><p>Whether to calculate statistics by soil layer. Defaults to False.</p>
+</dd>
+<dt>stat_by_col (bool, optional ):</dt><dd><p>Whether to calculate statistics by soil column. Defaults to False.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>dict | None:</dt><dd><p>The calibration parameters for workflow submission</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="deeprootgen.form.components.build_collapsible">
 <span class="sig-prename descclassname"><span class="pre">deeprootgen.form.components.</span></span><span class="sig-name descname"><span class="pre">build_collapsible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Row</span></span></span><a class="reference internal" href="../_modules/deeprootgen/form/components.html#build_collapsible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.form.components.build_collapsible" title="Link to this definition"></a></dt>
