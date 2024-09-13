@@ -14,7 +14,7 @@ components:
         max_value: 3
         kwargs:
           min: 1
-          max: 5
+          max: 10
           persistence: true
           pushable: false
           allowCross: false
@@ -425,23 +425,31 @@ components:
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_summary_statistics
+        statistic_parameter: true
         kwargs:
           multi: true
           searchable: true
           clearable: true
           placeholder: Select summary statistics
+          persistence: true
       - id: stat-by-soil-layer-switch
         param: stat_by_soil_layer
         label: Statistics by soil layer
         help: Enable the calculation of summary statistics by soil layer within the voxel grid
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
       - id: stat-by-soil-col-switch
         param: stat_by_soil_column
         label: Statistics by soil column
         help: Enable the calculation of summary statistics by soil column within the voxel grid
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
       - id: distance-dropdown
         param: distance_metric
         label: Distance metric
@@ -449,11 +457,13 @@ components:
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_distance_metrics
+        statistic_parameter: true
         kwargs:
           multi: false
           searchable: true
           clearable: true
           placeholder: Select distance metric
+          persistence: true
       - id: epsilon-input
         param: epsilon
         label: Epsilon
@@ -519,23 +529,31 @@ components:
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_summary_statistics
+        statistic_parameter: true
         kwargs:
           multi: true
           searchable: true
           clearable: true
           placeholder: Select summary statistics
+          persistence: true
       - id: stat-by-soil-layer-switch
         param: stat_by_soil_layer
         label: Statistics by soil layer
         help: Enable the calculation of summary statistics by soil layer within the voxel grid
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
       - id: stat-by-soil-col-switch
         param: stat_by_soil_column
         label: Statistics by soil column
         help: Enable the calculation of summary statistics by soil column within the voxel grid
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
       - id: distance-dropdown
         param: distance_metric
         label: Distance metric
@@ -543,11 +561,13 @@ components:
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_distance_metrics
+        statistic_parameter: true
         kwargs:
           multi: false
           searchable: true
           clearable: true
           placeholder: Select distance metric
+          persistence: true
   sensitivity_analysis:
     collapsible: true
     children:
@@ -569,23 +589,31 @@ components:
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_summary_statistics
+        statistic_parameter: true
         kwargs:
           multi: true
           searchable: true
           clearable: true
           placeholder: Select summary statistics
+          persistence: true
       - id: stat-by-soil-layer-switch
-        param: stat_by_soil_layer
+        param: stat_by_soil_layer 
         label: Statistics by soil layer
         help: Enable the calculation of summary statistics by soil layer within the voxel grid
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
       - id: stat-by-soil-col-switch
         param: stat_by_soil_column
         label: Statistics by soil column
         help: Enable the calculation of summary statistics by soil column within the voxel grid
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
       - id: distance-dropdown
         param: distance_metric
         label: Distance metric
@@ -593,11 +621,13 @@ components:
         class_name: dash.dcc.Dropdown
         handler: dropdown
         options_func: deeprootgen.statistics.get_distance_metrics
+        statistic_parameter: true
         kwargs:
           multi: false
           searchable: true
           clearable: true
           placeholder: Select distance metric
+          persistence: true
   snpe:
     collapsible: true
     children:

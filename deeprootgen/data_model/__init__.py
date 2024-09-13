@@ -5,6 +5,7 @@ from .config_data_models import (
     OrchestrationModel,
 )
 from .simulation_data_models import (
+    RootCalibrationModel,
     RootEdgeModel,
     RootNodeModel,
     RootSimulationModel,

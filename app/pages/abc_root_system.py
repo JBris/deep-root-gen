@@ -309,22 +309,33 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
     Output(f"{PAGE_ID}-results-toast", "children"),
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
-    State({"index": f"{PAGE_ID}-enable-soil-input", "type": ALL}, "on"),
+    State({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
+    State({"index": f"{PAGE_ID}-stat-by-soil-layer-switch", "type": ALL}, "on"),
+    State({"index": f"{PAGE_ID}-stat-by-soil-col-switch", "type": ALL}, "on"),
     State("store-simulation-run", "data"),
     prevent_initial_call=True,
 )
 def run_root_model(
-    n_clicks: list, form_values: list, enable_soils: list, simulation_runs: list
+    n_clicks: list,
+    parameter_values: list,
+    calibration_values: list,
+    stat_by_layer: list,
+    stat_by_col: list,
+    simulation_runs: list,
 ) -> dcc.Graph:
     """Run and plot the root model.
 
     Args:
         n_clicks (list):
             Number of times the button has been clicked.
-        form_values (list):
-            The form input data.
-        enable_soils (list):
-            Enable visualisation of soil data.
+        parameter_values (list):
+            The parameter form input data.
+        calibration_values (list):
+            The calibration parameter form input data.
+        stat_by_layer (list):
+            Whether to calculate statistics by soil layer.
+        stat_by_col (list):
+            Whether to calculate statistics by soil column.
         simulation_runs (list):
             A list of simulation run data.
 
@@ -340,12 +351,36 @@ def run_root_model(
     form_inputs = {}
     app = get_app()
     form_model = app.settings[FORM_NAME]
+
     for i, input in enumerate(form_model.components["parameters"]["children"]):
         k = input["param"]
-        form_inputs[k] = form_values[i]
+        if isinstance(parameter_values[i], list):
+            lower_bound, upper_bound = parameter_values[i]
+            form_inputs[k] = {
+                "lower_bound": lower_bound,
+                "upper_bound": upper_bound,
+                "data_type": input["data_type"],
+            }
+        else:
+            form_inputs[k] = parameter_values[i]
 
-    enable_soil: bool = enable_soils[0]
-    form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
+    form_inputs["calibration_parameters"] = {}
+    form_inputs["statistics_comparison"] = {}
+
+    for i, input in enumerate(form_model.components[TASK]["children"]):
+        k = input["param"]
+        calibration_value = calibration_values[i]
+        if k == "distance_metric" or k == "distance_metric":
+            if calibration_value is None or len(calibration_value) == 0:
+                return no_update
+
+        if input.get("statistic_parameter"):
+            form_inputs["statistics_comparison"][k] = calibration_value
+        else:
+            form_inputs["calibration_parameters"][k] = calibration_value
+
+    form_inputs["statistics_comparison"]["stat_by_soil_layer"] = stat_by_layer[0]
+    form_inputs["statistics_comparison"]["stat_by_soil_column"] = stat_by_col[0]
 
     simulation_runs, toast_message = dispatch_new_run(
         TASK, form_inputs, simulation_runs

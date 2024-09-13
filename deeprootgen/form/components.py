@@ -78,6 +78,9 @@ def build_common_components(
         component_instance.style = {"padding-left": "0.5em"}
 
         if hasattr(component_spec, "handler"):
+            if component_spec.handler == "boolean_switch":
+                component_instance.on = False
+
             if component_spec.handler == "dropdown":
                 options_func = locate(component_spec.options_func)
                 summary_statistics = options_func()  # type: ignore

@@ -10,7 +10,7 @@ components:
         class_name: dash.dcc.Slider
         kwargs:
           min: 1
-          max: 5
+          max: 10
           value: 2
           step: 1
           persistence: true
@@ -268,7 +268,9 @@ components:
         label: Enable soil
         help: Enable the soil voxel grid into the simulation.
         class_name: dash_daq.BooleanSwitch.BooleanSwitch 
-        kwargs: {}
+        handler: boolean_switch
+        kwargs: 
+          persistence: true
       - id: soil-layer-height-input
         param: soil_layer_height
         label: Soil layer height

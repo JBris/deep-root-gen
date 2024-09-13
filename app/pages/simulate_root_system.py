@@ -335,7 +335,7 @@ def run_root_model(
         form_inputs[k] = form_values[i]
 
     enable_soil: bool = enable_soils[0]
-    form_inputs["enable_soil"] = enable_soil == True  # noqa: E712
+    form_inputs["enable_soil"] = enable_soil
 
     simulation_runs, toast_message = dispatch_new_run(
         TASK, form_inputs, simulation_runs

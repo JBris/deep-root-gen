@@ -8,7 +8,7 @@ import mlflow
 from prefect import context, flow, task
 from prefect.task_runners import ConcurrentTaskRunner
 
-from deeprootgen.data_model import RootSimulationModel
+from deeprootgen.data_model import RootCalibrationModel
 from deeprootgen.io import save_graph_to_db
 from deeprootgen.model import RootSystemSimulation
 from deeprootgen.pipeline import (
@@ -25,13 +25,13 @@ from deeprootgen.pipeline import (
 
 @task
 def run_optimisation(
-    input_parameters: RootSimulationModel, simulation_uuid: str
+    input_parameters: RootCalibrationModel, simulation_uuid: str
 ) -> None:
     """Running a optimisation procedure.
 
     Args:
-        input_parameters (RootSimulationModel):
-            The root simulation data model.
+        input_parameters (RootCalibrationModel):
+            The root calibration data model.
         simulation_uuid (str):
             The simulation uuid.
     """
@@ -44,13 +44,13 @@ def run_optimisation(
     task_runner=ConcurrentTaskRunner(),
 )
 def run_optimisation_flow(
-    input_parameters: RootSimulationModel, simulation_uuid: str
+    input_parameters: RootCalibrationModel, simulation_uuid: str
 ) -> None:
-    """Flow for running a optimisation procedure.
+    """Flow for running an optimisation procedure.
 
     Args:
-        input_parameters (RootSimulationModel):
-            The root simulation data model.
+        input_parameters (RootCalibrationModel):
+            The root calibration data model.
         simulation_uuid (str):
             The simulation uuid.
     """

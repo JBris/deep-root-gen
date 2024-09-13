@@ -6,7 +6,7 @@ root system architecture simulation procedures.
 """
 
 from enum import Enum
-from typing import Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -133,3 +133,66 @@ class ParameterIntervalModel(BaseModel):
     lower_bound: float
     upper_bound: float
     data_type: str
+
+
+class StatisticsComparisonModel(BaseModel):
+    """
+    The data model for comparing synthetic and observed data.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    summary_statistics: List[str]
+    distance_metric: str
+    stat_by_soil_layer: Optional[bool] = False
+    stat_by_soil_column: Optional[bool] = False
+
+
+class RootCalibrationModel(BaseModel):
+    """
+    The root system architecture calibration data model.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    random_seed: int | None
+    max_order_interval: ParameterIntervalModel
+    root_ratio_interval: ParameterIntervalModel
+    fine_root_threshold_interval: ParameterIntervalModel
+    outer_root_num_interval: ParameterIntervalModel
+    inner_root_num_interval: ParameterIntervalModel
+    min_primary_length_interval: ParameterIntervalModel
+    max_primary_length_interval: ParameterIntervalModel
+    base_diameter_interval: ParameterIntervalModel
+    diameter_reduction_interval: ParameterIntervalModel
+    apex_diameter_interval: ParameterIntervalModel
+    min_sec_root_num_interval: ParameterIntervalModel
+    max_sec_root_num_interval: ParameterIntervalModel
+    growth_sec_root_interval: ParameterIntervalModel
+    min_sec_root_length_interval: ParameterIntervalModel
+    max_sec_root_length_interval: ParameterIntervalModel
+    segments_per_root_interval: ParameterIntervalModel
+    length_reduction_interval: ParameterIntervalModel
+    root_vary_interval: ParameterIntervalModel
+    interbranch_distance_interval: ParameterIntervalModel
+    mechanical_constraints_interval: ParameterIntervalModel
+    root_tissue_density_interval: ParameterIntervalModel
+    gravitropism_interval: ParameterIntervalModel
+    calibration_parameters: Dict[str, bool | float | int | str]
+    statistics_comparison: StatisticsComparisonModel
+    origin_min: Optional[float] = 1e-3
+    origin_max: Optional[float] = 1e-2
+    enable_soil: Optional[bool] = False
+    soil_layer_height: Optional[float] = 0
+    soil_layer_width: Optional[float] = 0
+    soil_n_layers: Optional[int] = 0
+    soil_n_cols: Optional[int] = 0
+    max_val_attempts: Optional[int] = 50
+    simulation_tag: Optional[str] = "default"
+    no_root_zone: Optional[float] = 1e-4
+    floor_threshold: Optional[float] = 0.4
+    ceiling_threshold: Optional[float] = 0.9
