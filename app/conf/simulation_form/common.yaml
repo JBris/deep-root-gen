@@ -215,6 +215,54 @@ components:
           step: 1
           value: 30
           persistence: true
+      - id: interbranch-distance-input
+        param: interbranch_distance
+        label: Interbranch distance
+        help: The interbranch distance between roots
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.001
+          max: 0.01
+          step: 0.001
+          value: 0.0078
+          persistence: true
+      - id: mechanical-constraints-input
+        param: mechanical_constraints
+        label: Mechanical constraints
+        help: The mechanical constraints of the roots (radial degrees/cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.1
+          max: 1
+          step: 0.1
+          value: 0.5
+          persistence: true
+      - id: root-tissue-density-input
+        param: root_tissue_density
+        label: Root tissue density
+        help: The root tissue density (g/cm3)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.01
+          max: 0.1
+          step: 0.01
+          value: 0.05
+          persistence: true
+      - id: gravitropism-input
+        param: gravitropism
+        label: Gravitropism factor
+        help: The gravitropism factor for root development
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          max: 10
+          step: 1
+          value: 7.5
+          persistence: true
       - id: enable-soil-input
         param: enable_soil
         label: Enable soil
@@ -268,7 +316,7 @@ components:
           max: 20
           step: 1
           value: 1
-          persistence: true
+          persistence: true          
       - id: random-seed-input
         param: random_seed
         label: Random seed

@@ -273,6 +273,66 @@ components:
           persistence: true
           pushable: false
           allowCross: false
+      - id: interbranch-distance-slider
+        param: interbranch_distance_interval
+        label: Interbranch distance
+        help: The interval for the interbranch distance between roots
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.005
+        max_value: 0.009
+        kwargs:
+          min: 0.001
+          max: 0.01
+          persistence: true
+          pushable: false
+          allowCross: false
+      - id: mechanical-constraints-slider
+        param: mechanical_constraints_interval
+        label: Mechanical constraints
+        help: The interval for the mechanical constraints of the roots (radial degrees/cm)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.3
+        max_value: 0.6
+        kwargs:
+          min: 0.1
+          max: 1
+          persistence: true
+          pushable: false
+          allowCross: false
+      - id: root-tissue-density-slider
+        param: root_tissue_density_interval
+        label: Root tissue density
+        help: The interval for the root tissue density (g/cm3)
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0.03
+        max_value: 0.07
+        kwargs:
+          min: 0.01
+          max: 0.1
+          persistence: true
+          pushable: false
+          allowCross: false
+      - id: gravitropism-slider
+        param: gravitropism_interval
+        label: Gravitropism factor
+        help: The gravitropism factor for root development
+        data_type: float
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 4
+        max_value: 9
+        kwargs:
+          min: 1
+          max: 10
+          persistence: true
+          pushable: false
+          allowCross: false
       - id: random-seed-input
         param: random_seed
         label: Random seed

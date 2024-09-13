@@ -56,6 +56,7 @@ class RootNodeModel(BaseModel):
     segment_rank: Optional[int] = 0
     diameter: Optional[float] = 0.0
     length: Optional[float] = 0.0
+    root_tissue_density: Optional[float] = 0.0
     root_type: Optional[str] = "base"
     order_type: Optional[str] = "base"
     position_type: Optional[str] = "base"
@@ -103,6 +104,10 @@ class RootSimulationModel(BaseModel):
     segments_per_root: int
     length_reduction: float
     root_vary: float
+    interbranch_distance: float
+    mechanical_constraints: float
+    root_tissue_density: float
+    gravitropism: float
     origin_min: Optional[float] = 1e-3
     origin_max: Optional[float] = 1e-2
     enable_soil: bool

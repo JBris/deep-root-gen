@@ -133,6 +133,7 @@ class RootOrgan:
         lengths: np.ndarray,
         coordinates: np.ndarray,
         root_type: RootTypeModel,
+        root_tissue_density: float,
         i: int,
         new_organ: bool = False,
     ) -> RootNode:
@@ -149,6 +150,8 @@ class RootOrgan:
                 The 3D coordinates.
             root_type (RootTypeModel):
                 The root type data model.
+            root_tissue_density (float):
+                The root tissue density (g/cm3)
             i (int):
                 The current array index.
             new_organ (bool, optional):
@@ -168,7 +171,7 @@ class RootOrgan:
             z=z,
             diameter=diameter,
             length=length,
-            mode="marker",
+            root_tissue_density=root_tissue_density,
             root_type=root_type.root_type,
             order_type=root_type.order_type,
             position_type=root_type.position_type,
@@ -222,9 +225,7 @@ class RootOrgan:
         return coordinates
 
     def construct_root(
-        self,
-        segments_per_root: int,
-        apex_diameter: int,
+        self, segments_per_root: int, apex_diameter: int, root_tissue_density: float
     ) -> List[RootNode]:
         """Construct all root segments for the root organ.
 
@@ -233,6 +234,8 @@ class RootOrgan:
                 The number of segments for a single root organ.
             apex_diameter (int):
                 The diameter of the root apex.
+            root_tissue_density (float):
+                The root tissue density (g/cm3)
 
         Returns:
             List[RootNode]:
@@ -248,6 +251,7 @@ class RootOrgan:
             lengths=lengths,
             coordinates=coordinates,
             root_type=self.root_type,
+            root_tissue_density=root_tissue_density,
             i=0,
             new_organ=True,
         )
@@ -260,6 +264,7 @@ class RootOrgan:
                 lengths=lengths,
                 coordinates=coordinates,
                 root_type=self.root_type,
+                root_tissue_density=root_tissue_density,
                 i=i,
                 new_organ=False,
             )
@@ -327,12 +332,14 @@ class RootOrgan:
             position_type=self.root_type.position_type,
         )
 
+        root_tissue_density = parent_data.root_tissue_density
         self.base_node = self.add_child_node(
             self.parent_node,
             diameters=diameters,
             lengths=lengths,
             coordinates=coordinates,
             root_type=root_type,
+            root_tissue_density=root_tissue_density,
             i=0,
             new_organ=True,
         )
@@ -345,6 +352,7 @@ class RootOrgan:
                 lengths=lengths,
                 coordinates=coordinates,
                 root_type=root_type,
+                root_tissue_density=root_tissue_density,
                 i=i,
                 new_organ=False,
             )
@@ -891,7 +899,9 @@ class RootSystemSimulation:
                 simulation_tag=self.simulation_tag,
                 rng=self.rng,
             )
-            organ.construct_root(segments_per_root, apex_diameter)
+            organ.construct_root(
+                segments_per_root, apex_diameter, input_parameters.root_tissue_density
+            )
             self.organs[order].append(organ)
 
         root_type = RootTypeModel(
@@ -907,7 +917,9 @@ class RootSystemSimulation:
                 simulation_tag=self.simulation_tag,
                 rng=self.rng,
             )
-            organ.construct_root(segments_per_root, apex_diameter)
+            organ.construct_root(
+                segments_per_root, apex_diameter, input_parameters.root_tissue_density
+            )
             self.organs[order].append(organ)
 
         min_sec_root_num = input_parameters.min_sec_root_num

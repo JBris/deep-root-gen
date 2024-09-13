@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from scipy.spatial import ConvexHull
 
 px.defaults.template = "ggplot2"
 
@@ -528,7 +529,7 @@ class TotalDiameter(SummaryStatisticBase):
 
 
 class AverageDiameter(SummaryStatisticBase):
-    """The AverageDiametersummary statistic."""
+    """The AverageDiameter summary statistic."""
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the average root diameter.
@@ -587,6 +588,124 @@ class AverageDiameter(SummaryStatisticBase):
         return comparison_data
 
 
+class ConvexHullArea(SummaryStatisticBase):
+    """The ConvexHullArea statistic."""
+
+    def calculate(self, df: pd.DataFrame) -> float:
+        """Caculate the area of the convex hull.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            float:
+                The area of the convex hull.
+        """
+        coordinates = df[["x", "y", "z"]].values
+        hull = ConvexHull(points=coordinates)
+        return hull.area
+
+    def visualise(self, df: pd.DataFrame) -> go.Figure:
+        """Visualise the area of the convex hull.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            go.Figure:
+                The visualisation of the area of the convex hull.
+        """
+        areas, soil_layers = self.calculate_statistic_per_layer(df)
+
+        return px.scatter(
+            title="Convex hull area by soil layer",
+            x=areas,
+            y=abs(soil_layers),
+        ).update_layout(
+            xaxis_title="Convex hull area (cm^2)", yaxis_title="Soil depth (cm)"
+        )
+
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
+
+
+class ConvexHullVolume(SummaryStatisticBase):
+    """The ConvexHullVolume statistic."""
+
+    def calculate(self, df: pd.DataFrame) -> float:
+        """Caculate the volume of the convex hull.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            float:
+                The volume of the convex hull.
+        """
+        coordinates = df[["x", "y", "z"]].values
+        hull = ConvexHull(points=coordinates)
+        return hull.volume
+
+    def visualise(self, df: pd.DataFrame) -> go.Figure:
+        """Visualise the volume of the convex hull.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+
+        Returns:
+            go.Figure:
+                The visualisation of the volume of the convex hull.
+        """
+        areas, soil_layers = self.calculate_statistic_per_layer(df)
+
+        return px.scatter(
+            title="Convex hull volume by soil layer",
+            x=areas,
+            y=abs(soil_layers),
+        ).update_layout(
+            xaxis_title="Convex hull volume (cm^3)", yaxis_title="Soil depth (cm)"
+        )
+
+    def get_xy_comparison_data(
+        self, df: pd.DataFrame, n_elements: int = 10
+    ) -> np.ndarray:
+        """Get summary statistic data for comparing against another summary statistic.
+
+        Args:
+            df (pd.DataFrame):
+                The dataframe of root data.
+            n_elements (int, optional):
+                The number of elements for the comparison. Defaults to 10.
+
+        Returns:
+            np.ndarray:
+                The comparison data.
+        """
+        comparison_data, _ = self.calculate_statistic_per_layer(df)
+        comparison_data = comparison_data[:n_elements]
+        return comparison_data
+
+
 def get_summary_statistic_func(summary_statistic: str) -> Callable:
     """Get the summary statistic function by name.
 
@@ -619,6 +738,8 @@ def get_summary_statistics() -> list[dict]:
         "average_length",
         "total_diameter",
         "average_diameter",
+        "convex_hull_area",
+        "convex_hull_volume",
     ]
 
     summary_statistic_list = []
