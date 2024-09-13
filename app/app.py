@@ -63,7 +63,6 @@ def define_ui(app: Dash) -> None:
     app.layout = html.Div(
         [
             dcc.Store(id="store-simulation-run", storage_type="local", data=[]),
-            dcc.Store(id="store-eda-data", storage_type="local", data=[]),
             dcc.Store(id="store-summary-data", storage_type="local", data={}),
             dcc.Store(id="store-observed-data", storage_type="local", data={}),
             dcc.Loading(

@@ -15,6 +15,7 @@ components:
           searchable: true
           clearable: true
           placeholder: Select x axis
+          persistence: true
       - id: select-y-axis-dropdown
         param: y_axis_column
         label: Y axis
@@ -27,6 +28,7 @@ components:
           searchable: true
           clearable: true
           placeholder: Select y axis
+          persistence: true
       - id: select-group-by-dropdown
         param: group_by_column
         label: Group by
@@ -39,6 +41,7 @@ components:
           searchable: true
           clearable: true
           placeholder: Select group by
+          persistence: true
       - id: select-x-summary-stats-dropdown
         param: x_summary_statistics
         label: X summary statistic
@@ -51,6 +54,7 @@ components:
           searchable: true
           clearable: true
           placeholder: Select left summary statistic
+          persistence: true
       - id: select-y-summary-stats-dropdown
         param: y_summary_statistics
         label: Y summary statistic
@@ -63,6 +67,7 @@ components:
           searchable: true
           clearable: true
           placeholder: Select right summary statistic
+          persistence: true
   data:
     collapsible: true
     children:

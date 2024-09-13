@@ -147,12 +147,46 @@ def update_table(runs: list | None) -> list | None:
 
 
 @callback(
-    Output("store-eda-data", "data", allow_duplicate=True),
     Output(
-        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL},
-        "children",
-        allow_duplicate=True,
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "children"
     ),
+    Output({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "options"),
+    Output({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "options"),
+    Output({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "options"),
+    Input("store-observed-data", "data"),
+)
+def update_eda_data_state(eda_data: dict) -> tuple:
+    """Update the state of the exploratory data analysis data.
+
+    Args:
+        eda_data (dict | None):
+            The exploratory data analysis data.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    button_contents = ["Load observed data"]
+    if eda_data is None:
+        return button_contents, [[]], [[]], [[]]
+
+    eda_label = eda_data.get("label")
+    if eda_label is None:
+        return button_contents, [[]], [[]], [[]]
+
+    eda_values = eda_data["values"]
+    df_columns = pd.DataFrame(eda_values).columns
+    columns = []
+    for df_column in df_columns:
+        columns.append(
+            {"label": df_column.replace("_", " ").title(), "value": df_column}
+        )
+
+    return [eda_label], [columns], [columns], [columns]
+
+
+@callback(
+    Output("store-observed-data", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
@@ -179,20 +213,12 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
         return no_update
 
     loaded_data, toast_message = load_data_from_file(list_of_contents, list_of_names)
-
-    return loaded_data, list_of_names, True, toast_message
+    eda_data = {"label": list_of_names[0], "values": loaded_data}
+    return eda_data, True, toast_message
 
 
 @callback(
-    Output("store-eda-data", "data", allow_duplicate=True),
-    Output(
-        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL},
-        "children",
-        allow_duplicate=True,
-    ),
-    Output(
-        {"type": f"{PAGE_ID}-results", "index": ALL}, "figure", allow_duplicate=True
-    ),
+    Output("store-observed-data", "data", allow_duplicate=True),
     Output(
         {"type": f"{PAGE_ID}-parameters", "index": ALL}, "value", allow_duplicate=True
     ),
@@ -202,17 +228,17 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
-    State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
+    State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
-def clear_observation_data(n_clicks: int | list[int], list_of_names: list) -> tuple:
+def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
     """Clear observation data from the page.
 
     Args:
         n_clicks (int | list[int]):
             The number of form clicks.
-        list_of_names (list):
-            The list of file names.
+        eda_data (dict | None):
+            The exploratory data analysis data.
 
     Returns:
         tuple:
@@ -224,52 +250,16 @@ def clear_observation_data(n_clicks: int | list[int], list_of_names: list) -> tu
     if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
         return no_update
 
-    if list_of_names is None or len(list_of_names) == 0:
+    eda_label = eda_data.get("label")
+    if eda_data is None or eda_label is None:
         return no_update
 
-    if list_of_names[0] is None:
-        return no_update
-
-    button_contents = "Load observed data"
-    toast_message = f"Clearing: {list_of_names[0]}"
+    toast_message = f"Clearing: {eda_label}"
 
     app = get_app()
     form_model = app.settings[FORM_NAME]
-    clear_plots: list[dict] = [{} for _ in form_model.components["results"]["children"]]
-
     clear_form = [None for _ in form_model.components["parameters"]["children"]]
-
-    return [], [button_contents], clear_plots, clear_form, [None], True, toast_message
-
-
-@callback(
-    Output({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "options"),
-    Output({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "options"),
-    Output({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "options"),
-    Input("store-eda-data", "data"),
-    prevent_initial_call=True,
-)
-def update_axes(eda_data: list | None) -> tuple | None:
-    """Update the data axes.
-
-    Args:
-        eda_data (list | None):
-            The list of observed data.
-
-    Returns:
-        tuple | None:
-            The updated axes state.
-    """
-    if eda_data is None:
-        return no_update
-
-    df_columns = pd.DataFrame(eda_data).columns
-    columns = []
-    for df_column in df_columns:
-        columns.append(
-            {"label": df_column.replace("_", " ").title(), "value": df_column}
-        )
-    return [columns], [columns], [columns]
+    return {}, clear_form, [None], True, toast_message
 
 
 @callback(
@@ -278,14 +268,14 @@ def update_axes(eda_data: list | None) -> tuple | None:
     Input({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-eda-data", "data"),
+    State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
 def update_xy_plots(
     x_axes: list | None,
     y_axes: list | None,
     group_bys: list | None,
-    eda_data: list | None,
+    eda_data: dict,
 ) -> tuple | None:
     """Update the plot states.
 
@@ -296,15 +286,16 @@ def update_xy_plots(
             The y axis list of values.
         group_bys (list | None):
             The column to group data by.
-        eda_data (list | None):
+        eda_data (dict | None):
             The list of observed data.
 
     Returns:
         tuple | None:
             The updated plot states.
     """
-    if eda_data is None or len(eda_data) == 0:
-        return no_update
+    eda_values = eda_data.get("values")
+    if eda_data is None or eda_values is None:
+        return [{}], [{}]
     if x_axes is None or len(x_axes) == 0:
         return no_update
     if y_axes is None or len(y_axes) == 0:
@@ -319,7 +310,8 @@ def update_xy_plots(
     y_axis = y_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_data).query("order > 0")
+    df = pd.DataFrame(eda_values).query("order > 0")
+
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -346,11 +338,11 @@ def update_xy_plots(
     Output({"index": f"{PAGE_ID}-box-x-plot", "type": ALL}, "figure"),
     Input({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-eda-data", "data"),
+    State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
 def update_x_plots(
-    x_axes: list | None, group_bys: list | None, eda_data: list | None
+    x_axes: list | None, group_bys: list | None, eda_data: dict
 ) -> tuple | None:
     """Update the x axis plot states.
 
@@ -359,17 +351,18 @@ def update_x_plots(
             The x axis list of values.
         group_bys (list | None):
             The column to group data by.
-        eda_data (list | None):
+        eda_data (dict | None):
             The list of observed data.
 
     Returns:
         tuple | None:
             The updated plot states.
     """
-    if eda_data is None or len(eda_data) == 0:
-        return no_update
+    eda_values = eda_data.get("values")
+    if eda_data is None or eda_values is None:
+        return [{}], [{}]
     if x_axes is None or len(x_axes) == 0:
-        return no_update
+        return [{}], [{}]
     if group_bys is None or len(group_bys) == 0:
         return no_update
 
@@ -379,7 +372,7 @@ def update_x_plots(
     x_axis = x_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_data).query("order > 0")
+    df = pd.DataFrame(eda_values).query("order > 0")
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -403,11 +396,11 @@ def update_x_plots(
     Output({"index": f"{PAGE_ID}-box-y-plot", "type": ALL}, "figure"),
     Input({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-eda-data", "data"),
+    State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
 def update_y_plots(
-    y_axes: list | None, group_bys: list | None, eda_data: list | None
+    y_axes: list | None, group_bys: list | None, eda_data: dict
 ) -> tuple | None:
     """Update the x axis plot states.
 
@@ -416,17 +409,18 @@ def update_y_plots(
             The y axis list of values.
         group_bys (list | None):
             The column to group data by.
-        eda_data (list | None):
+        eda_data (dict | None):
             The list of observed data.
 
     Returns:
         tuple | None:
             The updated plot states.
     """
-    if eda_data is None or len(eda_data) == 0:
-        return no_update
+    eda_values = eda_data.get("values")
+    if eda_data is None or eda_values is None:
+        return [{}], [{}]
     if y_axes is None or len(y_axes) == 0:
-        return no_update
+        return [{}], [{}]
     if group_bys is None or len(group_bys) == 0:
         return no_update
 
@@ -436,7 +430,7 @@ def update_y_plots(
     y_axis = y_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_data).query("order > 0")
+    df = pd.DataFrame(eda_values).query("order > 0")
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -460,33 +454,33 @@ def update_y_plots(
     Input(
         {"index": f"{PAGE_ID}-select-x-summary-stats-dropdown", "type": ALL}, "value"
     ),
-    State("store-eda-data", "data"),
+    State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
-def update_x_statistic_plot(
-    summary_stats: list | None, eda_data: list | None
-) -> list | None:
+def update_x_statistic_plot(summary_stats: list | None, eda_data: dict) -> list | None:
     """Update the x summary statistic plot state.
 
     Args:
         summary_stats (list | None):
             The list of summary statistics.
-        eda_data (list | None):
+        eda_data (dict | None):
             The list of observed data.
 
     Returns:
         list | None:
             The updated plot state.
     """
-    if eda_data is None or len(eda_data) == 0:
-        return no_update
+    if eda_data is None or eda_data.get("values") is None:
+        return [{}]
     if summary_stats is None or len(summary_stats) == 0:
-        return no_update
+        return [{}]
     if summary_stats[0] is None:
         return [{}]
 
     summary_stat = summary_stats[0]
-    df = pd.DataFrame(eda_data).query("order > 0")
+    eda_values = eda_data["values"]
+    df = pd.DataFrame(eda_values).query("order > 0")
+
     if len(df) == 0:
         return no_update
 
@@ -503,33 +497,33 @@ def update_x_statistic_plot(
         {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
         "value",
     ),
-    State("store-eda-data", "data"),
+    State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
-def update_y_statistic_plot(
-    summary_stats: list | None, eda_data: list | None
-) -> list | None:
+def update_y_statistic_plot(summary_stats: list | None, eda_data: dict) -> list | None:
     """Update the y summary statistic plot state.
 
     Args:
         summary_stats (list | None):
             The list of summary statistics.
-        eda_data (list | None):
+        eda_data (dict | None):
             The list of observed data.
 
     Returns:
         list | None:
             The updated plot state.
     """
-    if eda_data is None or len(eda_data) == 0:
-        return no_update
+    if eda_data is None or eda_data.get("values") is None:
+        return [{}]
     if summary_stats is None or len(summary_stats) == 0:
-        return no_update
+        return [{}]
     if summary_stats[0] is None:
         return [{}]
 
     summary_stat = summary_stats[0]
-    df = pd.DataFrame(eda_data).query("order > 0")
+    eda_values = eda_data["values"]
+    df = pd.DataFrame(eda_values).query("order > 0")
+
     if len(df) == 0:
         return no_update
 
@@ -551,11 +545,11 @@ def update_y_statistic_plot(
         {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
         "value",
     ),
-    State("store-eda-data", "data"),
+    State("store-observed-data", "data"),
     prevent_initial_call=True,
 )
 def update_xy_statistic_plot(
-    x_summary_stats: list | None, y_summary_stats: list | None, eda_data: list | None
+    x_summary_stats: list | None, y_summary_stats: list | None, eda_data: dict
 ) -> tuple | None:
     """Update the y summary statistic plot state.
 
@@ -564,29 +558,31 @@ def update_xy_statistic_plot(
             The list of summary statistics for the x axis.
         y_summary_stats (list | None):
             The list of summary statistics for the x axis.
-        eda_data (list | None):
+        eda_data (dict | None):
             The list of observed data.
 
     Returns:
         tuple | None:
             The updated plot state.
     """
-    if eda_data is None or len(eda_data) == 0:
-        return no_update
+    if eda_data is None or eda_data.get("values") is None:
+        return [{}], [{}]
 
     if x_summary_stats is None or len(x_summary_stats) == 0:
-        return no_update
+        return [{}], [{}]
     if x_summary_stats[0] is None:
         return [{}], [{}]
 
     if y_summary_stats is None or len(y_summary_stats) == 0:
-        return no_update
+        return [{}], [{}]
     if y_summary_stats[0] is None:
         return [{}], [{}]
 
-    df = pd.DataFrame(eda_data).query("order > 0")
+    eda_values = eda_data["values"]
+    df = pd.DataFrame(eda_values).query("order > 0")
+
     if len(df) == 0:
-        return no_update
+        return [{}], [{}]
 
     kwargs = dict(root_tissue_density=df.root_tissue_density.iloc[0])
     x_summary_stat = x_summary_stats[0]

@@ -309,8 +309,6 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
     Input({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "n_clicks"),
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     State({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
-    State({"index": f"{PAGE_ID}-stat-by-soil-layer-switch", "type": ALL}, "on"),
-    State({"index": f"{PAGE_ID}-stat-by-soil-col-switch", "type": ALL}, "on"),
     State("store-simulation-run", "data"),
     State("store-observed-data", "data"),
     prevent_initial_call=True,
@@ -319,8 +317,6 @@ def run_root_model(
     n_clicks: list,
     parameter_values: list,
     calibration_values: list,
-    stats_by_layer: list[bool],
-    stats_by_col: list[bool],
     simulation_runs: list,
     observed_data: dict,
 ) -> tuple:
@@ -333,10 +329,6 @@ def run_root_model(
             The parameter form input data.
         calibration_values (list):
             The calibration parameter form input data.
-        stats_by_layer (list):
-            Whether to calculate statistics by soil layer.
-        stats_by_col (list):
-            Whether to calculate statistics by soil column.
         simulation_runs (list):
             A list of simulation run data.
         observed_data: (dict):
@@ -352,9 +344,6 @@ def run_root_model(
     if n_clicks[0] is None or n_clicks[0] == 0:
         return no_update
 
-    stat_by_layer = stats_by_layer[0]
-    stat_by_col = stats_by_col[0]
-
     observed_values = observed_data.get("values", None)
     form_inputs = build_calibration_parameters(
         FORM_NAME,
@@ -362,8 +351,6 @@ def run_root_model(
         parameter_values,
         calibration_values,
         observed_data=observed_values,
-        stat_by_layer=stat_by_layer,
-        stat_by_col=stat_by_col,
     )
     if form_inputs is None:
         return no_update
@@ -416,6 +403,105 @@ def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
     if n:
         return not is_open
     return is_open
+
+
+@callback(
+    Output(
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "children"
+    ),
+    Output({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "disabled"),
+    Input("store-observed-data", "data"),
+)
+def update_observed_data_state(observed_data: dict | None) -> tuple:
+    """Update the state of the observed data.
+
+    Args:
+        observed_data (dict | None):
+            The observed data.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    button_contents = ["Load observed data"]
+    if observed_data is None:
+        return button_contents, [True]
+
+    eda_label = observed_data.get("label")
+    if eda_label is None:
+        return button_contents, [True]
+
+    return [eda_label], [False]
+
+
+@callback(
+    Output("store-observed-data", "data", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
+    State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
+    prevent_initial_call=True,
+)
+def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load observed data from file.
+
+    Args:
+        list_of_contents (list):
+            The list of file contents.
+        list_of_names (list):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if list_of_contents is None or len(list_of_contents) == 0:
+        return no_update
+
+    if list_of_contents[0] is None:
+        return no_update
+
+    loaded_data, toast_message = load_data_from_file(list_of_contents, list_of_names)
+    eda_data = {"label": list_of_names[0], "values": loaded_data}
+    return eda_data, True, toast_message
+
+
+@callback(
+    Output("store-observed-data", "data", allow_duplicate=True),
+    Output(
+        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"
+    ),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
+    State("store-observed-data", "data"),
+    prevent_initial_call=True,
+)
+def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
+    """Clear observation data from the page.
+
+    Args:
+        n_clicks (int | list[int]):
+            The number of form clicks.
+        eda_data (dict):
+            The exploratory data analysis data.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if n_clicks is None or len(n_clicks) == 0:  # type: ignore
+        return no_update
+
+    if n_clicks[0] is None or n_clicks[0] == 0:  # type: ignore
+        return no_update
+
+    eda_label = eda_data.get("label")
+    if eda_data is None or eda_label is None:
+        return no_update
+
+    toast_message = f"Clearing: {eda_label}"
+    return {}, [None], True, toast_message
 
 
 ######################################
