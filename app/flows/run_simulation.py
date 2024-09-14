@@ -24,6 +24,26 @@ from deeprootgen.pipeline import (
 
 
 @task
+def execute_simulation(input_parameters: RootSimulationModel) -> RootSystemSimulation:
+    """Execute the root simulation.
+
+    Args:
+        input_parameters (RootSimulationModel):
+            The root simulation data model.
+
+    Returns:
+        RootSystemSimulation:
+            The root simulation.
+    """
+    simulation = RootSystemSimulation(
+        simulation_tag=input_parameters.simulation_tag,  # type: ignore
+        random_seed=input_parameters.random_seed,  # type: ignore
+    )
+    simulation.run(input_parameters)
+    return simulation
+
+
+@task
 def run_simulation(input_parameters: RootSimulationModel, simulation_uuid: str) -> None:
     """Running a single root simulation.
 
@@ -36,15 +56,10 @@ def run_simulation(input_parameters: RootSimulationModel, simulation_uuid: str) 
     task = "simulation"
     flow_run_id = context.get_run_context().task_run.flow_run_id
     begin_experiment(
-        task, simulation_uuid, flow_run_id, input_parameters.simulation_tag  # type: ignore
+        task, simulation_uuid, flow_run_id, input_parameters.simulation_tag
     )
     log_experiment_details(simulation_uuid)
-
-    simulation = RootSystemSimulation(
-        simulation_tag=input_parameters.simulation_tag,  # type: ignore
-        random_seed=input_parameters.random_seed,  # type: ignore
-    )
-    simulation.run(input_parameters)
+    simulation = execute_simulation(input_parameters)
     config = input_parameters.dict()
 
     log_config(config, task)

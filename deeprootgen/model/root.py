@@ -924,6 +924,10 @@ class RootSystemSimulation:
 
         min_sec_root_num = input_parameters.min_sec_root_num
         max_sec_root_num = input_parameters.max_sec_root_num
+
+        if min_sec_root_num == max_sec_root_num:
+            max_sec_root_num += 1
+
         if min_sec_root_num > max_sec_root_num:
             min_sec_root_num, max_sec_root_num = max_sec_root_num, min_sec_root_num
 

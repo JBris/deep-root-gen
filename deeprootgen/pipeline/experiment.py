@@ -13,10 +13,10 @@ from datetime import datetime
 
 import mlflow
 import networkx as nx
-import numpy as np
 import pandas as pd
 import yaml
 from dash import get_app
+from prefect import task
 from prefect.deployments import run_deployment
 from ydata_profiling import ProfileReport
 
@@ -58,6 +58,7 @@ def get_simulation_uuid() -> str:
     return simulation_uuid
 
 
+@task
 def begin_experiment(
     task: str, simulation_uuid: str, flow_run_id: str, simulation_tag: str
 ) -> None:
@@ -106,6 +107,7 @@ def begin_experiment(
     mlflow.set_tag("simulation_tag", simulation_tag)
 
 
+@task
 def log_config(
     config: dict,
     task: str,
@@ -133,6 +135,49 @@ def log_config(
     return outfile
 
 
+@task
+def calculate_graph_metrics(G: nx.Graph, time_now: str, task: str) -> str:
+    """Calculate graph metrics.
+
+    Args:
+        G (nx.Graph):
+            The NetworkX graph.
+        time_now (str):
+            The current time.
+        task (str):
+            The current simulation task.
+
+    Returns:
+        str:
+            The graph metric file.
+    """
+    metric_names = []
+    metric_values = []
+    for metric_func in [
+        nx.diameter,
+        nx.radius,
+        nx.average_clustering,
+        nx.node_connectivity,
+        nx.degree_assortativity_coefficient,
+        nx.degree_pearson_correlation_coefficient,
+    ]:
+        metric_name = metric_func.__name__
+        metric_value = metric_func(G)
+
+        mlflow.log_metric(metric_name, metric_value)
+        metric_names.append(metric_name)
+        metric_values.append(metric_value)
+
+    metric_df = pd.DataFrame(
+        {"metric_name": metric_names, "metric_value": metric_values}
+    )
+    outfile = osp.join(OUT_DIR, f"{time_now}-{task}_graph_metrics.csv")
+    metric_df.to_csv(outfile, index=False)
+    mlflow.log_artifact(outfile)
+    return outfile
+
+
+@task
 def log_simulation(
     input_parameters: RootSimulationModel, simulation: RootSystemSimulation, task: str
 ) -> None:
@@ -172,30 +217,6 @@ def log_simulation(
     profile = ProfileReport(node_df, title="Root Model Report")
     outfile = osp.join(OUT_DIR, f"{time_now}-{task}_data_profile.html")
     profile.to_file(outfile)
-    mlflow.log_artifact(outfile)
-
-    metric_names = []
-    metric_values = []
-    for metric_func in [
-        nx.diameter,
-        nx.radius,
-        nx.average_clustering,
-        nx.node_connectivity,
-        nx.degree_assortativity_coefficient,
-        nx.degree_pearson_correlation_coefficient,
-    ]:
-        metric_name = metric_func.__name__
-        metric_value = metric_func(G)
-
-        mlflow.log_metric(metric_name, metric_value)
-        metric_names.append(metric_name)
-        metric_values.append(metric_value)
-
-    metric_df = pd.DataFrame(
-        {"metric_name": metric_names, "metric_value": metric_values}
-    )
-    outfile = osp.join(OUT_DIR, f"{time_now}-{task}_graph_metrics.csv")
-    metric_df.to_csv(outfile, index=False)
     mlflow.log_artifact(outfile)
 
     kwargs = dict(root_tissue_density=input_parameters.root_tissue_density)

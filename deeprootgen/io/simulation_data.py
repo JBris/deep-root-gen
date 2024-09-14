@@ -12,6 +12,7 @@ import boto3
 import pandas as pd
 from adbnx_adapter import ADBNX_Adapter
 from arango import ArangoClient
+from prefect import task
 
 from ..model import RootSystemSimulation
 
@@ -43,6 +44,7 @@ def s3_upload_file(file_name: str, object_name: str, bucket_name: str = "data") 
     return response
 
 
+@task
 def save_graph_to_db(
     simulation: RootSystemSimulation, task: str, simulation_uuid: str
 ) -> None:

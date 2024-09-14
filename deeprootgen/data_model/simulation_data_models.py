@@ -110,11 +110,11 @@ class RootSimulationModel(BaseModel):
     gravitropism: float
     origin_min: Optional[float] = 1e-3
     origin_max: Optional[float] = 1e-2
-    enable_soil: bool
-    soil_layer_height: float
-    soil_layer_width: float
-    soil_n_layers: int
-    soil_n_cols: int
+    enable_soil: Optional[bool] = False
+    soil_layer_height: Optional[float] = 0
+    soil_layer_width: Optional[float] = 0
+    soil_n_layers: Optional[int] = 0
+    soil_n_cols: Optional[int] = 0
     max_val_attempts: Optional[int] = 50
     simulation_tag: Optional[str] = "default"
     no_root_zone: Optional[float] = 1e-4
@@ -163,16 +163,15 @@ class StatisticsComparisonModel(BaseModel):
     stat_by_soil_column: Optional[bool] = False
 
 
-class RootCalibrationModel(BaseModel):
+class RootCalibrationIntervals(BaseModel):
     """
-    The root system architecture calibration data model.
+    The root system architecture calibration interval data model.
 
     Args:
         BaseModel (BaseModel):
             The Pydantic Base model class.
     """
 
-    random_seed: int | None
     max_order: ParameterIntervalModel
     root_ratio: ParameterIntervalModel
     fine_root_threshold: ParameterIntervalModel
@@ -195,6 +194,19 @@ class RootCalibrationModel(BaseModel):
     mechanical_constraints: ParameterIntervalModel
     root_tissue_density: ParameterIntervalModel
     gravitropism: ParameterIntervalModel
+
+
+class RootCalibrationModel(BaseModel):
+    """
+    The root system architecture calibration data model.
+
+    Args:
+        BaseModel (BaseModel):
+            The Pydantic Base model class.
+    """
+
+    random_seed: int | None
+    parameter_intervals: RootCalibrationIntervals
     calibration_parameters: Dict[str, bool | float | int | str]
     summary_statistics: Optional[List[SummaryStatisticsModel]] = None
     observed_data: Optional[List[RootNodeModel]] = None

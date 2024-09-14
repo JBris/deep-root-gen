@@ -3,8 +3,182 @@
 This module defines utility functions for distance metrics that can be used to compare simulated and observational data.
 """
 
+from abc import ABC, abstractmethod
 from pydoc import locate
 from typing import Callable
+
+import numpy as np
+import sklearn.metrics as metrics
+
+
+class DistanceMetricBase(ABC):
+    """The distance metric abstract class."""
+
+    def __init__(self, **_) -> None:  # type: ignore
+        """DistanceMetricBase constructor."""
+        super().__init__()
+
+    @abstractmethod
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+
+        Raises:
+            NotImplementedError:
+                Error raised for the unimplemented abstract method.
+        """
+        raise NotImplementedError("calculate() method not implemented.")
+
+
+class L2Norm(DistanceMetricBase):
+    """The L2 norm distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = np.linalg.norm(observed - simulated, ord=2)
+        return distance
+
+
+class L1Norm(DistanceMetricBase):
+    """The L1 norm distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = np.linalg.norm(observed - simulated, ord=1)
+        return distance
+
+
+class MeanSquaredError(DistanceMetricBase):
+    """The mean squared error distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = metrics.mean_squared_error(observed, simulated)
+        return distance
+
+
+class MeanAbsoluteError(DistanceMetricBase):
+    """The mean absolute error distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = metrics.mean_absolute_error(observed, simulated)
+        return distance
+
+
+class RootMeanSquaredError(DistanceMetricBase):
+    """The root mean squared error distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = metrics.root_mean_squared_error(observed, simulated)
+        return distance
+
+
+class MeanPinballLoss(DistanceMetricBase):
+    """The mean pinball loss distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = metrics.mean_pinball_loss(observed, simulated)
+        return distance
+
+
+class MeanAbsolutePercentageError(DistanceMetricBase):
+    """The mean absolute percentage error distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = metrics.mean_absolute_percentage_error(observed, simulated)
+        return distance
+
+
+class MedianAbsoluteError(DistanceMetricBase):
+    """The median absolute error distance."""
+
+    def calculate(
+        self, observed: np.ndarray, simulated: np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the distance between observed and simulated data.
+
+        Args:
+            observed (np.ndarray):
+                The observed data.
+            simulated (np.ndarray):
+                The simulated data.
+        """
+        distance = metrics.median_absolute_error(observed, simulated)
+        return distance
 
 
 def get_distance_metric_func(distance_metric: str) -> Callable:

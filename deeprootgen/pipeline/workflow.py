@@ -8,9 +8,11 @@ workflows with Prefect.
 import os
 
 import mlflow
+from prefect import task
 from prefect.artifacts import create_markdown_artifact
 
 
+@task
 def log_experiment_details(simulation_uuid: str) -> None:
     """Log the experiment details.
 
