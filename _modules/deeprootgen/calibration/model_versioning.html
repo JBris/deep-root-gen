@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeprootgen.calibration.model_versioning &mdash; DeepRootGen 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelogs/changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deeprootgen.calibration.model_versioning</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeprootgen.calibration.model_versioning</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains MLflow compatible models for versioning and deployment.</span>
+
+<span class="sd">This module defines MLflow compatible models for versioning and deployment as microservices.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">mlflow</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">mlflow.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
+<span class="kn">from</span> <span class="nn">mlflow.models</span> <span class="kn">import</span> <span class="n">infer_signature</span>
+<span class="kn">from</span> <span class="nn">mlflow.pyfunc.context</span> <span class="kn">import</span> <span class="n">Context</span>
+
+<span class="kn">from</span> <span class="nn">..data_model</span> <span class="kn">import</span> <span class="n">RootCalibrationModel</span>
+
+
+<div class="viewcode-block" id="log_model">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.log_model">[docs]</a>
+<span class="k">def</span> <span class="nf">log_model</span><span class="p">(</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootCalibrationModel</span><span class="p">,</span>
+    <span class="n">calibration_model</span><span class="p">:</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">PythonModel</span><span class="p">,</span>
+    <span class="n">artifacts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">simulation_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">signature_x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">signature_y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log the calibrator model to the registry.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task (str):</span>
+<span class="sd">            The name of the current task for the experiment.</span>
+<span class="sd">        input_parameters (RootCalibrationModel):</span>
+<span class="sd">            The root calibration data model.</span>
+<span class="sd">        calibration_model (mlflow.pyfunc.PythonModel):</span>
+<span class="sd">            The calibrator to log.</span>
+<span class="sd">        artifacts (dict):</span>
+<span class="sd">            Experiment artifacts to log.</span>
+<span class="sd">        simulation_uuid (str):</span>
+<span class="sd">            The simulation uuid.</span>
+<span class="sd">        signature_x (pd.DataFrame | np.ndarray | list | None, optional):</span>
+<span class="sd">            The signature for data inputs. Defaults to None.</span>
+<span class="sd">        signature_y (pd.DataFrame | np.ndarray | list | None, optional):</span>
+<span class="sd">            The signature for data outputs. Defaults to None.. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">signature_x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">signature_y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">infer_signature</span><span class="p">(</span><span class="n">signature_x</span><span class="p">,</span> <span class="n">signature_y</span><span class="p">)</span>
+
+    <span class="n">logged_model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+        <span class="n">python_model</span><span class="o">=</span><span class="n">calibration_model</span><span class="p">,</span>
+        <span class="n">artifact_path</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+        <span class="n">artifacts</span><span class="o">=</span><span class="n">artifacts</span><span class="p">,</span>
+        <span class="n">signature</span><span class="o">=</span><span class="n">signature</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">model_uri</span> <span class="o">=</span> <span class="n">logged_model</span><span class="o">.</span><span class="n">model_uri</span>
+    <span class="n">model_version</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span>
+        <span class="n">model_uri</span><span class="o">=</span><span class="n">model_uri</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+        <span class="n">tags</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+            <span class="n">simulation_uuid</span><span class="o">=</span><span class="n">simulation_uuid</span><span class="p">,</span>
+            <span class="n">simulation_tag</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">simulation_tag</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">MlflowClient</span><span class="p">(</span><span class="n">mlflow</span><span class="o">.</span><span class="n">get_tracking_uri</span><span class="p">())</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">update_model_version</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="n">model_version</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;A root model calibrator for performing the following task: </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="OptimisationModel">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.OptimisationModel">[docs]</a>
+<span class="k">class</span> <span class="nc">OptimisationModel</span><span class="p">(</span><span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">PythonModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An optimisation calibration model.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The OptimisationModel constructor.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;optimisation&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calibrator</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="OptimisationModel.load_context">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.OptimisationModel.load_context">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the model context.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (Context):</span>
+<span class="sd">                The model context.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">joblib</span>
+
+        <span class="n">calibrator_data</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">artifacts</span><span class="p">[</span><span class="s2">&quot;calibrator&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calibrator</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">calibrator_data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OptimisationModel.predict">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.OptimisationModel.predict">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">model_input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a model prediction.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (Context):</span>
+<span class="sd">                The model context.</span>
+<span class="sd">            model_input (dict):</span>
+<span class="sd">                The model input data.</span>
+<span class="sd">            params (dict, optional):</span>
+<span class="sd">                Optional model parameters. Defaults to None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError:</span>
+<span class="sd">                Error raised when the calibrator has not been loaded.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame:</span>
+<span class="sd">                The model prediction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="si">}</span><span class="s2"> calibrator has not been loaded.&quot;</span><span class="p">)</span>
+
+        <span class="n">n_trials</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_trials&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">trials_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrator</span><span class="o">.</span><span class="n">trials_dataframe</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+            <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">trials_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n_trials</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
