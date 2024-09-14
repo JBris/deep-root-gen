@@ -104,9 +104,10 @@ def build_common_components(
                     "borderWidth": "1px",
                     "borderStyle": "dashed",
                     "textAlign": "center",
+                    "overflow-wrap": "break-word",
                     "text-overflow": "ellipsis",
+                    "word-break": "break-all",
                     "overflow": "hidden",
-                    "white-space": "nowrap",
                 }
 
             if component_spec.handler == "data_table":
@@ -211,6 +212,42 @@ def build_collapsible(
     return collapsible
 
 
+def get_external_links() -> dbc.Nav:
+    """Get the list of external links.
+
+    Returns:
+        dbc.Nav:
+            The navigation component for the external links.
+    """
+    return dbc.Nav(
+        [
+            dbc.NavItem(
+                dbc.NavLink("MLflow", href="http://127.0.0.1:5000", target="_blank")
+            ),
+            dbc.NavItem(
+                dbc.NavLink("Prefect", href="http://127.0.0.1:4200", target="_blank")
+            ),
+            dbc.NavItem(
+                dbc.NavLink("MinIO", href="http://127.0.0.1:9001", target="_blank")
+            ),
+            dbc.NavItem(
+                dbc.NavLink("Metabase", href="http://127.0.0.1:3000", target="_blank")
+            ),
+            dbc.NavItem(
+                dbc.NavLink(
+                    "Cloudbeaver", href="http://127.0.0.1:8978", target="_blank"
+                )
+            ),
+            dbc.NavItem(
+                dbc.NavLink("ArangoDB", href="http://127.0.0.1:8529", target="_blank")
+            ),
+        ],
+        pills=True,
+        justified=True,
+        vertical="md",
+    )
+
+
 def build_common_layout(
     title: str,
     page_id: str,
@@ -242,33 +279,7 @@ def build_common_layout(
         html.Div:
             The common layout.
     """
-    external_links = dbc.Nav(
-        [
-            dbc.NavItem(
-                dbc.NavLink("MLflow", href="http://127.0.0.1:5000", target="_blank")
-            ),
-            dbc.NavItem(
-                dbc.NavLink("Prefect", href="http://127.0.0.1:4200", target="_blank")
-            ),
-            dbc.NavItem(
-                dbc.NavLink("MinIO", href="http://127.0.0.1:9001", target="_blank")
-            ),
-            dbc.NavItem(
-                dbc.NavLink("Metabase", href="http://127.0.0.1:3000", target="_blank")
-            ),
-            dbc.NavItem(
-                dbc.NavLink(
-                    "Cloudbeaver", href="http://127.0.0.1:8978", target="_blank"
-                )
-            ),
-            dbc.NavItem(
-                dbc.NavLink("ArangoDB", href="http://127.0.0.1:8529", target="_blank")
-            ),
-        ],
-        pills=True,
-        justified=True,
-        vertical="md",
-    )
+    external_links = get_external_links()
     external_links_collapsible = build_collapsible(
         external_links, page_id, "External Links"
     )
@@ -302,7 +313,7 @@ def build_common_layout(
         dbc.Toast(
             "",
             id=f"{page_id}-results-toast",
-            header="Simulation Results",
+            header="Results Notification",
             is_open=False,
             dismissable=True,
             icon="primary",
@@ -389,6 +400,7 @@ def get_common_layout(
     simulation_form_name: str = "simulation_form",
     procedure: str = "Simulation",
     task: str = "simulation",
+    data_key: str = "summary_data",
     left_sticky: bool = False,
     right_sticky: bool = True,
 ) -> html.Div:
@@ -409,6 +421,8 @@ def get_common_layout(
             The simulation procedure.
         task (str):
             The simulation task.
+        data_key (str):
+            The key to use for building the data components within the form.
         left_sticky (bool, optional):
             Whether the left side of the page should be sticky. Defaults to False.
         right_sticky (bool, optional):
@@ -423,7 +437,7 @@ def get_common_layout(
     simulation_form = app.settings[simulation_form_name]
     input_components = []
 
-    k = "data"
+    k = data_key
     if parameter_form.components.get(k) is not None:
         calibration_components = build_common_components(
             parameter_form.components[k]["children"], page_id, k
@@ -431,7 +445,7 @@ def get_common_layout(
 
         if parameter_form.components[k].get("collapsible"):
             calibration_components = build_collapsible(
-                calibration_components, page_id, k.title()
+                calibration_components, page_id, k.replace("_", " ").title()
             )
             input_components.append(calibration_components)
 

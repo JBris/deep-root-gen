@@ -68,22 +68,22 @@ components:
           clearable: true
           placeholder: Select right summary statistic
           persistence: true
-  data:
+  simulated_data:
     collapsible: true
     children:
-      - id: upload-obs-data-file-button
+      - id: upload-node-data-file-button
         label: Upload  
-        help: Upload observed data from a csv file
+        help: Upload simulated node data from a csv file
         class_name: dash.dcc.Upload
         handler: file_upload
         kwargs:
-          children: Load observed data
+          children: Load node data
       - id: clear-obs-data-file-button
         label: Clear
-        help: Clear the observed data 
+        help: Clear the simulated root data from the form
         class_name: dash_bootstrap_components.Button 
         kwargs:
-          children: Clear data
+          children: Clear simulation data
           color: primary
           className: me-1
   results:

@@ -8,13 +8,11 @@ This includes integration with NetworkX and PyTorch Geometric.
 from typing import List
 
 import networkx as nx
-import numpy as np
 import pandas as pd
 from torch_geometric.data import Data
 from torch_geometric.utils import from_networkx
 
 from ..data_model import RootEdgeModel, RootNodeModel
-from ..spatial import get_transform_matrix, make_homogenous
 
 
 class RootNode:

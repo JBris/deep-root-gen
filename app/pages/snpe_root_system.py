@@ -33,6 +33,7 @@ TASK = "snpe"
 PAGE_ID = f"{TASK}-root-system-page"
 FORM_NAME = "calibration_form"
 PROCEDURE = "calibration"
+DATA_COMPONENT_KEY = "observed_data"
 
 ######################################
 # Callbacks
@@ -308,9 +309,9 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output(f"{PAGE_ID}-data-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-data-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-data-collapse", "is_open")],
+    Output(f"{PAGE_ID}-observed-data-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-observed-data-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-observed-data-collapse", "is_open")],
 )
 def toggle_data_collapse(n: int, is_open: bool) -> bool:
     """Toggle the collapsible for statistics.
@@ -357,7 +358,7 @@ def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
     ),
     Output({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "disabled"),
     Output({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "disabled"),
-    Input("store-observed-data", "data"),
+    Input("store-node-data", "data"),
 )
 def update_observed_data_state(observed_data: dict | None) -> tuple:
     """Update the state of the observed data.
@@ -382,8 +383,8 @@ def update_observed_data_state(observed_data: dict | None) -> tuple:
 
 
 @callback(
-    Output("store-observed-data", "data", allow_duplicate=True),
-    Output("store-raw-observed-data", "data", allow_duplicate=True),
+    Output("store-node-data", "data", allow_duplicate=True),
+    Output("store-raw-node-data", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
@@ -417,15 +418,54 @@ def load_observed_data(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output("store-observed-data", "data", allow_duplicate=True),
-    Output("store-raw-observed-data", "data", allow_duplicate=True),
+    Output("store-edge-data", "data", allow_duplicate=True),
+    Output("store-raw-edge-data", "data", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
+    Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
+    Input(
+        {"index": f"{PAGE_ID}-upload-edge-data-file-button", "type": ALL}, "contents"
+    ),
+    State(
+        {"index": f"{PAGE_ID}-upload-edge-data-file-button", "type": ALL}, "filename"
+    ),
+    prevent_initial_call=True,
+)
+def load_edge_data(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load edge data from file.
+
+    Args:
+        list_of_contents (list):
+            The list of file contents.
+        list_of_names (list):
+            The list of file names.
+
+    Returns:
+        tuple:
+            The updated form state.
+    """
+    if list_of_contents is None or len(list_of_contents) == 0:
+        return no_update
+
+    if list_of_contents[0] is None:
+        return no_update
+
+    loaded_data, content_string, toast_message = load_data_from_file(
+        list_of_contents, list_of_names
+    )
+    eda_data = {"label": list_of_names[0], "values": loaded_data}
+    return eda_data, {"value": content_string}, True, toast_message
+
+
+@callback(
+    Output("store-node-data", "data", allow_duplicate=True),
+    Output("store-raw-node-data", "data", allow_duplicate=True),
     Output(
         {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"
     ),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def clear_observed_data(n_clicks: int | list[int], observed_data: dict) -> tuple:
@@ -463,7 +503,7 @@ def clear_observed_data(n_clicks: int | list[int], observed_data: dict) -> tuple
     State({"type": f"{PAGE_ID}-parameters", "index": ALL}, "value"),
     State({"type": f"{PAGE_ID}-{TASK}", "index": ALL}, "value"),
     State("store-simulation-run", "data"),
-    State("store-raw-observed-data", "data"),
+    State("store-raw-node-data", "data"),
     prevent_initial_call=True,
 )
 def run_root_model(
@@ -547,5 +587,6 @@ def layout() -> html.Div:
         parameter_form_name=FORM_NAME,
         procedure=PROCEDURE.title(),
         task=TASK,
+        data_key=DATA_COMPONENT_KEY,
     )
     return layout

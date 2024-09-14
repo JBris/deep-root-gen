@@ -33,6 +33,7 @@ TASK = "sensitivity_analysis"
 PAGE_ID = f"{TASK.replace('_', '-')}-root-system-page"
 FORM_NAME = "calibration_form"
 PROCEDURE = "calibration"
+DATA_COMPONENT_KEY = "summary_data"
 
 ######################################
 # Callbacks
@@ -308,9 +309,9 @@ def load_params(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output(f"{PAGE_ID}-data-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-data-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-data-collapse", "is_open")],
+    Output(f"{PAGE_ID}-summary-data-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-summary-data-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-summary-data-collapse", "is_open")],
 )
 def toggle_data_collapse(n: int, is_open: bool) -> bool:
     """Toggle the collapsible for statistics.
@@ -370,7 +371,7 @@ def update_summary_data_state(summary_data: dict | None) -> tuple:
         tuple:
             The updated form state.
     """
-    button_contents = ["Load observed data"]
+    button_contents = ["Load statistics data"]
     if summary_data is None:
         return button_contents, [True], [True]
 
@@ -390,7 +391,7 @@ def update_summary_data_state(summary_data: dict | None) -> tuple:
     prevent_initial_call=True,
 )
 def load_summary_data(list_of_contents: list, list_of_names: list) -> tuple:
-    """Load summary data from file.
+    """Load statistics data from file.
 
     Args:
         list_of_contents (list):
@@ -551,5 +552,6 @@ def layout() -> html.Div:
         parameter_form_name=FORM_NAME,
         procedure=PROCEDURE.title(),
         task=TASK,
+        data_key=DATA_COMPONENT_KEY,
     )
     return layout

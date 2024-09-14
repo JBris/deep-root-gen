@@ -33,6 +33,7 @@ TASK = "eda"
 PAGE_ID = f"{TASK}-root-system-page"
 FORM_NAME = "eda_form"
 PROCEDURE = "exploratory-data-analysis"
+DATA_COMPONENT_KEY = "simulated_data"
 
 ######################################
 # Callbacks
@@ -105,9 +106,9 @@ def toggle_external_links_collapse(n: int, is_open: bool) -> bool:
 
 
 @callback(
-    Output(f"{PAGE_ID}-data-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-data-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-data-collapse", "is_open")],
+    Output(f"{PAGE_ID}-observed-data-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-observed-data-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-observed-data-collapse", "is_open")],
 )
 def toggle_data_collapse(n: int, is_open: bool) -> bool:
     """Toggle the collapsible for statistics.
@@ -148,13 +149,13 @@ def update_table(runs: list | None) -> list | None:
 
 @callback(
     Output(
-        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "children"
+        {"index": f"{PAGE_ID}-upload-node-data-file-button", "type": ALL}, "children"
     ),
     Output({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "disabled"),
     Output({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "options"),
     Output({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "options"),
     Output({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "options"),
-    Input("store-observed-data", "data"),
+    Input("store-node-data", "data"),
 )
 def update_eda_data_state(eda_data: dict) -> tuple:
     """Update the state of the exploratory data analysis data.
@@ -167,7 +168,7 @@ def update_eda_data_state(eda_data: dict) -> tuple:
         tuple:
             The updated form state.
     """
-    button_contents = ["Load observed data"]
+    button_contents = ["Load node data"]
     if eda_data is None:
         return button_contents, [True], [[]], [[]], [[]]
 
@@ -187,16 +188,20 @@ def update_eda_data_state(eda_data: dict) -> tuple:
 
 
 @callback(
-    Output("store-observed-data", "data", allow_duplicate=True),
-    Output("store-raw-observed-data", "data", allow_duplicate=True),
+    Output("store-node-data", "data", allow_duplicate=True),
+    Output("store-raw-node-data", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
-    Input({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"),
-    State({"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "filename"),
+    Input(
+        {"index": f"{PAGE_ID}-upload-node-data-file-button", "type": ALL}, "contents"
+    ),
+    State(
+        {"index": f"{PAGE_ID}-upload-node-data-file-button", "type": ALL}, "filename"
+    ),
     prevent_initial_call=True,
 )
-def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
-    """Load observed data from file.
+def load_node_data(list_of_contents: list, list_of_names: list) -> tuple:
+    """Load node data from file.
 
     Args:
         list_of_contents (list):
@@ -222,18 +227,18 @@ def load_observation_data(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output("store-observed-data", "data", allow_duplicate=True),
-    Output("store-raw-observed-data", "data", allow_duplicate=True),
+    Output("store-node-data", "data", allow_duplicate=True),
+    Output("store-raw-node-data", "data", allow_duplicate=True),
     Output(
         {"type": f"{PAGE_ID}-parameters", "index": ALL}, "value", allow_duplicate=True
     ),
     Output(
-        {"index": f"{PAGE_ID}-upload-obs-data-file-button", "type": ALL}, "contents"
+        {"index": f"{PAGE_ID}-upload-node-data-file-button", "type": ALL}, "contents"
     ),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
@@ -273,7 +278,7 @@ def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
     Input({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def update_xy_plots(
@@ -343,7 +348,7 @@ def update_xy_plots(
     Output({"index": f"{PAGE_ID}-box-x-plot", "type": ALL}, "figure"),
     Input({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def update_x_plots(
@@ -401,7 +406,7 @@ def update_x_plots(
     Output({"index": f"{PAGE_ID}-box-y-plot", "type": ALL}, "figure"),
     Input({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def update_y_plots(
@@ -459,7 +464,7 @@ def update_y_plots(
     Input(
         {"index": f"{PAGE_ID}-select-x-summary-stats-dropdown", "type": ALL}, "value"
     ),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def update_x_statistic_plot(summary_stats: list | None, eda_data: dict) -> list | None:
@@ -502,7 +507,7 @@ def update_x_statistic_plot(summary_stats: list | None, eda_data: dict) -> list 
         {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
         "value",
     ),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def update_y_statistic_plot(summary_stats: list | None, eda_data: dict) -> list | None:
@@ -550,7 +555,7 @@ def update_y_statistic_plot(summary_stats: list | None, eda_data: dict) -> list 
         {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
         "value",
     ),
-    State("store-observed-data", "data"),
+    State("store-node-data", "data"),
     prevent_initial_call=True,
 )
 def update_xy_statistic_plot(
@@ -640,6 +645,7 @@ def layout() -> html.Div:
         simulation_form_name=FORM_NAME,
         procedure=TITLE,
         task=TASK,
+        data_key=DATA_COMPONENT_KEY,
         left_sticky=True,
         right_sticky=False,
     )

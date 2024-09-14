@@ -64,8 +64,10 @@ def define_ui(app: Dash) -> None:
         [
             dcc.Store(id="store-simulation-run", storage_type="local", data=[]),
             dcc.Store(id="store-summary-data", storage_type="local", data={}),
-            dcc.Store(id="store-observed-data", storage_type="local", data={}),
-            dcc.Store(id="store-raw-observed-data", storage_type="local", data={}),
+            dcc.Store(id="store-node-data", storage_type="local", data={}),
+            dcc.Store(id="store-raw-node-data", storage_type="local", data={}),
+            dcc.Store(id="store-edge-data", storage_type="local", data={}),
+            dcc.Store(id="store-raw-edge-data", storage_type="local", data={}),
             dcc.Loading(
                 id="loading_page_content",
                 children=[
