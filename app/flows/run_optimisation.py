@@ -9,14 +9,17 @@ import os.path as osp
 import mlflow
 import optuna
 import pandas as pd
+from joblib import dump as calibrator_dump
 from optuna.samplers import TPESampler
 from prefect import context, flow, task
 from prefect.artifacts import create_table_artifact
 from prefect.task_runners import ConcurrentTaskRunner
 
 from deeprootgen.calibration import (
+    OptimisationModel,
     calculate_summary_statistic_discrepency,
     get_calibration_summary_stats,
+    log_model,
     run_calibration_simulation,
 )
 from deeprootgen.data_model import RootCalibrationModel, SummaryStatisticsModel
@@ -155,7 +158,9 @@ def objective(
 
 @task
 def log_task(
-    study: optuna.study.Study, input_parameters: RootCalibrationModel
+    study: optuna.study.Study,
+    input_parameters: RootCalibrationModel,
+    simulation_uuid: str,
 ) -> tuple:
     """Log the optimisation results.
 
@@ -164,6 +169,8 @@ def log_task(
             The optimisation study.
         input_parameters (RootCalibrationModel):
             The root calibration data model.
+        simulation_uuid (str):
+            The simulation uuid.
 
     Returns:
         tuple:
@@ -184,7 +191,6 @@ def log_task(
         table=trials_df.drop(
             columns=["datetime_start", "datetime_complete", "duration"]
         )
-        .sort_values(by="value")
         .head(10)
         .to_dict(orient="records"),
         description="# Optimised parameters.",
@@ -215,6 +221,26 @@ def log_task(
     simulation, simulation_parameters = run_calibration_simulation(
         parameter_specs, input_parameters
     )
+
+    outfile = osp.join(outdir, f"{time_now}-{TASK}_calibrator.pkl")
+    calibrator_dump(study, outfile)
+    calibration_model = OptimisationModel()
+
+    artifacts = {"calibrator": outfile}
+    signature_x = pd.DataFrame({"n_trials": [1, 2, 3]})
+    signature_y = trials_df.head(5).drop(
+        columns=["datetime_start", "datetime_complete", "duration"]
+    )
+
+    log_model(
+        TASK,
+        input_parameters,
+        calibration_model,
+        artifacts,
+        simulation_uuid,
+        signature_x,
+        signature_y,
+    )
     return simulation, simulation_parameters
 
 
@@ -232,13 +258,15 @@ def run_optimisation(
     """
     flow_run_id = context.get_run_context().task_run.flow_run_id
     begin_experiment(
-        task, simulation_uuid, flow_run_id, input_parameters.simulation_tag
+        TASK, simulation_uuid, flow_run_id, input_parameters.simulation_tag
     )
     log_experiment_details(simulation_uuid)
 
     study, statistics_list, distance = prepare_task(input_parameters)
     perform_task(input_parameters, study, statistics_list, distance)
-    simulation, simulation_parameters = log_task(study, input_parameters)
+    simulation, simulation_parameters = log_task(
+        study, input_parameters, simulation_uuid
+    )
 
     config = input_parameters.dict()
     log_config(config, TASK)

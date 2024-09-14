@@ -1,6 +1,12 @@
 Calibration
 ===========
 
+Model Versioning
+----------------
+
+.. automodule:: deeprootgen.calibration.model_versioning
+   :members:
+
 Summary Statistics
 ------------------
 
