@@ -87,6 +87,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">adbnx_adapter</span> <span class="kn">import</span> <span class="n">ADBNX_Adapter</span>
 <span class="kn">from</span> <span class="nn">arango</span> <span class="kn">import</span> <span class="n">ArangoClient</span>
+<span class="kn">from</span> <span class="nn">prefect</span> <span class="kn">import</span> <span class="n">task</span>
 
 <span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">RootSystemSimulation</span>
 
@@ -121,8 +122,7 @@
 
 
 
-<div class="viewcode-block" id="save_graph_to_db">
-<a class="viewcode-back" href="../../../api_reference/io.html#deeprootgen.io.simulation_data.save_graph_to_db">[docs]</a>
+<span class="nd">@task</span>
 <span class="k">def</span> <span class="nf">save_graph_to_db</span><span class="p">(</span>
     <span class="n">simulation</span><span class="p">:</span> <span class="n">RootSystemSimulation</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_uuid</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -170,8 +170,7 @@
     <span class="p">]</span>
 
     <span class="n">adapter</span> <span class="o">=</span> <span class="n">ADBNX_Adapter</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
-    <span class="n">adapter</span><span class="o">.</span><span class="n">networkx_to_arangodb</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">graph_definitions</span><span class="p">)</span></div>
-
+    <span class="n">adapter</span><span class="o">.</span><span class="n">networkx_to_arangodb</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">graph_definitions</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="load_data_from_file">

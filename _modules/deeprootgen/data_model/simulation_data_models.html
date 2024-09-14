@@ -199,11 +199,11 @@
     <span class="n">gravitropism</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">origin_min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-3</span>
     <span class="n">origin_max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-2</span>
-    <span class="n">enable_soil</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">soil_layer_height</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">soil_layer_width</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">soil_n_layers</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">soil_n_cols</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">enable_soil</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">soil_layer_height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">soil_layer_width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">soil_n_layers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">soil_n_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">max_val_attempts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="n">simulation_tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
     <span class="n">no_root_zone</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-4</span>
@@ -262,18 +262,17 @@
 
 
 
-<div class="viewcode-block" id="RootCalibrationModel">
-<a class="viewcode-back" href="../../../api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationModel">[docs]</a>
-<span class="k">class</span> <span class="nc">RootCalibrationModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="RootCalibrationIntervals">
+<a class="viewcode-back" href="../../../api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationIntervals">[docs]</a>
+<span class="k">class</span> <span class="nc">RootCalibrationIntervals</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The root system architecture calibration data model.</span>
+<span class="sd">    The root system architecture calibration interval data model.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        BaseModel (BaseModel):</span>
 <span class="sd">            The Pydantic Base model class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
     <span class="n">max_order</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
     <span class="n">root_ratio</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
     <span class="n">fine_root_threshold</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
@@ -295,7 +294,23 @@
     <span class="n">interbranch_distance</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
     <span class="n">mechanical_constraints</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
     <span class="n">root_tissue_density</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
-    <span class="n">gravitropism</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span>
+    <span class="n">gravitropism</span><span class="p">:</span> <span class="n">ParameterIntervalModel</span></div>
+
+
+
+<div class="viewcode-block" id="RootCalibrationModel">
+<a class="viewcode-back" href="../../../api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationModel">[docs]</a>
+<span class="k">class</span> <span class="nc">RootCalibrationModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The root system architecture calibration data model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        BaseModel (BaseModel):</span>
+<span class="sd">            The Pydantic Base model class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">parameter_intervals</span><span class="p">:</span> <span class="n">RootCalibrationIntervals</span>
     <span class="n">calibration_parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">summary_statistics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">SummaryStatisticsModel</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">observed_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">RootNodeModel</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>

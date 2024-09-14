@@ -1075,6 +1075,10 @@
 
         <span class="n">min_sec_root_num</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">min_sec_root_num</span>
         <span class="n">max_sec_root_num</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">max_sec_root_num</span>
+
+        <span class="k">if</span> <span class="n">min_sec_root_num</span> <span class="o">==</span> <span class="n">max_sec_root_num</span><span class="p">:</span>
+            <span class="n">max_sec_root_num</span> <span class="o">+=</span> <span class="mi">1</span>
+
         <span class="k">if</span> <span class="n">min_sec_root_num</span> <span class="o">&gt;</span> <span class="n">max_sec_root_num</span><span class="p">:</span>
             <span class="n">min_sec_root_num</span><span class="p">,</span> <span class="n">max_sec_root_num</span> <span class="o">=</span> <span class="n">max_sec_root_num</span><span class="p">,</span> <span class="n">min_sec_root_num</span>
 

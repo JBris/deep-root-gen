@@ -88,10 +88,10 @@
 
 <span class="kn">import</span> <span class="nn">mlflow</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">get_app</span>
+<span class="kn">from</span> <span class="nn">prefect</span> <span class="kn">import</span> <span class="n">task</span>
 <span class="kn">from</span> <span class="nn">prefect.deployments</span> <span class="kn">import</span> <span class="n">run_deployment</span>
 <span class="kn">from</span> <span class="nn">ydata_profiling</span> <span class="kn">import</span> <span class="n">ProfileReport</span>
 
@@ -142,8 +142,7 @@
 
 
 
-<div class="viewcode-block" id="begin_experiment">
-<a class="viewcode-back" href="../../../api_reference/pipeline.html#deeprootgen.pipeline.experiment.begin_experiment">[docs]</a>
+<span class="nd">@task</span>
 <span class="k">def</span> <span class="nf">begin_experiment</span><span class="p">(</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flow_run_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_tag</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -189,12 +188,10 @@
     <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;flow_run_id&quot;</span><span class="p">,</span> <span class="n">flow_run_id</span><span class="p">)</span>
     <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;app_url&quot;</span><span class="p">,</span> <span class="n">app_url</span><span class="p">)</span>
     <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;prefect_flow_url&quot;</span><span class="p">,</span> <span class="n">prefect_flow_url</span><span class="p">)</span>
-    <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;simulation_tag&quot;</span><span class="p">,</span> <span class="n">simulation_tag</span><span class="p">)</span></div>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;simulation_tag&quot;</span><span class="p">,</span> <span class="n">simulation_tag</span><span class="p">)</span>
 
 
-
-<div class="viewcode-block" id="log_config">
-<a class="viewcode-back" href="../../../api_reference/pipeline.html#deeprootgen.pipeline.experiment.log_config">[docs]</a>
+<span class="nd">@task</span>
 <span class="k">def</span> <span class="nf">log_config</span><span class="p">(</span>
     <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -219,12 +216,52 @@
         <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">outfile</span></div>
+    <span class="k">return</span> <span class="n">outfile</span>
 
 
+<span class="nd">@task</span>
+<span class="k">def</span> <span class="nf">calculate_graph_metrics</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">time_now</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate graph metrics.</span>
 
-<div class="viewcode-block" id="log_simulation">
-<a class="viewcode-back" href="../../../api_reference/pipeline.html#deeprootgen.pipeline.experiment.log_simulation">[docs]</a>
+<span class="sd">    Args:</span>
+<span class="sd">        G (nx.Graph):</span>
+<span class="sd">            The NetworkX graph.</span>
+<span class="sd">        time_now (str):</span>
+<span class="sd">            The current time.</span>
+<span class="sd">        task (str):</span>
+<span class="sd">            The current simulation task.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str:</span>
+<span class="sd">            The graph metric file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metric_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">metric_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">metric_func</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">,</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">average_clustering</span><span class="p">,</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">node_connectivity</span><span class="p">,</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">degree_assortativity_coefficient</span><span class="p">,</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">degree_pearson_correlation_coefficient</span><span class="p">,</span>
+    <span class="p">]:</span>
+        <span class="n">metric_name</span> <span class="o">=</span> <span class="n">metric_func</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">metric_value</span> <span class="o">=</span> <span class="n">metric_func</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="n">metric_name</span><span class="p">,</span> <span class="n">metric_value</span><span class="p">)</span>
+        <span class="n">metric_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_name</span><span class="p">)</span>
+        <span class="n">metric_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_value</span><span class="p">)</span>
+
+    <span class="n">metric_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;metric_name&quot;</span><span class="p">:</span> <span class="n">metric_names</span><span class="p">,</span> <span class="s2">&quot;metric_value&quot;</span><span class="p">:</span> <span class="n">metric_values</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_graph_metrics.csv&quot;</span><span class="p">)</span>
+    <span class="n">metric_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">outfile</span>
+
+
+<span class="nd">@task</span>
 <span class="k">def</span> <span class="nf">log_simulation</span><span class="p">(</span>
     <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootSimulationModel</span><span class="p">,</span> <span class="n">simulation</span><span class="p">:</span> <span class="n">RootSystemSimulation</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -266,30 +303,6 @@
     <span class="n">profile</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
     <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
 
-    <span class="n">metric_names</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">metric_values</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">metric_func</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">,</span>
-        <span class="n">nx</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
-        <span class="n">nx</span><span class="o">.</span><span class="n">average_clustering</span><span class="p">,</span>
-        <span class="n">nx</span><span class="o">.</span><span class="n">node_connectivity</span><span class="p">,</span>
-        <span class="n">nx</span><span class="o">.</span><span class="n">degree_assortativity_coefficient</span><span class="p">,</span>
-        <span class="n">nx</span><span class="o">.</span><span class="n">degree_pearson_correlation_coefficient</span><span class="p">,</span>
-    <span class="p">]:</span>
-        <span class="n">metric_name</span> <span class="o">=</span> <span class="n">metric_func</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="n">metric_value</span> <span class="o">=</span> <span class="n">metric_func</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="n">metric_name</span><span class="p">,</span> <span class="n">metric_value</span><span class="p">)</span>
-        <span class="n">metric_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_name</span><span class="p">)</span>
-        <span class="n">metric_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_value</span><span class="p">)</span>
-
-    <span class="n">metric_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="p">{</span><span class="s2">&quot;metric_name&quot;</span><span class="p">:</span> <span class="n">metric_names</span><span class="p">,</span> <span class="s2">&quot;metric_value&quot;</span><span class="p">:</span> <span class="n">metric_values</span><span class="p">}</span>
-    <span class="p">)</span>
-    <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_graph_metrics.csv&quot;</span><span class="p">)</span>
-    <span class="n">metric_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
-
     <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">root_tissue_density</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">root_tissue_density</span><span class="p">)</span>
     <span class="n">statistic_names</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">statistic_values</span> <span class="o">=</span> <span class="p">[]</span>
@@ -312,8 +325,7 @@
     <span class="p">)</span>
     <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_summary_statistics.csv&quot;</span><span class="p">)</span>
     <span class="n">statistic_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span></div>
-
+    <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="load_form_parameters">
