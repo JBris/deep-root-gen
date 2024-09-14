@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeprootgen.calibration.summary_statistics &mdash; DeepRootGen 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelogs/changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deeprootgen.calibration.summary_statistics</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeprootgen.calibration.summary_statistics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Contains utilities for calibrating models from summary statistics.</span>
+
+<span class="sd">This module defines utility functions for calibrating simulation models from summary statistics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">..data_model</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RootCalibrationModel</span><span class="p">,</span>
+    <span class="n">RootSimulationModel</span><span class="p">,</span>
+    <span class="n">SummaryStatisticsModel</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">RootSystemSimulation</span>
+<span class="kn">from</span> <span class="nn">..statistics</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DistanceMetricBase</span><span class="p">,</span>
+    <span class="n">get_distance_metric_func</span><span class="p">,</span>
+    <span class="n">get_summary_statistic_func</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_calibration_summary_stats">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.get_calibration_summary_stats">[docs]</a>
+<span class="k">def</span> <span class="nf">get_calibration_summary_stats</span><span class="p">(</span><span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootCalibrationModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract summary statistics needed for model calibration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_parameters (RootCalibrationModel):</span>
+<span class="sd">            The root calibration data model.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError:</span>
+<span class="sd">            Error thrown when the summary statistic list is empty.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            The calibration distance metric and summary statistics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">statistics_comparison</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">statistics_comparison</span>
+    <span class="n">distance_func</span> <span class="o">=</span> <span class="n">get_distance_metric_func</span><span class="p">(</span><span class="n">statistics_comparison</span><span class="o">.</span><span class="n">distance_metric</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">()</span>
+
+    <span class="n">statistics_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">summary_statistic</span> <span class="ow">in</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">summary_statistics</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="n">statistics_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">summary_statistic</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
+
+    <span class="n">statistics_records</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">statistics_list</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;statistic_name in @statistics_comparison.summary_statistics&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">statistics_records</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Summary statistics list cannot be empty.&quot;</span><span class="p">)</span>
+
+    <span class="n">statistics_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">SummaryStatisticsModel</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">statistic</span><span class="p">)</span> <span class="k">for</span> <span class="n">statistic</span> <span class="ow">in</span> <span class="n">statistics_records</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">distance</span><span class="p">,</span> <span class="n">statistics_list</span></div>
+
+
+
+<div class="viewcode-block" id="run_calibration_simulation">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.run_calibration_simulation">[docs]</a>
+<span class="k">def</span> <span class="nf">run_calibration_simulation</span><span class="p">(</span>
+    <span class="n">parameter_specs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootCalibrationModel</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a simulation for model calibration purposes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        parameter_specs (dict):</span>
+<span class="sd">            The simulation parameter specification.</span>
+<span class="sd">        input_parameters (RootCalibrationModel):</span>
+<span class="sd">            The root calibration data model.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            The simulation and its parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parameter_specs</span><span class="p">[</span><span class="s2">&quot;random_seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">random_seed</span>
+    <span class="n">simulation_parameters</span> <span class="o">=</span> <span class="n">RootSimulationModel</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">parameter_specs</span><span class="p">)</span>
+    <span class="n">simulation</span> <span class="o">=</span> <span class="n">RootSystemSimulation</span><span class="p">(</span>
+        <span class="n">simulation_tag</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">simulation_tag</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+        <span class="n">random_seed</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">random_seed</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+    <span class="p">)</span>
+    <span class="n">simulation</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">simulation_parameters</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">simulation</span><span class="p">,</span> <span class="n">simulation_parameters</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_summary_statistic_discrepency">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepency">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_summary_statistic_discrepency</span><span class="p">(</span>
+    <span class="n">parameter_specs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootCalibrationModel</span><span class="p">,</span>
+    <span class="n">statistics_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SummaryStatisticsModel</span><span class="p">],</span>
+    <span class="n">distance</span><span class="p">:</span> <span class="n">DistanceMetricBase</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the discrepency between simulated and observed data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        parameter_specs (dict):</span>
+<span class="sd">            The simulation parameter specification.</span>
+<span class="sd">        input_parameters (RootCalibrationModel):</span>
+<span class="sd">            The root calibration data model.</span>
+<span class="sd">        statistics_list (list[SummaryStatisticsModel]):</span>
+<span class="sd">            The list of summary statistics.</span>
+<span class="sd">        distance (DistanceMetricBase):</span>
+<span class="sd">            The distance metric object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float:</span>
+<span class="sd">            The discrepency between simulated and observed data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">simulation</span><span class="p">,</span> <span class="n">simulation_parameters</span> <span class="o">=</span> <span class="n">run_calibration_simulation</span><span class="p">(</span>
+        <span class="n">parameter_specs</span><span class="p">,</span> <span class="n">input_parameters</span>
+    <span class="p">)</span>
+    <span class="n">node_df</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span>
+
+    <span class="n">observed_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">simulated_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">root_tissue_density</span><span class="o">=</span><span class="n">simulation_parameters</span><span class="o">.</span><span class="n">root_tissue_density</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">statistic</span> <span class="ow">in</span> <span class="n">statistics_list</span><span class="p">:</span>
+        <span class="n">statistic_name</span> <span class="o">=</span> <span class="n">statistic</span><span class="o">.</span><span class="n">statistic_name</span>
+        <span class="n">statistic_func</span> <span class="o">=</span> <span class="n">get_summary_statistic_func</span><span class="p">(</span><span class="n">statistic_name</span><span class="p">)</span>
+        <span class="n">statistic_instance</span> <span class="o">=</span> <span class="n">statistic_func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">statistic_value</span> <span class="o">=</span> <span class="n">statistic_instance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span>
+
+        <span class="n">observed_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic</span><span class="o">.</span><span class="n">statistic_value</span><span class="p">)</span>
+        <span class="n">simulated_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">)</span>
+
+    <span class="n">observed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">observed_values</span><span class="p">)</span>
+    <span class="n">simulated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">simulated_values</span><span class="p">)</span>
+    <span class="n">discrepency</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">simulated</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">discrepency</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

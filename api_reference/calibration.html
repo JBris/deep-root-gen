@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calibration &mdash; DeepRootGen 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Model" href="data_model.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.summary_statistics">Summary Statistics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepency"><code class="docutils literal notranslate"><span class="pre">calculate_summary_statistic_discrepency()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.summary_statistics.get_calibration_summary_stats"><code class="docutils literal notranslate"><span class="pre">get_calibration_summary_stats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.summary_statistics.run_calibration_simulation"><code class="docutils literal notranslate"><span class="pre">run_calibration_simulation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_model.html">Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="form.html">Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="io.html">Input/Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spatial.html">Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statistics.html">Statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelogs/changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Calibration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api_reference/calibration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="calibration">
+<h1>Calibration<a class="headerlink" href="#calibration" title="Link to this heading"></a></h1>
+<section id="module-deeprootgen.calibration.summary_statistics">
+<span id="summary-statistics"></span><h2>Summary Statistics<a class="headerlink" href="#module-deeprootgen.calibration.summary_statistics" title="Link to this heading"></a></h2>
+<p>Contains utilities for calibrating models from summary statistics.</p>
+<p>This module defines utility functions for calibrating simulation models from summary statistics.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepency">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">calculate_summary_statistic_discrepency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_specs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationModel" title="deeprootgen.data_model.simulation_data_models.RootCalibrationModel"><span class="pre">RootCalibrationModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistics_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data_model.html#deeprootgen.data_model.simulation_data_models.SummaryStatisticsModel" title="deeprootgen.data_model.simulation_data_models.SummaryStatisticsModel"><span class="pre">SummaryStatisticsModel</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="statistics.html#deeprootgen.statistics.distance_metrics.DistanceMetricBase" title="deeprootgen.statistics.distance_metrics.DistanceMetricBase"><span class="pre">DistanceMetricBase</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/summary_statistics.html#calculate_summary_statistic_discrepency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepency" title="Link to this definition"></a></dt>
+<dd><p>Calculate the discrepency between simulated and observed data.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>parameter_specs (dict):</dt><dd><p>The simulation parameter specification.</p>
+</dd>
+<dt>input_parameters (RootCalibrationModel):</dt><dd><p>The root calibration data model.</p>
+</dd>
+<dt>statistics_list (list[SummaryStatisticsModel]):</dt><dd><p>The list of summary statistics.</p>
+</dd>
+<dt>distance (DistanceMetricBase):</dt><dd><p>The distance metric object.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>float:</dt><dd><p>The discrepency between simulated and observed data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.calibration.summary_statistics.get_calibration_summary_stats">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">get_calibration_summary_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationModel" title="deeprootgen.data_model.simulation_data_models.RootCalibrationModel"><span class="pre">RootCalibrationModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/summary_statistics.html#get_calibration_summary_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.summary_statistics.get_calibration_summary_stats" title="Link to this definition"></a></dt>
+<dd><p>Extract summary statistics needed for model calibration.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>input_parameters (RootCalibrationModel):</dt><dd><p>The root calibration data model.</p>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>ValueError:</dt><dd><p>Error thrown when the summary statistic list is empty.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>tuple:</dt><dd><p>The calibration distance metric and summary statistics.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.calibration.summary_statistics.run_calibration_simulation">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.summary_statistics.</span></span><span class="sig-name descname"><span class="pre">run_calibration_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_specs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationModel" title="deeprootgen.data_model.simulation_data_models.RootCalibrationModel"><span class="pre">RootCalibrationModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/summary_statistics.html#run_calibration_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.summary_statistics.run_calibration_simulation" title="Link to this definition"></a></dt>
+<dd><p>Run a simulation for model calibration purposes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>parameter_specs (dict):</dt><dd><p>The simulation parameter specification.</p>
+</dd>
+<dt>input_parameters (RootCalibrationModel):</dt><dd><p>The root calibration data model.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>tuple:</dt><dd><p>The simulation and its parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_model.html" class="btn btn-neutral float-right" title="Data Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
