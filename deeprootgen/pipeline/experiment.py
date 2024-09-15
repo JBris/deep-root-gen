@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 import yaml
 from dash import get_app
-from prefect import task
+from prefect import context, task
 from prefect.deployments import run_deployment
 from ydata_profiling import ProfileReport
 
@@ -60,9 +60,7 @@ def get_simulation_uuid() -> str:
 
 
 @task
-def begin_experiment(
-    task: str, simulation_uuid: str, flow_run_id: str, simulation_tag: str
-) -> None:
+def begin_experiment(task: str, simulation_uuid: str, simulation_tag: str) -> None:
     """Begin the experiment session.
 
     Args:
@@ -70,8 +68,6 @@ def begin_experiment(
             The name of the current task for the experiment.
         simulation_uuid (str):
             The simulation uuid.
-        flow_run_id (str):
-            The Prefect flow run ID.
         simulation_tag (str):
             The tag for the current root model simulation.
     """
@@ -88,6 +84,8 @@ def begin_experiment(
     app_prefect_host = os.environ.get("APP_PREFECT_USER_HOST")
     if app_prefect_host is None:
         app_prefect_host = "http://localhost:4200"
+
+    flow_run_id = context.get_run_context().task_run.flow_run_id
     prefect_flow_url = f"{app_prefect_host}/flow-runs/flow-run/{flow_run_id}"
 
     run_description = f"""

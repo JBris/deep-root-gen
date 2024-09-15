@@ -77,7 +77,7 @@ components:
         class_name: dash.dcc.Upload
         handler: file_upload
         kwargs:
-          children: Load node data
+          children: Load simulation data
       - id: clear-obs-data-file-button
         label: Clear
         help: Clear the simulated root data from the form

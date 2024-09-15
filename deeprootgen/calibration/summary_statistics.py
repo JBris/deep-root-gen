@@ -88,13 +88,13 @@ def run_calibration_simulation(
     return simulation, simulation_parameters
 
 
-def calculate_summary_statistic_discrepency(
+def calculate_summary_statistic_discrepancy(
     parameter_specs: dict,
     input_parameters: RootCalibrationModel,
     statistics_list: list[SummaryStatisticsModel],
     distance: DistanceMetricBase,
 ) -> float:
-    """Calculate the discrepency between simulated and observed data.
+    """Calculate the discrepancy between simulated and observed data.
 
     Args:
         parameter_specs (dict):
@@ -108,7 +108,7 @@ def calculate_summary_statistic_discrepency(
 
     Returns:
         float:
-            The discrepency between simulated and observed data.
+            The discrepancy between simulated and observed data.
     """
     simulation, simulation_parameters = run_calibration_simulation(
         parameter_specs, input_parameters
@@ -133,5 +133,5 @@ def calculate_summary_statistic_discrepency(
 
     observed = np.array(observed_values)
     simulated = np.array(simulated_values)
-    discrepency = distance.calculate(observed, simulated)
-    return discrepency
+    discrepancy = distance.calculate(observed, simulated)
+    return discrepancy

@@ -130,3 +130,52 @@ class OptimisationModel(mlflow.pyfunc.PythonModel):
             "value", ascending=True
         )
         return trials_df.head(n_trials)
+
+
+class SensitivityAnalysisModel(mlflow.pyfunc.PythonModel):
+    """A sensitivity analysis calibration model."""
+
+    def __init__(self) -> None:
+        """The SensitivityAnalysisModel constructor."""
+        self.task = "sensitivity_analysis"
+        self.calibrator = None
+
+    def load_context(self, context: Context) -> None:
+        """Load the model context.
+
+        Args:
+            context (Context):
+                The model context.
+        """
+        import joblib
+
+        calibrator_data = context.artifacts["calibrator"]
+        self.calibrator = joblib.load(calibrator_data)
+
+    def predict(
+        self, context: Context, model_input: pd.DataFrame, params: dict | None = None
+    ) -> pd.DataFrame:
+        """Make a model prediction.
+
+        Args:
+            context (Context):
+                The model context.
+            model_input (pd.DataFrame):
+                The model input data.
+            params (dict, optional):
+                Optional model parameters. Defaults to None.
+
+        Raises:
+            ValueError:
+                Error raised when the calibrator has not been loaded.
+
+        Returns:
+            pd.DataFrame:
+                The model prediction.
+        """
+        if self.calibrator is None:
+            raise ValueError(f"The {self.task} calibrator has not been loaded.")
+
+        names = model_input["name"].values  # noqa: F841
+        si_df = self.calibrator.total_si_df
+        return si_df.query("name in @names")

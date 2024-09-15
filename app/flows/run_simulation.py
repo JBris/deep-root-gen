@@ -5,7 +5,7 @@
 ######################################
 
 import mlflow
-from prefect import context, flow, task
+from prefect import flow, task
 from prefect.task_runners import ConcurrentTaskRunner
 
 from deeprootgen.data_model import RootSimulationModel
@@ -17,6 +17,12 @@ from deeprootgen.pipeline import (
     log_experiment_details,
     log_simulation,
 )
+
+######################################
+# Constants
+######################################
+
+TASK = "simulation"
 
 ######################################
 # Main
@@ -53,18 +59,14 @@ def run_simulation(input_parameters: RootSimulationModel, simulation_uuid: str) 
         simulation_uuid (str):
             The simulation uuid.
     """
-    task = "simulation"
-    flow_run_id = context.get_run_context().task_run.flow_run_id
-    begin_experiment(
-        task, simulation_uuid, flow_run_id, input_parameters.simulation_tag
-    )
+    begin_experiment(TASK, simulation_uuid, input_parameters.simulation_tag)
     log_experiment_details(simulation_uuid)
     simulation = execute_simulation(input_parameters)
     config = input_parameters.dict()
 
-    log_config(config, task)
-    log_simulation(input_parameters, simulation, task)
-    save_graph_to_db(simulation, task, simulation_uuid)
+    log_config(config, TASK)
+    log_simulation(input_parameters, simulation, TASK)
+    save_graph_to_db(simulation, TASK, simulation_uuid)
     mlflow.end_run()
 
 

@@ -597,8 +597,19 @@ components:
         kwargs:
           type: number
           min: 1
-          step: 2
-          value: 8
+          step: 1
+          value: 4
+          persistence: true
+      - id: n-jobs-input
+        param: n_jobs 
+        label: Number of parallel simulations
+        help: The number of simulations to run in parallel. '-1' runs all simulations in parallel.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number 
+          min: -1
+          step: 1
+          value: 1
           persistence: true
       - id: select-summary-stats-dropdown
         param: summary_statistics

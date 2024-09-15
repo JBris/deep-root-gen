@@ -708,7 +708,7 @@ class RootSystemSimulation:
             mode="markers",
             marker=dict(
                 symbol="circle",
-                size=7,
+                size=4,
                 color="green",
                 line=dict(color="black", width=0.5),
             ),

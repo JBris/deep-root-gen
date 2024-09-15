@@ -168,7 +168,7 @@ def update_eda_data_state(eda_data: dict) -> tuple:
         tuple:
             The updated form state.
     """
-    button_contents = ["Load node data"]
+    button_contents = ["Load simulation data"]
     if eda_data is None:
         return button_contents, [True], [[]], [[]], [[]]
 
@@ -320,7 +320,7 @@ def update_xy_plots(
     y_axis = y_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_values).query("order > 0")
+    df = pd.DataFrame(eda_values)
 
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
@@ -382,7 +382,7 @@ def update_x_plots(
     x_axis = x_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_values).query("order > 0")
+    df = pd.DataFrame(eda_values)
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -440,7 +440,7 @@ def update_y_plots(
     y_axis = y_axes[0]
     group_by = group_bys[0]
 
-    df = pd.DataFrame(eda_values).query("order > 0")
+    df = pd.DataFrame(eda_values)
     if group_by is not None:
         df[group_by] = df[group_by].astype("category")
 
@@ -489,7 +489,7 @@ def update_x_statistic_plot(summary_stats: list | None, eda_data: dict) -> list 
 
     summary_stat = summary_stats[0]
     eda_values = eda_data["values"]
-    df = pd.DataFrame(eda_values).query("order > 0")
+    df = pd.DataFrame(eda_values)
 
     if len(df) == 0:
         return no_update
@@ -532,7 +532,7 @@ def update_y_statistic_plot(summary_stats: list | None, eda_data: dict) -> list 
 
     summary_stat = summary_stats[0]
     eda_values = eda_data["values"]
-    df = pd.DataFrame(eda_values).query("order > 0")
+    df = pd.DataFrame(eda_values)
 
     if len(df) == 0:
         return no_update
@@ -589,7 +589,7 @@ def update_xy_statistic_plot(
         return [{}], [{}]
 
     eda_values = eda_data["values"]
-    df = pd.DataFrame(eda_values).query("order > 0")
+    df = pd.DataFrame(eda_values)
 
     if len(df) == 0:
         return [{}], [{}]

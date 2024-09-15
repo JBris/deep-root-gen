@@ -11,13 +11,13 @@ import optuna
 import pandas as pd
 from joblib import dump as calibrator_dump
 from optuna.samplers import TPESampler
-from prefect import context, flow, task
+from prefect import flow, task
 from prefect.artifacts import create_table_artifact
 from prefect.task_runners import ConcurrentTaskRunner
 
 from deeprootgen.calibration import (
     OptimisationModel,
-    calculate_summary_statistic_discrepency,
+    calculate_summary_statistic_discrepancy,
     get_calibration_summary_stats,
     log_model,
     run_calibration_simulation,
@@ -151,10 +151,10 @@ def objective(
                 parameter, lower_bound, upper_bound
             )
 
-    discrepency = calculate_summary_statistic_discrepency(
+    discrepancy = calculate_summary_statistic_discrepancy(
         parameter_specs, input_parameters, statistics_list, distance
     )
-    return discrepency
+    return discrepancy
 
 
 @task
@@ -257,10 +257,7 @@ def run_optimisation(
         simulation_uuid (str):
             The simulation uuid.
     """
-    flow_run_id = context.get_run_context().task_run.flow_run_id
-    begin_experiment(
-        TASK, simulation_uuid, flow_run_id, input_parameters.simulation_tag
-    )
+    begin_experiment(TASK, simulation_uuid, input_parameters.simulation_tag)
     log_experiment_details(simulation_uuid)
 
     study, statistics_list, distance = prepare_task(input_parameters)

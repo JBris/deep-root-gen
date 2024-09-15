@@ -28,6 +28,34 @@ services:
     command: >
       bentoml serve --host 0.0.0.0 -p 3000 deployments.optimisation_service:svc
 
+  sensitivity_analysis:
+    image: ghcr.io/jbris/deep-root-gen:${APP_VERSION}
+    restart: always
+    stop_grace_period: 10s
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+      MLFLOW_BACKEND_STORE_URI: $MLFLOW_BACKEND_STORE_URI
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      BENTOML_DO_NOT_TRACK: True
+      BENTOML_HOME: /app/outputs/bento
+      BENTOML_BUCKET: s3://bento
+      BENTOML_CONFIG: /app/bentoml_configuration.yaml
+    ports:
+      - 5002:3000
+    volumes:
+      - ./app/app.py:/app/app.py
+      - ./app/conf:/app/conf
+      - ./app/pages:/app/pages
+      - ./app/outputs:/app/outputs
+      - ./app/flows:/app/flows
+      - ./app/deployments:/app/deployments
+      - ./deeprootgen:/app/deeprootgen
+      - ./bentoml_configuration.yaml:/app/bentoml_configuration.yaml
+    command: >
+      bentoml serve --host 0.0.0.0 -p 3000 deployments.sensitivity_analysis_service:svc
+
 networks:
   default:
     name: $COMPOSE_PROJECT_NAME
