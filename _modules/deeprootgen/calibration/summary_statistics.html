@@ -115,12 +115,18 @@
     <span class="n">distance</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">()</span>
 
     <span class="n">statistics_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">input_statistics</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">summary_statistic</span> <span class="ow">in</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">summary_statistics</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
         <span class="n">statistics_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">summary_statistic</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
+        <span class="n">input_statistics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">summary_statistic</span><span class="o">.</span><span class="n">statistic_name</span><span class="p">)</span>
+
+    <span class="n">summary_statistics</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>  <span class="c1"># noqa: F841</span>
+        <span class="n">statistics_comparison</span><span class="o">.</span><span class="n">summary_statistics</span>  <span class="c1"># type: ignore</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">input_statistics</span><span class="p">)</span>
 
     <span class="n">statistics_records</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">statistics_list</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;statistic_name in @statistics_comparison.summary_statistics&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;statistic_name in @summary_statistics&quot;</span><span class="p">)</span>
         <span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">statistics_records</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -200,6 +206,11 @@
         <span class="n">statistic_func</span> <span class="o">=</span> <span class="n">get_summary_statistic_func</span><span class="p">(</span><span class="n">statistic_name</span><span class="p">)</span>
         <span class="n">statistic_instance</span> <span class="o">=</span> <span class="n">statistic_func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">statistic_value</span> <span class="o">=</span> <span class="n">statistic_instance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span>
+
+        <span class="c1"># @TODO calculate by depth and horizontal distance</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">continue</span>
+
         <span class="n">observed_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic</span><span class="o">.</span><span class="n">statistic_value</span><span class="p">)</span>
         <span class="n">simulated_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">)</span>
 
