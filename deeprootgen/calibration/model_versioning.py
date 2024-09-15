@@ -3,6 +3,7 @@
 This module defines MLflow compatible models for versioning and deployment as microservices.
 """
 
+import bentoml
 import mlflow
 import numpy as np
 import pandas as pd
@@ -69,6 +70,16 @@ def log_model(
         description=f"A root model calibrator for performing the following task: {task}",
     )
 
+    bentoml.mlflow.import_model(
+        task,
+        model_uri,
+        labels=mlflow.active_run().data.tags,
+        metadata={
+            "metrics": mlflow.active_run().data.metrics,
+            "params": mlflow.active_run().data.params,
+        },
+    )
+
 
 class OptimisationModel(mlflow.pyfunc.PythonModel):
     """An optimisation calibration model."""
@@ -91,14 +102,14 @@ class OptimisationModel(mlflow.pyfunc.PythonModel):
         self.calibrator = joblib.load(calibrator_data)
 
     def predict(
-        self, context: Context, model_input: dict, params: dict | None = None
+        self, context: Context, model_input: pd.DataFrame, params: dict | None = None
     ) -> pd.DataFrame:
         """Make a model prediction.
 
         Args:
             context (Context):
                 The model context.
-            model_input (dict):
+            model_input (pd.DataFrame):
                 The model input data.
             params (dict, optional):
                 Optional model parameters. Defaults to None.
@@ -114,7 +125,7 @@ class OptimisationModel(mlflow.pyfunc.PythonModel):
         if self.calibrator is None:
             raise ValueError(f"The {self.task} calibrator has not been loaded.")
 
-        n_trials = model_input.get("n_trials", 10)
+        n_trials = model_input["n_trials"].item()
         trials_df: pd.DataFrame = self.calibrator.trials_dataframe().sort_values(
             "value", ascending=True
         )

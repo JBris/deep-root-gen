@@ -24,6 +24,10 @@ services:
       ARANGO_ROOT_USER: root
       ARANGO_ROOT_PASSWORD: $ARANGO_ROOT_PASSWORD
       ARANGO_HOST_URL: http://arangodb:8529 
+      BENTOML_DO_NOT_TRACK: True
+      BENTOML_HOME: /app/outputs/bento
+      BENTOML_BUCKET: s3://bento
+      BENTOML_CONFIG: /app/bentoml_configuration.yaml
     ports:
       - 8000:8000
     volumes:
@@ -33,6 +37,7 @@ services:
       - ./app/outputs:/app/outputs
       - ./app/flows:/app/flows
       - ./deeprootgen:/app/deeprootgen
+      - ./bentoml_configuration.yaml:/app/bentoml_configuration.yaml
     command: >
       gunicorn -b 0.0.0.0:8000 -w 4 app:server
       
@@ -51,6 +56,7 @@ services:
       APP_MLFLOW_USER_HOST: http://localhost:5000
       MLFLOW_BACKEND_STORE_URI: $MLFLOW_BACKEND_STORE_URI
       MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      MLFLOW_TRACKING_URI: http://localhost:5000
       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
     ports:
@@ -106,6 +112,10 @@ services:
       ARANGO_ROOT_USER: root
       ARANGO_ROOT_PASSWORD: $ARANGO_ROOT_PASSWORD
       ARANGO_HOST_URL: http://arangodb:8529 
+      BENTOML_DO_NOT_TRACK: True
+      BENTOML_HOME: /app/outputs/bento
+      BENTOML_BUCKET: s3://bento
+      BENTOML_CONFIG: /app/bentoml_configuration.yaml
     depends_on:
       - prefect-server
     entrypoint: prefect worker start -p default
@@ -113,6 +123,7 @@ services:
       - ./app/flows:/app/flows
       - ./deeprootgen:/app/deeprootgen
       - ./app/outputs:/app/outputs
+      - ./bentoml_configuration.yaml:/app/bentoml_configuration.yaml
 
   prefect-deployments:
     image: ghcr.io/jbris/deep-root-gen:${APP_VERSION}

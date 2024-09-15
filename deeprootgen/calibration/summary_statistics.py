@@ -108,16 +108,15 @@ def calculate_summary_statistic_discrepency(
         parameter_specs, input_parameters
     )
     node_df, _ = simulation.G.as_df()
-
     observed_values = []
     simulated_values = []
     kwargs = dict(root_tissue_density=simulation_parameters.root_tissue_density)
+
     for statistic in statistics_list:
         statistic_name = statistic.statistic_name
         statistic_func = get_summary_statistic_func(statistic_name)
         statistic_instance = statistic_func(**kwargs)
         statistic_value = statistic_instance.calculate(node_df)
-
         observed_values.append(statistic.statistic_value)
         simulated_values.append(statistic_value)
 

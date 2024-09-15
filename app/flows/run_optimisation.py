@@ -106,7 +106,8 @@ def perform_task(
         ),
         n_trials=calibration_parameters["n_trials"],
         n_jobs=calibration_parameters["n_jobs"],
-        gc_after_trial=True,
+        gc_after_trial=False,
+        show_progress_bar=False,
     )
 
 
