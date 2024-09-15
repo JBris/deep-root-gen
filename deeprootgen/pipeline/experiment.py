@@ -13,6 +13,7 @@ from datetime import datetime
 
 import mlflow
 import networkx as nx
+import numpy as np
 import pandas as pd
 import yaml
 from dash import get_app
@@ -229,8 +230,10 @@ def log_simulation(
         statistic_instance = statistic_func(**kwargs)
         statistic_value = statistic_instance.calculate(node_df)
 
-        if isinstance(statistic_value, tuple):
-            continue
+        # @TODO calculate by depth and horizontal distance
+        if isinstance(statistic_value, tuple) or isinstance(statistic_value, tuple):
+            statistic_name = f"average_{statistic_name}"
+            statistic_value = np.array(statistic_value).flatten().mean()
 
         statistic_names.append(statistic_name)
         statistic_values.append(statistic_value)

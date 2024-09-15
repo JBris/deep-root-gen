@@ -38,12 +38,18 @@ def get_calibration_summary_stats(input_parameters: RootCalibrationModel) -> tup
     distance = distance_func()
 
     statistics_list = []
+    input_statistics = []
     for summary_statistic in input_parameters.summary_statistics:  # type: ignore
         statistics_list.append(summary_statistic.dict())
+        input_statistics.append(summary_statistic.statistic_name)
+
+    summary_statistics = set(  # noqa: F841
+        statistics_comparison.summary_statistics  # type: ignore
+    ).intersection(input_statistics)
 
     statistics_records = (
         pd.DataFrame(statistics_list)
-        .query("statistic_name in @statistics_comparison.summary_statistics")
+        .query("statistic_name in @summary_statistics")
         .to_dict("records")
     )
     if len(statistics_records) == 0:
@@ -117,6 +123,11 @@ def calculate_summary_statistic_discrepency(
         statistic_func = get_summary_statistic_func(statistic_name)
         statistic_instance = statistic_func(**kwargs)
         statistic_value = statistic_instance.calculate(node_df)
+
+        # @TODO calculate by depth and horizontal distance
+        if isinstance(statistic_value, tuple) or isinstance(statistic_value, list):
+            continue
+
         observed_values.append(statistic.statistic_value)
         simulated_values.append(statistic_value)
 
