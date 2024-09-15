@@ -169,15 +169,15 @@
 
 
 
-<div class="viewcode-block" id="calculate_summary_statistic_discrepency">
-<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepency">[docs]</a>
-<span class="k">def</span> <span class="nf">calculate_summary_statistic_discrepency</span><span class="p">(</span>
+<div class="viewcode-block" id="calculate_summary_statistic_discrepancy">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepancy">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_summary_statistic_discrepancy</span><span class="p">(</span>
     <span class="n">parameter_specs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootCalibrationModel</span><span class="p">,</span>
     <span class="n">statistics_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SummaryStatisticsModel</span><span class="p">],</span>
     <span class="n">distance</span><span class="p">:</span> <span class="n">DistanceMetricBase</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the discrepency between simulated and observed data.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the discrepancy between simulated and observed data.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parameter_specs (dict):</span>
@@ -191,7 +191,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        float:</span>
-<span class="sd">            The discrepency between simulated and observed data.</span>
+<span class="sd">            The discrepancy between simulated and observed data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">simulation</span><span class="p">,</span> <span class="n">simulation_parameters</span> <span class="o">=</span> <span class="n">run_calibration_simulation</span><span class="p">(</span>
         <span class="n">parameter_specs</span><span class="p">,</span> <span class="n">input_parameters</span>
@@ -216,8 +216,8 @@
 
     <span class="n">observed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">observed_values</span><span class="p">)</span>
     <span class="n">simulated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">simulated_values</span><span class="p">)</span>
-    <span class="n">discrepency</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">simulated</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">discrepency</span></div>
+    <span class="n">discrepancy</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">simulated</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">discrepancy</span></div>
 
 </pre></div>
 

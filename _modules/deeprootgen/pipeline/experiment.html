@@ -92,7 +92,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">get_app</span>
-<span class="kn">from</span> <span class="nn">prefect</span> <span class="kn">import</span> <span class="n">task</span>
+<span class="kn">from</span> <span class="nn">prefect</span> <span class="kn">import</span> <span class="n">context</span><span class="p">,</span> <span class="n">task</span>
 <span class="kn">from</span> <span class="nn">prefect.deployments</span> <span class="kn">import</span> <span class="n">run_deployment</span>
 <span class="kn">from</span> <span class="nn">ydata_profiling</span> <span class="kn">import</span> <span class="n">ProfileReport</span>
 
@@ -144,9 +144,7 @@
 
 
 <span class="nd">@task</span>
-<span class="k">def</span> <span class="nf">begin_experiment</span><span class="p">(</span>
-    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flow_run_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_tag</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">begin_experiment</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">simulation_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Begin the experiment session.</span>
 
 <span class="sd">    Args:</span>
@@ -154,8 +152,6 @@
 <span class="sd">            The name of the current task for the experiment.</span>
 <span class="sd">        simulation_uuid (str):</span>
 <span class="sd">            The simulation uuid.</span>
-<span class="sd">        flow_run_id (str):</span>
-<span class="sd">            The Prefect flow run ID.</span>
 <span class="sd">        simulation_tag (str):</span>
 <span class="sd">            The tag for the current root model simulation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -172,6 +168,8 @@
     <span class="n">app_prefect_host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;APP_PREFECT_USER_HOST&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">app_prefect_host</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">app_prefect_host</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:4200&quot;</span>
+
+    <span class="n">flow_run_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get_run_context</span><span class="p">()</span><span class="o">.</span><span class="n">task_run</span><span class="o">.</span><span class="n">flow_run_id</span>
     <span class="n">prefect_flow_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">app_prefect_host</span><span class="si">}</span><span class="s2">/flow-runs/flow-run/</span><span class="si">{</span><span class="n">flow_run_id</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="n">run_description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
