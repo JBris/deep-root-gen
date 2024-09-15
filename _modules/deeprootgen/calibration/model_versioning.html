@@ -78,6 +78,7 @@
 <span class="sd">This module defines MLflow compatible models for versioning and deployment as microservices.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">bentoml</span>
 <span class="kn">import</span> <span class="nn">mlflow</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -144,6 +145,16 @@
         <span class="n">name</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
         <span class="n">version</span><span class="o">=</span><span class="n">model_version</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;A root model calibrator for performing the following task: </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">bentoml</span><span class="o">.</span><span class="n">mlflow</span><span class="o">.</span><span class="n">import_model</span><span class="p">(</span>
+        <span class="n">task</span><span class="p">,</span>
+        <span class="n">model_uri</span><span class="p">,</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">mlflow</span><span class="o">.</span><span class="n">active_run</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">active_run</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">active_run</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">)</span></div>
 
 
@@ -176,14 +187,14 @@
 <div class="viewcode-block" id="OptimisationModel.predict">
 <a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.OptimisationModel.predict">[docs]</a>
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">model_input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">model_input</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a model prediction.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            context (Context):</span>
 <span class="sd">                The model context.</span>
-<span class="sd">            model_input (dict):</span>
+<span class="sd">            model_input (pd.DataFrame):</span>
 <span class="sd">                The model input data.</span>
 <span class="sd">            params (dict, optional):</span>
 <span class="sd">                Optional model parameters. Defaults to None.</span>
@@ -199,7 +210,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="si">}</span><span class="s2"> calibrator has not been loaded.&quot;</span><span class="p">)</span>
 
-        <span class="n">n_trials</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n_trials&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">n_trials</span> <span class="o">=</span> <span class="n">model_input</span><span class="p">[</span><span class="s2">&quot;n_trials&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="n">trials_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrator</span><span class="o">.</span><span class="n">trials_dataframe</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
             <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>

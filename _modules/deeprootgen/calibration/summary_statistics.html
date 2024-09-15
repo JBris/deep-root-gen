@@ -191,16 +191,15 @@
         <span class="n">parameter_specs</span><span class="p">,</span> <span class="n">input_parameters</span>
     <span class="p">)</span>
     <span class="n">node_df</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span>
-
     <span class="n">observed_values</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">simulated_values</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">root_tissue_density</span><span class="o">=</span><span class="n">simulation_parameters</span><span class="o">.</span><span class="n">root_tissue_density</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">statistic</span> <span class="ow">in</span> <span class="n">statistics_list</span><span class="p">:</span>
         <span class="n">statistic_name</span> <span class="o">=</span> <span class="n">statistic</span><span class="o">.</span><span class="n">statistic_name</span>
         <span class="n">statistic_func</span> <span class="o">=</span> <span class="n">get_summary_statistic_func</span><span class="p">(</span><span class="n">statistic_name</span><span class="p">)</span>
         <span class="n">statistic_instance</span> <span class="o">=</span> <span class="n">statistic_func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">statistic_value</span> <span class="o">=</span> <span class="n">statistic_instance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span>
-
         <span class="n">observed_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic</span><span class="o">.</span><span class="n">statistic_value</span><span class="p">)</span>
         <span class="n">simulated_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">)</span>
 
