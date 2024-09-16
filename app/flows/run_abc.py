@@ -7,17 +7,17 @@
 # isort: off
 
 # This is for compatibility with Prefect.
+
 import multiprocessing
 
 # isort: on
 
-import os.path as osp
 
 import mlflow
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import pymc as pm
+import pyabc
 from joblib import dump as calibrator_dump
 from matplotlib import pyplot as plt
 from prefect import flow, task
@@ -57,26 +57,6 @@ TASK = "abc"
 ######################################
 
 
-def distance_func(e: float, observed: np.ndarray, simulated: np.ndarray) -> float:
-    """Calculates the distance between simulated and observed data.
-
-    Args:
-        e (float):
-            The distance threshold.
-        observed (np.ndarray):
-            The observed data.
-        simulated (np.ndarray):
-            The simulated data.
-
-    Returns:
-        float:
-            The distance.
-    """
-    # We have already calculated the distance.
-    # This is for compatibility with the PyMC API.
-    return simulated.item()
-
-
 @task
 def prepare_task(input_parameters: RootCalibrationModel) -> tuple:
     """Prepare the Bayesian parameter estimation procedure.
@@ -114,68 +94,51 @@ def run_abc(input_parameters: RootCalibrationModel, simulation_uuid: str) -> Non
 
     distance, statistics_list, observed_values = prepare_task(input_parameters)
 
-    names = []
-    priors = []
+    def distance_func(x: dict, _: dict) -> float:
+        return x["discrepancy"]
+
     parameter_intervals = input_parameters.parameter_intervals.dict()
-    calibration_parameters = input_parameters.calibration_parameters
-    with pm.Model() as model:
-        for name, v in parameter_intervals.items():
-            names.append(name)
+    # calibration_parameters = input_parameters.calibration_parameters
+    names = []
+    data_types = {}
+    dist_kwargs = {}
+    for name, v in parameter_intervals.items():
+        names.append(name)
 
-            lower_bound = v["lower_bound"]
-            upper_bound = v["upper_bound"]
-            data_type = v["data_type"]
+        lower_bound = v["lower_bound"]
+        upper_bound = v["upper_bound"]
 
+        data_type = v["data_type"]
+        data_types[name] = data_type
+
+        dist_kwargs[name] = pyabc.RV("uniform", lower_bound, upper_bound - lower_bound)
+
+    prior = pyabc.Distribution(**dist_kwargs)
+
+    def simulator_func(theta: dict) -> dict:
+        parameter_specs = theta.copy()
+        for name in names:
+            data_type = data_types[name]
             if data_type == "discrete":
-                prior = pm.DiscreteUniform(name, lower_bound, upper_bound)
-            else:
-                prior = pm.Uniform(name, lower_bound, upper_bound)
-            priors.append(prior)
+                parameter_specs[name] = int(parameter_specs[name])
 
-        params = tuple(priors)
-
-        def simulator_func(_: np.random.Generator, *parameters: list) -> np.ndarray:
-            parameter_specs = {}
-            for i, name in enumerate(names):
-                parameter_specs[name] = parameters[i].item()
-
-            discrepancy = calculate_summary_statistic_discrepancy(
-                parameter_specs, input_parameters, statistics_list, distance
-            )
-
-            return np.array([discrepancy])
-
-        pm.Simulator(
-            "root_simulator",
-            simulator_func,
-            params=params,
-            distance=distance_func,
-            sum_stat="identity",
-            epsilon=calibration_parameters["epsilon"],
-            observed=observed_values,
+        discrepancy = calculate_summary_statistic_discrepancy(
+            parameter_specs, input_parameters, statistics_list, distance
         )
 
-    # trace = pm.sample_smc(
-    #     # draws = calibration_parameters["draws"],
-    #     model=model,
-    #     draws=5,
-    #     chains=2,
-    #     cores=2,
-    #     # chains = calibration_parameters["chains"],
-    #     # cores = calibration_parameters["cores"],
-    #     # compute_convergence_checks = False,
-    #     # return_inferencedata = False,
-    #     # random_seed = input_parameters.random_seed,
-    #     # progressbar = False
-    # )
+        return {"discrepancy": discrepancy}
 
-    time_now = get_datetime_now()
-    outdir = get_outdir()
-    pgm = pm.model_to_graphviz(model=model)
-    outfile = f"{time_now}-{TASK}_model_graph"
-    pgm.render(format="png", directory=outdir, filename=outfile)
-    outfile = osp.join(outdir, f"{outfile}.png")
-    mlflow.log_artifact(outfile)
+    abc = pyabc.ABCSMC(
+        simulator_func,
+        prior,
+        distance_func,
+        population_size=2,
+        sampler=pyabc.SingleCoreSampler(check_max_eval=True),
+    )
+
+    abc.new("sqlite://")
+
+    # history = abc.run(minimum_epsilon=0.1, max_nr_populations=2)
 
     config = input_parameters.dict()
     log_config(config, TASK)
