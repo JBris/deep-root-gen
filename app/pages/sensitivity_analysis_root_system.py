@@ -359,13 +359,21 @@ def toggle_calibration_parameters_collapse(n: int, is_open: bool) -> bool:
     Output({"index": f"{PAGE_ID}-run-sim-button", "type": ALL}, "disabled"),
     Output({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "disabled"),
     Input("store-summary-data", "data"),
+    Input({"index": f"{PAGE_ID}-select-summary-stats-dropdown", "type": ALL}, "value"),
+    Input({"index": f"{PAGE_ID}-distance-dropdown", "type": ALL}, "value"),
 )
-def update_summary_data_state(summary_data: dict | None) -> tuple:
+def update_summary_data_state(
+    summary_data: dict | None, summary_stats: list, distances: list
+) -> tuple:
     """Update the state of the summary data.
 
     Args:
         summary_data (dict | None):
             The summary data.
+        summary_stats (list):
+            The list of summary statistics.
+        distances (list):
+            The list of distance metrics.
 
     Returns:
         tuple:
@@ -378,6 +386,17 @@ def update_summary_data_state(summary_data: dict | None) -> tuple:
     summary_label = summary_data.get("label")
     if summary_label is None:
         return button_contents, [True], [True]
+
+    if summary_stats is None or distances is None:
+        return [summary_label], [True], [True]
+
+    summary_stats_list = summary_stats[0]
+    distance_list = distances[0]
+    if len(summary_stats_list) == 0 or distance_list is None:
+        return [summary_label], [True], [True]
+
+    if summary_stats_list[0] is None or distance_list == "":
+        return [summary_label], [True], [True]
 
     return [summary_label], [False], [False]
 

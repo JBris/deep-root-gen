@@ -54,6 +54,8 @@ dash-daq = "^0.5.0"
 ydata-profiling = "^4.10.0"
 adbnx-adapter = "^5.0.3"
 python-arango = "<8.0"
+pyabc = "^0.12.13"
+redis = "^5.0.8"
 
 
 [tool.poetry.group.torch.dependencies]
