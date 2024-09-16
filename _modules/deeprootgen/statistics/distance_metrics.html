@@ -118,30 +118,6 @@
 
 
 
-<div class="viewcode-block" id="L2Norm">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.distance_metrics.L2Norm">[docs]</a>
-<span class="k">class</span> <span class="nc">L2Norm</span><span class="p">(</span><span class="n">DistanceMetricBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The L2 norm distance.&quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="L2Norm.calculate">
-<a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.distance_metrics.L2Norm.calculate">[docs]</a>
-    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">observed</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">simulated</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the distance between observed and simulated data.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            observed (np.ndarray):</span>
-<span class="sd">                The observed data.</span>
-<span class="sd">            simulated (np.ndarray):</span>
-<span class="sd">                The simulated data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">observed</span> <span class="o">-</span> <span class="n">simulated</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">distance</span></div>
-</div>
-
-
-
 <div class="viewcode-block" id="L1Norm">
 <a class="viewcode-back" href="../../../api_reference/statistics.html#deeprootgen.statistics.distance_metrics.L1Norm">[docs]</a>
 <span class="k">class</span> <span class="nc">L1Norm</span><span class="p">(</span><span class="n">DistanceMetricBase</span><span class="p">):</span>
@@ -340,7 +316,6 @@
 <span class="sd">            A list of available distance metrics and labels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">distance_metrics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;l2_norm&quot;</span><span class="p">,</span>
         <span class="s2">&quot;l1_norm&quot;</span><span class="p">,</span>
         <span class="s2">&quot;mean_squared_error&quot;</span><span class="p">,</span>
         <span class="s2">&quot;mean_absolute_error&quot;</span><span class="p">,</span>

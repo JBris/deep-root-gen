@@ -59,7 +59,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.statistics.distance_metrics">Distance Metrics</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.distance_metrics.DistanceMetricBase"><code class="docutils literal notranslate"><span class="pre">DistanceMetricBase</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.distance_metrics.L1Norm"><code class="docutils literal notranslate"><span class="pre">L1Norm</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.distance_metrics.L2Norm"><code class="docutils literal notranslate"><span class="pre">L2Norm</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.distance_metrics.MeanAbsoluteError"><code class="docutils literal notranslate"><span class="pre">MeanAbsoluteError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.distance_metrics.MeanAbsolutePercentageError"><code class="docutils literal notranslate"><span class="pre">MeanAbsolutePercentageError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.statistics.distance_metrics.MeanPinballLoss"><code class="docutils literal notranslate"><span class="pre">MeanPinballLoss</span></code></a></li>
@@ -161,27 +160,6 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.statistics.distance_metrics.L1Norm.calculate">
 <span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/distance_metrics.html#L1Norm.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.distance_metrics.L1Norm.calculate" title="Link to this definition"></a></dt>
-<dd><p>Calculate the distance between observed and simulated data.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
-<dt>observed (np.ndarray):</dt><dd><p>The observed data.</p>
-</dd>
-<dt>simulated (np.ndarray):</dt><dd><p>The simulated data.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="deeprootgen.statistics.distance_metrics.L2Norm">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.statistics.distance_metrics.</span></span><span class="sig-name descname"><span class="pre">L2Norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/statistics/distance_metrics.html#L2Norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.distance_metrics.L2Norm" title="Link to this definition"></a></dt>
-<dd><p>The L2 norm distance.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="deeprootgen.statistics.distance_metrics.L2Norm.calculate">
-<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/deeprootgen/statistics/distance_metrics.html#L2Norm.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.statistics.distance_metrics.L2Norm.calculate" title="Link to this definition"></a></dt>
 <dd><p>Calculate the distance between observed and simulated data.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
