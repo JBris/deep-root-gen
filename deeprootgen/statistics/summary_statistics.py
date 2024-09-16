@@ -24,6 +24,8 @@ class SummaryStatisticBase(ABC):
     def __init__(self, **_) -> None:
         """SummaryStatisticBase constructor."""
         super().__init__()
+        self.statistic = ""
+        self.unit = ""
 
     @abstractmethod
     def calculate(self, df: pd.DataFrame) -> float | np.ndarray:
@@ -99,6 +101,33 @@ class SummaryStatisticBase(ABC):
             statistic = self.calculate(layer_df)
             statistics_per_layer.append(statistic)
         return statistics_per_layer, soil_layers
+
+    def visualise(self, df: pd.DataFrame, layer_decrement: int = 10, **_) -> go.Figure:
+        """Visualise the summary statistic by soil depth.
+
+        Args:
+            df (pd.DataFrame):
+                The root dataframe.
+            layer_decrement (int, optional):
+                The depth to decrement each soil layer. Defaults to 10.
+
+        Returns:
+            go.Figure:
+                The visualisation of the total root volume.
+        """
+        statistics, soil_layers = self.calculate_statistic_per_layer(
+            df, layer_decrement
+        )
+
+        fig = px.scatter(
+            title=f"{self.statistic} per soil layer ({layer_decrement} cm)",
+            x=statistics,
+            y=abs(soil_layers),
+        ).update_layout(
+            xaxis_title=f"{self.statistic} ({self.unit})", yaxis_title="Soil depth (cm)"
+        )
+
+        return fig
 
 
 class DepthDistribution(SummaryStatisticBase):
@@ -239,6 +268,12 @@ class RadialDistribution(SummaryStatisticBase):
 class TotalVolume(SummaryStatisticBase):
     """The TotalVolume summary statistic."""
 
+    def __init__(self, **_) -> None:
+        """TotalVolume constructor."""
+        super().__init__()
+        self.statistic = "Total root volume"
+        self.unit = "cm^3"
+
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the total root volume.
 
@@ -255,30 +290,15 @@ class TotalVolume(SummaryStatisticBase):
         volume = np.pi * radius**2 * height
         return np.sum(volume)
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the total root volume.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the total root volume.
-        """
-        volumes, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Total root volume per soil layer",
-            x=volumes,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Total root volume (cm^3)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class AverageVolume(SummaryStatisticBase):
     """The AverageVolume summary statistic."""
+
+    def __init__(self, **_) -> None:
+        """AverageVolume constructor."""
+        super().__init__()
+        self.statistic = "Average root volume"
+        self.unit = "cm^3"
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the average root volume.
@@ -299,30 +319,15 @@ class AverageVolume(SummaryStatisticBase):
         average = total_volume / n
         return average
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the average root volume.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the average root volume.
-        """
-        volumes, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Average root volume per soil layer",
-            x=volumes,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Average root volume (cm^3)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class TotalLength(SummaryStatisticBase):
     """The TotalLength summary statistic."""
+
+    def __init__(self, **_) -> None:
+        """TotalLength constructor."""
+        super().__init__()
+        self.statistic = "Total root length"
+        self.unit = "cm"
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the total root length.
@@ -337,30 +342,15 @@ class TotalLength(SummaryStatisticBase):
         """
         return df.length.sum()
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the total root length.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the total root length.
-        """
-        lengths, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Total root length per soil layer",
-            x=lengths,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Total root length (cm)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class AverageLength(SummaryStatisticBase):
     """The AverageLength summary statistic."""
+
+    def __init__(self, **_) -> None:
+        """AverageLength constructor."""
+        super().__init__()
+        self.statistic = "Average root length"
+        self.unit = "cm"
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the average root length.
@@ -378,30 +368,15 @@ class AverageLength(SummaryStatisticBase):
         average = total_length / n
         return average
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the average root length.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the average root length.
-        """
-        lengths, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Average root length per soil layer",
-            x=lengths,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Average root length (cm)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class TotalDiameter(SummaryStatisticBase):
     """The TotalDiameter summary statistic."""
+
+    def __init__(self, **_) -> None:
+        """TotalDiameter constructor."""
+        super().__init__()
+        self.statistic = "Total root diameter"
+        self.unit = "cm"
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the total root diameter.
@@ -416,30 +391,15 @@ class TotalDiameter(SummaryStatisticBase):
         """
         return df.diameter.sum()
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the total root diameter.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the total root diameter.
-        """
-        diameters, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Total root diameter per soil layer",
-            x=diameters,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Total root diameter (cm)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class AverageDiameter(SummaryStatisticBase):
     """The AverageDiameter summary statistic."""
+
+    def __init__(self, **_) -> None:
+        """AverageDiameter constructor."""
+        super().__init__()
+        self.statistic = "Average root diameter"
+        self.unit = "cm"
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the average root diameter.
@@ -457,31 +417,8 @@ class AverageDiameter(SummaryStatisticBase):
         average = total_length / n
         return average
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the average root diameter.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the average root diameter.
-        """
-        diameters, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Average root diameter by soil layer",
-            x=diameters,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Average root diameter (cm)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class TotalSpecificRootLength(SummaryStatisticBase):
-    """The TotalSpecificRootLength statistic."""
-
     def __init__(self, root_tissue_density: float, **_) -> None:
         """TotalSpecificRootLength constructor.
 
@@ -489,6 +426,8 @@ class TotalSpecificRootLength(SummaryStatisticBase):
             root_tissue_density (float):
                 The root tissue density of the root system.
         """
+        self.statistic = "Total specific root length"
+        self.unit = "cm"
         self.root_tissue_density = root_tissue_density
 
     def calculate(self, df: pd.DataFrame) -> float:
@@ -510,27 +449,6 @@ class TotalSpecificRootLength(SummaryStatisticBase):
         total = sum(specific_root_length)
         return total
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the total specific root length.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the total specific root length.
-        """
-        total_length, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Total specific root length by soil layer",
-            x=total_length,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Total specific root length (cm)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class AverageSpecificRootLength(SummaryStatisticBase):
     """The AverageSpecificRootLength statistic."""
@@ -542,6 +460,8 @@ class AverageSpecificRootLength(SummaryStatisticBase):
             root_tissue_density (float):
                 The root tissue density of the root system.
         """
+        self.statistic = "Average specific root length"
+        self.unit = "cm"
         self.root_tissue_density = root_tissue_density
 
     def calculate(self, df: pd.DataFrame) -> float:
@@ -565,28 +485,6 @@ class AverageSpecificRootLength(SummaryStatisticBase):
         average = total / n
         return average
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the average specific root length.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the average specific root length.
-        """
-        average_length, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Average specific root length by soil layer",
-            x=average_length,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Average specific root length (cm)",
-            yaxis_title="Soil depth (cm)",
-        )
-
 
 class TotalWeight(SummaryStatisticBase):
     """The TotalWeight statistic."""
@@ -598,6 +496,8 @@ class TotalWeight(SummaryStatisticBase):
             root_tissue_density (float):
                 The root tissue density of the root system.
         """
+        self.statistic = "Total root weight"
+        self.unit = "g"
         self.root_tissue_density = root_tissue_density
 
     def calculate(self, df: pd.DataFrame) -> float:
@@ -618,27 +518,6 @@ class TotalWeight(SummaryStatisticBase):
         total = sum(mass)
         return total
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the total root weight.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the total root weight.
-        """
-        total_weight, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Total root weight by soil layer",
-            x=total_weight,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Total root weight (g)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class AverageWeight(SummaryStatisticBase):
     """The AverageWeight statistic."""
@@ -650,6 +529,8 @@ class AverageWeight(SummaryStatisticBase):
             root_tissue_density (float):
                 The root tissue density of the root system.
         """
+        self.statistic = "Average root weight"
+        self.unit = "g"
         self.root_tissue_density = root_tissue_density
 
     def calculate(self, df: pd.DataFrame) -> float:
@@ -672,30 +553,14 @@ class AverageWeight(SummaryStatisticBase):
         average = total / n
         return average
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the average root weight.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the average root weight.
-        """
-        average_weight, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Average root weight by soil layer",
-            x=average_weight,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Average root weight (g)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class ConvexHullArea(SummaryStatisticBase):
     """The ConvexHullArea statistic."""
+
+    def __init__(self, **_) -> None:
+        """ConvexHullArea constructor."""
+        self.statistic = "Convex hull area"
+        self.unit = "cm^2"
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the area of the convex hull.
@@ -712,30 +577,14 @@ class ConvexHullArea(SummaryStatisticBase):
         hull = ConvexHull(points=coordinates)
         return hull.area
 
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the area of the convex hull.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the area of the convex hull.
-        """
-        areas, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Convex hull area by soil layer",
-            x=areas,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Convex hull area (cm^2)", yaxis_title="Soil depth (cm)"
-        )
-
 
 class ConvexHullVolume(SummaryStatisticBase):
     """The ConvexHullVolume statistic."""
+
+    def __init__(self, **_) -> None:
+        """ConvexHullVolume constructor."""
+        self.statistic = "Convex hull volume"
+        self.unit = "cm^3"
 
     def calculate(self, df: pd.DataFrame) -> float:
         """Caculate the volume of the convex hull.
@@ -751,27 +600,6 @@ class ConvexHullVolume(SummaryStatisticBase):
         coordinates = df[["x", "y", "z"]].values
         hull = ConvexHull(points=coordinates)
         return hull.volume
-
-    def visualise(self, df: pd.DataFrame) -> go.Figure:
-        """Visualise the volume of the convex hull.
-
-        Args:
-            df (pd.DataFrame):
-                The dataframe of root data.
-
-        Returns:
-            go.Figure:
-                The visualisation of the volume of the convex hull.
-        """
-        areas, soil_layers = self.calculate_statistic_per_layer(df)
-
-        return px.scatter(
-            title="Convex hull volume by soil layer",
-            x=areas,
-            y=abs(soil_layers),
-        ).update_layout(
-            xaxis_title="Convex hull volume (cm^3)", yaxis_title="Soil depth (cm)"
-        )
 
 
 def get_summary_statistic_func(summary_statistic: str) -> Callable:
@@ -798,8 +626,6 @@ def get_summary_statistics() -> list[dict]:
             A list of available summary statistics and labels.
     """
     summary_statistics: list[str] = [
-        "depth_distribution",
-        "radial_distribution",
         "total_volume",
         "average_volume",
         "total_length",
@@ -810,6 +636,8 @@ def get_summary_statistics() -> list[dict]:
         # "average_specific_root_length",
         "total_weight",
         "average_weight",
+        "depth_distribution",
+        "radial_distribution",
         "convex_hull_area",
         "convex_hull_volume",
     ]

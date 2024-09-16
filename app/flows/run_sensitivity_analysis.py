@@ -216,6 +216,13 @@ def log_task(
     for i, si_label in enumerate(["total_si", "first_si", "second_si"]):
         outfile = osp.join(outdir, f"{time_now}-{TASK}_{si_label}.csv")
         si_df = si_dfs[i]
+
+        if si_label != "second_si":
+            si_df["name"] = names
+            cols = list(si_df.columns)
+            cols = [cols[-1]] + cols[:-1]
+            si_df = si_df[cols]
+
         si_df.to_csv(outfile, index=False)
         mlflow.log_artifact(outfile)
 
@@ -225,11 +232,6 @@ def log_task(
     mlflow.log_artifact(outfile)
 
     total_si_df = si_dfs[0]
-    total_si_df["name"] = names
-    cols = list(total_si_df.columns)
-    cols = [cols[-1]] + cols[:-1]
-    total_si_df = total_si_df[cols]
-
     fig = px.bar(
         total_si_df,
         x="name",
@@ -240,6 +242,13 @@ def log_task(
     outfile = osp.join(outdir, f"{time_now}-{TASK}_total_order_indices.png")
     fig.write_image(outfile, width=1200, height=1200)
     mlflow.log_artifact(outfile)
+
+    st_confs = total_si_df.ST_conf.values
+    for i, sensitivity_index in enumerate(total_si_df.ST.values):
+        name = names[i]
+        st_conf = st_confs[i]
+        mlflow.log_metric(name, sensitivity_index)
+        mlflow.log_metric(f"{name}_conf", st_conf)
 
     create_table_artifact(
         key="sensitivity-analysis-indices",

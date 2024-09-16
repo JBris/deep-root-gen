@@ -6,6 +6,7 @@ This module defines the root system architecture simulation model for constructi
 
 # mypy: ignore-errors
 
+import math
 from typing import Dict, List
 
 import networkx as nx
@@ -274,12 +275,14 @@ class RootOrgan:
     def add_child_organ(
         self, floor_threshold: float = 0.4, ceiling_threshold: float = 0.9
     ) -> "RootOrgan":
-        floor = int(len(self.segments) * floor_threshold)
-        ceiling = int(len(self.segments) * ceiling_threshold)
-        if floor > ceiling:
+        floor = math.ceil(len(self.segments) * floor_threshold)
+        ceiling = math.ceil(len(self.segments) * ceiling_threshold)
+        if floor >= ceiling:
             floor, ceiling = ceiling, floor
         if floor <= 0:
             floor = 1
+        if floor == ceiling:
+            ceiling += 1
 
         indx = self.rng.integers(floor, ceiling)
         parent_node = self.segments[indx]
@@ -891,6 +894,7 @@ class RootSystemSimulation:
             order_type=RootType.PRIMARY.value,
             position_type=RootType.OUTER.value,
         )
+
         for _ in range(input_parameters.outer_root_num):
             organ = RootOrgan(
                 self.G.base_node,
@@ -939,7 +943,8 @@ class RootSystemSimulation:
                 n_secondary_roots = self.rng.integers(
                     min_sec_root_num, max_sec_root_num
                 )
-                n_secondary_roots = int(n_secondary_roots * growth_sec_root)
+
+                n_secondary_roots = math.ceil(n_secondary_roots * growth_sec_root)
                 for _ in range(n_secondary_roots):
                     child_organ = parent_organ.add_child_organ(
                         floor_threshold=input_parameters.floor_threshold,

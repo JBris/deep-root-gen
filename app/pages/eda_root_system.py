@@ -106,9 +106,9 @@ def toggle_external_links_collapse(n: int, is_open: bool) -> bool:
 
 
 @callback(
-    Output(f"{PAGE_ID}-observed-data-collapse", "is_open"),
-    [Input(f"{PAGE_ID}-observed-data-collapse-button", "n_clicks")],
-    [State(f"{PAGE_ID}-observed-data-collapse", "is_open")],
+    Output(f"{PAGE_ID}-simulated-data-collapse", "is_open"),
+    [Input(f"{PAGE_ID}-simulated-data-collapse-button", "n_clicks")],
+    [State(f"{PAGE_ID}-simulated-data-collapse", "is_open")],
 )
 def toggle_data_collapse(n: int, is_open: bool) -> bool:
     """Toggle the collapsible for statistics.

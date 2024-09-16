@@ -84,6 +84,7 @@ def run_calibration_simulation(
         simulation_tag=input_parameters.simulation_tag,  # type: ignore
         random_seed=input_parameters.random_seed,  # type: ignore
     )
+
     simulation.run(simulation_parameters)
     return simulation, simulation_parameters
 
@@ -113,6 +114,7 @@ def calculate_summary_statistic_discrepancy(
     simulation, simulation_parameters = run_calibration_simulation(
         parameter_specs, input_parameters
     )
+
     node_df, _ = simulation.G.as_df()
     observed_values = []
     simulated_values = []

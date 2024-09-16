@@ -4,19 +4,38 @@
 # Imports
 ######################################
 
+
 import mlflow
-from prefect import context, flow, task
+import numpy as np
+import pandas as pd
+import plotly.express as px
+from joblib import dump as calibrator_dump
+from matplotlib import pyplot as plt
+from prefect import flow, task
+from prefect.artifacts import create_table_artifact
 from prefect.task_runners import ConcurrentTaskRunner
 
-from deeprootgen.data_model import RootCalibrationModel
-from deeprootgen.io import save_graph_to_db
-from deeprootgen.model import RootSystemSimulation
+from deeprootgen.calibration import (
+    SensitivityAnalysisModel,
+    calculate_summary_statistic_discrepancy,
+    get_calibration_summary_stats,
+    log_model,
+)
+from deeprootgen.data_model import RootCalibrationModel, SummaryStatisticsModel
 from deeprootgen.pipeline import (
     begin_experiment,
+    get_datetime_now,
+    get_outdir,
     log_config,
     log_experiment_details,
-    log_simulation,
 )
+from deeprootgen.statistics import DistanceMetricBase
+
+######################################
+# Constants
+######################################
+
+TASK = "abc"
 
 ######################################
 # Main
@@ -33,7 +52,12 @@ def run_abc(input_parameters: RootCalibrationModel, simulation_uuid: str) -> Non
         simulation_uuid (str):
             The simulation uuid.
     """
-    print("hello")
+    begin_experiment(TASK, simulation_uuid, input_parameters.simulation_tag)
+    log_experiment_details(simulation_uuid)
+
+    config = input_parameters.dict()
+    log_config(config, TASK)
+    mlflow.end_run()
 
 
 @flow(

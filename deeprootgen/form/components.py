@@ -83,8 +83,13 @@ def build_common_components(
 
             if component_spec.handler == "dropdown":
                 options_func = locate(component_spec.options_func)
-                summary_statistics = options_func()  # type: ignore
-                component_instance.options = summary_statistics
+                options_list = options_func()  # type: ignore
+                component_instance.options = options_list
+                if len(options_list) > 0:
+                    if component_spec.kwargs["multi"]:
+                        component_instance.value = [options_list[0]]
+                    else:
+                        component_instance.value = options_list[0]
 
             if component_spec.handler == "range_slider":
                 component_instance.value = [
