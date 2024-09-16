@@ -37,24 +37,6 @@ class DistanceMetricBase(ABC):
         raise NotImplementedError("calculate() method not implemented.")
 
 
-class L2Norm(DistanceMetricBase):
-    """The L2 norm distance."""
-
-    def calculate(
-        self, observed: np.ndarray, simulated: np.ndarray
-    ) -> float | np.ndarray:
-        """Calculate the distance between observed and simulated data.
-
-        Args:
-            observed (np.ndarray):
-                The observed data.
-            simulated (np.ndarray):
-                The simulated data.
-        """
-        distance = np.linalg.norm(observed - simulated, ord=2)
-        return distance
-
-
 class L1Norm(DistanceMetricBase):
     """The L1 norm distance."""
 
@@ -206,7 +188,6 @@ def get_distance_metrics() -> list[dict]:
             A list of available distance metrics and labels.
     """
     distance_metrics: list[str] = [
-        "l2_norm",
         "l1_norm",
         "mean_squared_error",
         "mean_absolute_error",

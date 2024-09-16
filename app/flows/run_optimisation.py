@@ -4,6 +4,14 @@
 # Imports
 ######################################
 
+# isort: off
+
+# This is for compatibility with Prefect.
+
+import multiprocessing
+
+# isort: on
+
 import os.path as osp
 
 import mlflow
@@ -33,6 +41,12 @@ from deeprootgen.pipeline import (
     log_simulation,
 )
 from deeprootgen.statistics import DistanceMetricBase
+
+######################################
+# Settings
+######################################
+
+multiprocessing.set_start_method("spawn", force=True)
 
 ######################################
 # Constants
