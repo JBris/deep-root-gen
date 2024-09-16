@@ -81,6 +81,7 @@
 
 <span class="c1"># mypy: ignore-errors</span>
 
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
@@ -366,12 +367,14 @@
     <span class="k">def</span> <span class="nf">add_child_organ</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">floor_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">ceiling_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RootOrgan&quot;</span><span class="p">:</span>
-        <span class="n">floor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span> <span class="o">*</span> <span class="n">floor_threshold</span><span class="p">)</span>
-        <span class="n">ceiling</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span> <span class="o">*</span> <span class="n">ceiling_threshold</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">floor</span> <span class="o">&gt;</span> <span class="n">ceiling</span><span class="p">:</span>
+        <span class="n">floor</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span> <span class="o">*</span> <span class="n">floor_threshold</span><span class="p">)</span>
+        <span class="n">ceiling</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span> <span class="o">*</span> <span class="n">ceiling_threshold</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">floor</span> <span class="o">&gt;=</span> <span class="n">ceiling</span><span class="p">:</span>
             <span class="n">floor</span><span class="p">,</span> <span class="n">ceiling</span> <span class="o">=</span> <span class="n">ceiling</span><span class="p">,</span> <span class="n">floor</span>
         <span class="k">if</span> <span class="n">floor</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">floor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">floor</span> <span class="o">==</span> <span class="n">ceiling</span><span class="p">:</span>
+            <span class="n">ceiling</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="n">indx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="n">floor</span><span class="p">,</span> <span class="n">ceiling</span><span class="p">)</span>
         <span class="n">parent_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="n">indx</span><span class="p">]</span>
@@ -1042,6 +1045,7 @@
             <span class="n">order_type</span><span class="o">=</span><span class="n">RootType</span><span class="o">.</span><span class="n">PRIMARY</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
             <span class="n">position_type</span><span class="o">=</span><span class="n">RootType</span><span class="o">.</span><span class="n">OUTER</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
         <span class="p">)</span>
+
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">outer_root_num</span><span class="p">):</span>
             <span class="n">organ</span> <span class="o">=</span> <span class="n">RootOrgan</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">base_node</span><span class="p">,</span>
@@ -1090,7 +1094,8 @@
                 <span class="n">n_secondary_roots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span>
                     <span class="n">min_sec_root_num</span><span class="p">,</span> <span class="n">max_sec_root_num</span>
                 <span class="p">)</span>
-                <span class="n">n_secondary_roots</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_secondary_roots</span> <span class="o">*</span> <span class="n">growth_sec_root</span><span class="p">)</span>
+
+                <span class="n">n_secondary_roots</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_secondary_roots</span> <span class="o">*</span> <span class="n">growth_sec_root</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_secondary_roots</span><span class="p">):</span>
                     <span class="n">child_organ</span> <span class="o">=</span> <span class="n">parent_organ</span><span class="o">.</span><span class="n">add_child_organ</span><span class="p">(</span>
                         <span class="n">floor_threshold</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">floor_threshold</span><span class="p">,</span>

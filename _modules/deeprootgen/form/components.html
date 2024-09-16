@@ -160,8 +160,13 @@
 
             <span class="k">if</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">handler</span> <span class="o">==</span> <span class="s2">&quot;dropdown&quot;</span><span class="p">:</span>
                 <span class="n">options_func</span> <span class="o">=</span> <span class="n">locate</span><span class="p">(</span><span class="n">component_spec</span><span class="o">.</span><span class="n">options_func</span><span class="p">)</span>
-                <span class="n">summary_statistics</span> <span class="o">=</span> <span class="n">options_func</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
-                <span class="n">component_instance</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">summary_statistics</span>
+                <span class="n">options_list</span> <span class="o">=</span> <span class="n">options_func</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+                <span class="n">component_instance</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options_list</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;multi&quot;</span><span class="p">]:</span>
+                        <span class="n">component_instance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">options_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">component_instance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">options_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">handler</span> <span class="o">==</span> <span class="s2">&quot;range_slider&quot;</span><span class="p">:</span>
                 <span class="n">component_instance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="p">[</span>
