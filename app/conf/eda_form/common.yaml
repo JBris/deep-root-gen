@@ -73,7 +73,7 @@ components:
     children:
       - id: upload-node-data-file-button
         label: Upload  
-        help: Upload simulated node data from a csv file
+        help: Upload simulated data from a csv file
         class_name: dash.dcc.Upload
         handler: file_upload
         kwargs:

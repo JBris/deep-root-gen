@@ -388,15 +388,15 @@ def update_summary_data_state(
         return button_contents, [True], [True]
 
     if summary_stats is None or distances is None:
-        return [summary_label], [True], [True]
+        return [summary_label], [True], [False]
 
     summary_stats_list = summary_stats[0]
     distance_list = distances[0]
     if len(summary_stats_list) == 0 or distance_list is None:
-        return [summary_label], [True], [True]
+        return [summary_label], [True], [False]
 
     if summary_stats_list[0] is None or distance_list == "":
-        return [summary_label], [True], [True]
+        return [summary_label], [True], [False]
 
     return [summary_label], [False], [False]
 

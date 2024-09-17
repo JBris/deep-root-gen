@@ -155,7 +155,7 @@ def update_table(runs: list | None) -> list | None:
     Output({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "options"),
     Output({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "options"),
     Output({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "options"),
-    Input("store-node-data", "data"),
+    Input("store-simulation-data", "data"),
 )
 def update_eda_data_state(eda_data: dict) -> tuple:
     """Update the state of the exploratory data analysis data.
@@ -188,8 +188,8 @@ def update_eda_data_state(eda_data: dict) -> tuple:
 
 
 @callback(
-    Output("store-node-data", "data", allow_duplicate=True),
-    Output("store-raw-node-data", "data", allow_duplicate=True),
+    Output("store-simulation-data", "data", allow_duplicate=True),
+    Output("store-raw-simulation-data", "data", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input(
@@ -227,8 +227,8 @@ def load_node_data(list_of_contents: list, list_of_names: list) -> tuple:
 
 
 @callback(
-    Output("store-node-data", "data", allow_duplicate=True),
-    Output("store-raw-node-data", "data", allow_duplicate=True),
+    Output("store-simulation-data", "data", allow_duplicate=True),
+    Output("store-raw-simulation-data", "data", allow_duplicate=True),
     Output(
         {"type": f"{PAGE_ID}-parameters", "index": ALL}, "value", allow_duplicate=True
     ),
@@ -238,7 +238,7 @@ def load_node_data(list_of_contents: list, list_of_names: list) -> tuple:
     Output(f"{PAGE_ID}-load-toast", "is_open", allow_duplicate=True),
     Output(f"{PAGE_ID}-load-toast", "children", allow_duplicate=True),
     Input({"index": f"{PAGE_ID}-clear-obs-data-file-button", "type": ALL}, "n_clicks"),
-    State("store-node-data", "data"),
+    State("store-simulation-data", "data"),
     prevent_initial_call=True,
 )
 def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
@@ -278,7 +278,7 @@ def clear_observation_data(n_clicks: int | list[int], eda_data: dict) -> tuple:
     Input({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-node-data", "data"),
+    State("store-simulation-data", "data"),
     prevent_initial_call=True,
 )
 def update_xy_plots(
@@ -348,7 +348,7 @@ def update_xy_plots(
     Output({"index": f"{PAGE_ID}-box-x-plot", "type": ALL}, "figure"),
     Input({"index": f"{PAGE_ID}-select-x-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-node-data", "data"),
+    State("store-simulation-data", "data"),
     prevent_initial_call=True,
 )
 def update_x_plots(
@@ -406,7 +406,7 @@ def update_x_plots(
     Output({"index": f"{PAGE_ID}-box-y-plot", "type": ALL}, "figure"),
     Input({"index": f"{PAGE_ID}-select-y-axis-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-select-group-by-dropdown", "type": ALL}, "value"),
-    State("store-node-data", "data"),
+    State("store-simulation-data", "data"),
     prevent_initial_call=True,
 )
 def update_y_plots(
@@ -464,7 +464,7 @@ def update_y_plots(
     Input(
         {"index": f"{PAGE_ID}-select-x-summary-stats-dropdown", "type": ALL}, "value"
     ),
-    State("store-node-data", "data"),
+    State("store-simulation-data", "data"),
     prevent_initial_call=True,
 )
 def update_x_statistic_plot(summary_stats: list | None, eda_data: dict) -> list | None:
@@ -507,7 +507,7 @@ def update_x_statistic_plot(summary_stats: list | None, eda_data: dict) -> list 
         {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
         "value",
     ),
-    State("store-node-data", "data"),
+    State("store-simulation-data", "data"),
     prevent_initial_call=True,
 )
 def update_y_statistic_plot(summary_stats: list | None, eda_data: dict) -> list | None:
@@ -555,7 +555,7 @@ def update_y_statistic_plot(summary_stats: list | None, eda_data: dict) -> list 
         {"index": f"{PAGE_ID}-select-y-summary-stats-dropdown", "type": ALL},
         "value",
     ),
-    State("store-node-data", "data"),
+    State("store-simulation-data", "data"),
     prevent_initial_call=True,
 )
 def update_xy_statistic_plot(

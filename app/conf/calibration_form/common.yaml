@@ -382,22 +382,36 @@ components:
           children: Clear statistics data
           color: primary
           className: me-1
-  observed_data:
+  simulated_data:
     collapsible: true
     children:
-      - id: upload-obs-data-file-button
+      - id: upload-summary-data-file-button
         label: Upload  
-        help: Upload observed root data from a csv file
+        help: Upload summary statistics data from a csv file
         class_name: dash.dcc.Upload
         handler: file_upload
         kwargs:
-          children: Load observed data
+          children: Load statistics data
+      - id: upload-obs-data-file-button
+        label: Upload  
+        help: Upload simulated root data from a csv file
+        class_name: dash.dcc.Upload
+        handler: file_upload
+        kwargs:
+          children: Load simulation data
+      - id: upload-edge-data-file-button
+        label: Upload  
+        help: Upload edge root data from a csv file
+        class_name: dash.dcc.Upload
+        handler: file_upload
+        kwargs:
+          children: Load edge data
       - id: clear-obs-data-file-button
         label: Clear
-        help: Clear the observed root data from the form
+        help: Clear the simulated root data from the form
         class_name: dash_bootstrap_components.Button 
         kwargs:
-          children: Clear observed data
+          children: Clear simulated data
           color: primary
           className: me-1
   abc:
@@ -725,4 +739,45 @@ components:
           min: 1
           step: 1
           value: 10
+          persistence: true
+      - id: use-summary-statistics-switch
+        param: use_summary_statistics
+        label: Use summary statistics
+        help: Use summary statistic data to train the model, rather than node and edge data
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
+      - id: select-summary-stats-dropdown
+        param: summary_statistics
+        label: Summary statistics  
+        help: Select summary statistics for comparing simulated and observed data
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_summary_statistics
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select summary statistics
+          persistence: true
+      - id: stat-by-soil-layer-switch
+        param: stat_by_soil_layer
+        label: Statistics by soil layer
+        help: Enable the calculation of summary statistics by soil layer within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
+      - id: stat-by-soil-col-switch
+        param: stat_by_soil_column
+        label: Statistics by soil column
+        help: Enable the calculation of summary statistics by soil column within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
           persistence: true
