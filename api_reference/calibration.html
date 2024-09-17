@@ -50,6 +50,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Calibration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.model_versioning">Model Versioning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.AbcModel"><code class="docutils literal notranslate"><span class="pre">AbcModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.OptimisationModel"><code class="docutils literal notranslate"><span class="pre">OptimisationModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.SensitivityAnalysisModel"><code class="docutils literal notranslate"><span class="pre">SensitivityAnalysisModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.log_model"><code class="docutils literal notranslate"><span class="pre">log_model()</span></code></a></li>
@@ -106,6 +107,52 @@
 <span id="model-versioning"></span><h2>Model Versioning<a class="headerlink" href="#module-deeprootgen.calibration.model_versioning" title="Link to this heading"></a></h2>
 <p>Contains MLflow compatible models for versioning and deployment.</p>
 <p>This module defines MLflow compatible models for versioning and deployment as microservices.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.AbcModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.model_versioning.</span></span><span class="sig-name descname"><span class="pre">AbcModel</span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#AbcModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.AbcModel" title="Link to this definition"></a></dt>
+<dd><p>An Approximate Bayesian Computation calibration model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.AbcModel.load_context">
+<span class="sig-name descname"><span class="pre">load_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#AbcModel.load_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.AbcModel.load_context" title="Link to this definition"></a></dt>
+<dd><p>Load the model context.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>context (Context):</dt><dd><p>The model context.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.AbcModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#AbcModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.AbcModel.predict" title="Link to this definition"></a></dt>
+<dd><p>Make a model prediction.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>context (Context):</dt><dd><p>The model context.</p>
+</dd>
+<dt>model_input (pd.DataFrame):</dt><dd><p>The model input data.</p>
+</dd>
+<dt>params (dict, optional):</dt><dd><p>Optional model parameters. Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>ValueError:</dt><dd><p>Error raised when the calibrator has not been loaded.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>pd.DataFrame:</dt><dd><p>The model prediction.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.OptimisationModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.model_versioning.</span></span><span class="sig-name descname"><span class="pre">OptimisationModel</span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#OptimisationModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.OptimisationModel" title="Link to this definition"></a></dt>
