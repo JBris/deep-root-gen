@@ -527,8 +527,10 @@ def build_calibration_parameters(
     observed_data: list[dict] | None = None,
     summary_statistics: list[dict] | None = None,
     observed_data_content: str = "",
+    raw_edge_content: str = "",
     stat_by_layer: bool = False,
     stat_by_col: bool = False,
+    use_summary_statistics: bool = True,
 ) -> dict | None:
     """Build calibration parameters for workflow submission from form inputs.
 
@@ -547,10 +549,14 @@ def build_calibration_parameters(
             The list of observed summary statistic data. Defaults to None.
         observed_data_content (str, optional):
             The raw content string for the observed root data. Defaults to "".
+        raw_edge_content (str, optional):
+            The raw content string for the simulated edge data. Defaults to "".
         stat_by_layer (bool, optional):
             Whether to calculate statistics by soil layer. Defaults to False.
-        stat_by_col (bool, optional ):
+        stat_by_col (bool, optional):
             Whether to calculate statistics by soil column. Defaults to False.
+        use_summary_statistics (bool, optional):
+            Whether to use summary statistics rather than graph data. Defaults to True.
 
     Returns:
         dict | None:
@@ -579,7 +585,11 @@ def build_calibration_parameters(
         k = input["param"]
         calibration_value = calibration_values[i]
         if k == "summary_statistics" or k == "distance_metric":
-            if calibration_value is None or len(calibration_value) == 0:
+            if (
+                calibration_value is None
+                or len(calibration_value) == 0
+                and use_summary_statistics
+            ):
                 return None
 
         if input.get("statistic_parameter"):
@@ -589,8 +599,17 @@ def build_calibration_parameters(
 
     form_inputs["statistics_comparison"]["stat_by_soil_layer"] = stat_by_layer
     form_inputs["statistics_comparison"]["stat_by_soil_column"] = stat_by_col
+    form_inputs["statistics_comparison"][
+        "use_summary_statistics"
+    ] = use_summary_statistics
+
+    if use_summary_statistics:
+        observed_data_content = ""
+        raw_edge_content = ""
+
     form_inputs["observed_data"] = observed_data
     form_inputs["summary_statistics"] = summary_statistics
     form_inputs["observed_data_content"] = observed_data_content
+    form_inputs["raw_edge_content"] = raw_edge_content
 
     return form_inputs

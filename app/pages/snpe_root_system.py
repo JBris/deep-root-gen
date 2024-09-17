@@ -375,7 +375,7 @@ def update_uploaded_data_state(
     simulation_data: dict | None,
     edge_data: dict | None,
     summary_stats: list,
-    use_summary_stats: list[bool],
+    use_summary_statistics: list[bool],
 ) -> tuple:
     """Update the state of the uploaded data.
 
@@ -388,7 +388,7 @@ def update_uploaded_data_state(
             The graph edge data.
         summary_stats (list):
             The list of summary statistics.
-        use_summary_stats (list):
+        use_summary_statistics (list):
             Whether to use summary statistics, rather than graph data.
 
     Returns:
@@ -404,8 +404,8 @@ def update_uploaded_data_state(
         return bttn_label
 
     stats_bttn = set_bttn_label(summary_data, "statistics", "label")  # type: ignore[arg-type]
-    sim_bttn = set_bttn_label(simulation_data, "statistics", "label")  # type: ignore[arg-type]
-    edge_bttn = set_bttn_label(edge_data, "statistics", "label")  # type: ignore[arg-type]
+    sim_bttn = set_bttn_label(simulation_data, "simulation", "label")  # type: ignore[arg-type]
+    edge_bttn = set_bttn_label(edge_data, "edge", "label")  # type: ignore[arg-type]
 
     clear_disabled = True
     for data in [summary_data, simulation_data, edge_data]:
@@ -419,7 +419,7 @@ def update_uploaded_data_state(
                 break
 
     run_disabled = False
-    use_summary_stat = use_summary_stats[0]
+    use_summary_stat = use_summary_statistics[0]
     if use_summary_stat:
         data_list = [summary_data]
     else:
@@ -607,17 +607,21 @@ def clear_summary_data(n_clicks: int | list[int]) -> tuple:
     State({"index": f"{PAGE_ID}-stat-by-soil-col-switch", "type": ALL}, "on"),
     State("store-simulation-run", "data"),
     State("store-summary-data", "data"),
+    State("store-raw-simulation-data", "data"),
+    State("store-raw-edge-data", "data"),
     prevent_initial_call=True,
 )
 def run_root_model(
     n_clicks: list,
     parameter_values: list,
     calibration_values: list,
-    use_summary_stats: list[bool],
+    use_summary_statistics: list[bool],
     stats_by_layer: list[bool],
     stats_by_col: list[bool],
     simulation_runs: list,
     summary_data: dict,
+    raw_simulation_data: str,
+    raw_edge_content: str,
 ) -> tuple:
     """Run and plot the root model.
 
@@ -628,7 +632,7 @@ def run_root_model(
             The parameter form input data.
         calibration_values (list):
             The calibration parameter form input data.
-        use_summary_stats (list):
+        use_summary_statistics (list):
             Whether to use summary statistics, rather than graph data.
         stats_by_layer (list):
             Whether to calculate statistics by soil layer.
@@ -636,8 +640,12 @@ def run_root_model(
             Whether to calculate statistics by soil column.
         simulation_runs (list):
             A list of simulation run data.
-        summary_data: (dict):
+        summary_data (dict):
             The dictionary of observed summary statistic data.
+        raw_simulation_data (str):
+            The content string for the simulation data.
+        raw_edge_content (str):
+            The content string for the edge data.
 
     Returns:
         tuple:
@@ -649,13 +657,13 @@ def run_root_model(
     if n_clicks[0] is None or n_clicks[0] == 0:
         return no_update
 
-    use_summary_stats[0]
-    stat_by_layer = stats_by_layer[0]
-    stat_by_col = stats_by_col[0]
-
     summary_statistics = summary_data.get("values", None)
     if summary_statistics is None:
         return no_update
+
+    use_summary_stat = use_summary_statistics[0]
+    stat_by_layer = stats_by_layer[0]
+    stat_by_col = stats_by_col[0]
 
     form_inputs = build_calibration_parameters(
         FORM_NAME,
@@ -665,6 +673,9 @@ def run_root_model(
         summary_statistics=summary_statistics,
         stat_by_layer=stat_by_layer,
         stat_by_col=stat_by_col,
+        use_summary_statistics=use_summary_stat,
+        observed_data_content=raw_simulation_data.get("values", ""),
+        raw_edge_content=raw_edge_content.get("values", ""),
     )
     if form_inputs is None:
         return no_update

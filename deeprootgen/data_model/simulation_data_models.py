@@ -161,6 +161,7 @@ class StatisticsComparisonModel(BaseModel):
     distance_metric: Optional[str] = ""
     stat_by_soil_layer: Optional[bool] = False
     stat_by_soil_column: Optional[bool] = False
+    use_summary_statistics: Optional[bool] = True
 
 
 class RootCalibrationIntervals(BaseModel):
@@ -211,6 +212,7 @@ class RootCalibrationModel(BaseModel):
     summary_statistics: Optional[List[SummaryStatisticsModel]] = None
     observed_data: Optional[List[RootNodeModel]] = None
     observed_data_content: Optional[str] = ""
+    raw_edge_content: Optional[str] = ""
     statistics_comparison: Optional[StatisticsComparisonModel] = None
     origin_min: Optional[float] = 1e-3
     origin_max: Optional[float] = 1e-2
