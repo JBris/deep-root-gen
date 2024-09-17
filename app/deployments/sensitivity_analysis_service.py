@@ -5,7 +5,6 @@
 ######################################
 
 import bentoml
-import numpy as np
 import pandas as pd
 from bentoml.io import JSON, PandasDataFrame
 from pydantic import BaseModel

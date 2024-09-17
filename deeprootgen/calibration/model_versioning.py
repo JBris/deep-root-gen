@@ -179,3 +179,56 @@ class SensitivityAnalysisModel(mlflow.pyfunc.PythonModel):
         names = model_input["name"].values  # noqa: F841
         si_df = self.calibrator.total_si_df
         return si_df.query("name in @names")
+
+
+class AbcModel(mlflow.pyfunc.PythonModel):
+    """An Approximate Bayesian Computation calibration model."""
+
+    def __init__(self) -> None:
+        """The AbcModel constructor."""
+        self.task = "abc"
+        self.calibrator = None
+
+    def load_context(self, context: Context) -> None:
+        """Load the model context.
+
+        Args:
+            context (Context):
+                The model context.
+        """
+        import joblib
+
+        calibrator_data = context.artifacts["calibrator"]
+        self.calibrator = joblib.load(calibrator_data)
+
+    def predict(
+        self, context: Context, model_input: pd.DataFrame, params: dict | None = None
+    ) -> pd.DataFrame:
+        """Make a model prediction.
+
+        Args:
+            context (Context):
+                The model context.
+            model_input (pd.DataFrame):
+                The model input data.
+            params (dict, optional):
+                Optional model parameters. Defaults to None.
+
+        Raises:
+            ValueError:
+                Error raised when the calibrator has not been loaded.
+
+        Returns:
+            pd.DataFrame:
+                The model prediction.
+        """
+        if self.calibrator is None:
+            raise ValueError(f"The {self.task} calibrator has not been loaded.")
+
+        t: list[int] = model_input["t"].values
+        sampling_df = self.calibrator
+
+        if len(t) == 0 or t[0] == -1:
+            return sampling_df
+        else:
+            return sampling_df.query("t in @t")

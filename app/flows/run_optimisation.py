@@ -218,9 +218,9 @@ def log_task(
         optuna.visualization.plot_param_importances,
         optuna.visualization.plot_slice,
     ]:
-        img_file = osp.join(outdir, f"{plot_func.__name__}.png")
-        plot_func(study).write_image(img_file)
-        mlflow.log_artifact(img_file)
+        outfile = osp.join(outdir, f"{plot_func.__name__}.png")
+        plot_func(study).write_image(outfile)
+        mlflow.log_artifact(outfile)
 
     parameter_specs = {}
     best_parameters = trials_df.head(1)

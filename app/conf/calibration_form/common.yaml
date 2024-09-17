@@ -403,38 +403,60 @@ components:
   abc:
     collapsible: true
     children:
-      - id: draws-input
-        param: draws
-        label: Samples
-        help: The number of samples to take for each chain of the Sequential Monte Carlo sampler
+      - id: epsilon-input
+        param: minimum_epsilon
+        label: Minimum epsilon
+        help: The minimum value of epsilon to stop sampling. Lower values will lead to more precise parameter estimates, but sampling will take longer.
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
-          min: 1
-          step: 1
-          value: 10
+          min: 0.0
+          step: 0.1
+          value: 0.1
           persistence: true
-      - id: chains-input
-        param: chains
-        label: Chains
-        help: The number of chains for the Sequential Monte Carlo sampler
+      - id: max-nr-populations-input
+        param: max_nr_populations
+        label: Maximum population size
+        help: The number of populations. Sampling will stop if this value is reached.
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
-          min: 1
+          min: 0.0
           step: 1
-          value: 4
+          value: 50
           persistence: true
-      - id: cores-input
-        param: cores
-        label: Cores
-        help: The number of CPU cores to run the chains on. 
+      - id: number-particles-input
+        param: start_nr_particles
+        label: Number of particles
+        help: The starting number of particles within the population for the Sequential Monte Carlo sampler. Note that the total population size is adaptive. Refer to Klinger, Emmanuel, and Jan Hasenauer. “A Scheme for Adaptive Selection of Population Sizes in " Approximate Bayesian Computation - Sequential Monte Carlo." Computational Methods in Systems Biology, 128-44. Lecture Notes in Computer Science. Springer, Cham, 2017. https://doi.org/10.1007/978-3-319-67471-1_8.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 25
+          persistence: true
+      - id: max-walltime-input
+        param: max_walltime
+        label: Maximum walltime
+        help: The maximum duration for sampling (minutes). Sampling will cease after this value is exceeded.
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
           min: 1
           step: 1
-          value: 1
+          value: 5
+          persistence: true
+      - id: max-total-nr-simulations-input
+        param: max_total_nr_simulations
+        label: Maximum simulations
+        help: The maximum number of simulations for sampling. Sampling will cease after this many simulations are performed.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 5
           persistence: true
       - id: select-summary-stats-dropdown
         param: summary_statistics
@@ -481,17 +503,6 @@ components:
           searchable: true
           clearable: true
           placeholder: Select distance metric
-          persistence: true
-      - id: epsilon-input
-        param: epsilon
-        label: Epsilon
-        help: The dissimilarity threshold for the Approximate Bayesian Computation procedure
-        class_name: dash_bootstrap_components.Input 
-        kwargs:
-          type: number
-          min: 0
-          step: 1
-          value: 1
           persistence: true
   optimisation:
     collapsible: true
