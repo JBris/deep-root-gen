@@ -232,3 +232,72 @@ class AbcModel(mlflow.pyfunc.PythonModel):
             return sampling_df
         else:
             return sampling_df.query("t in @t")
+
+
+class SnpeModel(mlflow.pyfunc.PythonModel):
+    """A Sequential neural posterior estimation calibration model."""
+
+    def __init__(self) -> None:
+        """The SnpeModel constructor."""
+        self.task = "snpe"
+        self.inference = None
+        self.posterior = None
+        self.parameter_intervals = None
+
+    def load_context(self, context: Context) -> None:
+        """Load the model context.
+
+        Args:
+            context (Context):
+                The model context.
+        """
+        import joblib
+
+        loaded_data = context.artifacts["inference"]
+        self.inference = joblib.load(loaded_data)
+
+        loaded_data = context.artifacts["posterior"]
+        self.posterior = joblib.load(loaded_data)
+
+        loaded_data = context.artifacts["parameter_intervals"]
+        self.parameter_intervals = joblib.load(loaded_data)
+
+    def predict(
+        self, context: Context, model_input: pd.DataFrame, params: dict | None = None
+    ) -> pd.DataFrame:
+        """Make a model prediction.
+
+        Args:
+            context (Context):
+                The model context.
+            model_input (pd.DataFrame):
+                The model input data.
+            params (dict, optional):
+                Optional model parameters. Defaults to None.
+
+        Raises:
+            ValueError:
+                Error raised when the calibrator has not been loaded.
+
+        Returns:
+            pd.DataFrame:
+                The model prediction.
+        """
+        if (
+            self.inference is None
+            or self.posterior is None
+            or self.parameter_intervals is None
+        ):
+            raise ValueError(f"The {self.task} calibrator has not been loaded.")
+
+        observed_values = model_input["statistic_value"].values
+        posterior_samples = self.posterior.sample((50,), x=observed_values)
+
+        names = []
+        for name in self.parameter_intervals:
+            if name == "inference_type":
+                continue
+            names.append(name)
+
+        df = pd.DataFrame(posterior_samples, columns=names)
+        return df

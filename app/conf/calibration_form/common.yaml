@@ -716,7 +716,7 @@ components:
           type: number
           min: 1
           step: 1
-          value: 120
+          value: 50
           persistence: true
       - id: num-transforms-input
         param: nn_num_transforms
@@ -727,7 +727,7 @@ components:
           type: number
           min: 1
           step: 1
-          value: 10
+          value: 5
           persistence: true
       - id: sbc-samples-input
         param: sbc_draws

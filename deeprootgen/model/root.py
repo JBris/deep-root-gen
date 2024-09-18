@@ -804,7 +804,7 @@ class RootSystemSimulation:
                 z=node_df["z"],
                 mode="markers",
                 line=dict(color="green", colorscale="brwnyl", width=10),
-                marker=dict(size=7, color="green", colorscale="brwnyl", opacity=1),
+                marker=dict(size=4, color="green", colorscale="brwnyl", opacity=1),
                 customdata=np.stack(
                     (
                         node_df.organ_id,
@@ -834,7 +834,29 @@ class RootSystemSimulation:
                 Simulation tag: %{customdata[8]}<br>""",
             )
         )
+
+        axis = dict(
+            showbackground=False,
+            showline=False,
+            zeroline=False,
+            showgrid=False,
+            showticklabels=False,
+        )
+
         fig.update_traces(connectgaps=False)
+        fig.update_layout(
+            width=1000,
+            height=1000,
+            showlegend=False,
+            scene=dict(
+                xaxis=dict(axis),
+                yaxis=dict(axis),
+                zaxis=dict(axis),
+            ),
+            margin=dict(t=100),
+            hovermode="closest",
+        )
+
         return fig
 
     def init_fig(self, input_parameters: RootSimulationModel) -> go.Figure | None:

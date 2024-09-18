@@ -36,10 +36,11 @@ def get_calibration_summary_stats(input_parameters: RootCalibrationModel) -> tup
     statistics_comparison = input_parameters.statistics_comparison
 
     distance_metrics = []
-    for distance_metric in statistics_comparison.distance_metrics:  # type: ignore[union-attr]
-        distance_func = get_distance_metric_func(distance_metric)
-        distance = distance_func()
-        distance_metrics.append(distance)
+    if isinstance(statistics_comparison.distance_metrics, list):  # type: ignore[union-attr]
+        for distance_metric in statistics_comparison.distance_metrics:  # type: ignore[union-attr]
+            distance_func = get_distance_metric_func(distance_metric)
+            distance = distance_func()
+            distance_metrics.append(distance)
 
     statistics_list = []
     input_statistics = []
@@ -93,13 +94,12 @@ def run_calibration_simulation(
     return simulation, simulation_parameters
 
 
-def calculate_summary_statistic_discrepancy(
+def calculate_summary_statistics(
     parameter_specs: dict,
     input_parameters: RootCalibrationModel,
     statistics_list: list[SummaryStatisticsModel],
-    distances: list[DistanceMetricBase],
-) -> float:
-    """Calculate the discrepancy between simulated and observed data.
+) -> tuple:
+    """Calculate summary statistics for observed and simulated data.
 
     Args:
         parameter_specs (dict):
@@ -108,12 +108,10 @@ def calculate_summary_statistic_discrepancy(
             The root calibration data model.
         statistics_list (list[SummaryStatisticsModel]):
             The list of summary statistics.
-        distances (list[DistanceMetricBase]):
-            The distance metric object.
 
     Returns:
-        float:
-            The discrepancy between simulated and observed data.
+        tuple:
+            The simulated and observed data.
     """
     simulation, simulation_parameters = run_calibration_simulation(
         parameter_specs, input_parameters
@@ -139,6 +137,35 @@ def calculate_summary_statistic_discrepancy(
 
     observed = np.array(observed_values).flatten()
     simulated = np.array(simulated_values).flatten()
+
+    return simulated, observed
+
+
+def calculate_summary_statistic_discrepancy(
+    parameter_specs: dict,
+    input_parameters: RootCalibrationModel,
+    statistics_list: list[SummaryStatisticsModel],
+    distances: list[DistanceMetricBase],
+) -> float:
+    """Calculate the discrepancy between simulated and observed data.
+
+    Args:
+        parameter_specs (dict):
+            The simulation parameter specification.
+        input_parameters (RootCalibrationModel):
+            The root calibration data model.
+        statistics_list (list[SummaryStatisticsModel]):
+            The list of summary statistics.
+        distances (list[DistanceMetricBase]):
+            The distance metric object.
+
+    Returns:
+        float:
+            The discrepancy between simulated and observed data.
+    """
+    simulated, observed = calculate_summary_statistics(
+        parameter_specs, input_parameters, statistics_list
+    )
 
     discrepancy_list = []
     for distance in distances:

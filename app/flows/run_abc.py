@@ -279,7 +279,7 @@ def log_task(
         pyabc.visualization.plot_acceptance_rates_trajectory,
         pyabc.visualization.plot_kde_matrix_highlevel,
     ]:
-        outfile = osp.join(outdir, f"{plot_func.__name__}.png")
+        outfile = osp.join(outdir, f"{time_now}-{plot_func.__name__}.png")
         plot_func(history)
         plt.tight_layout()
         plt.savefig(outfile)

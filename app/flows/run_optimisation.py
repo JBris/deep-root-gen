@@ -218,7 +218,7 @@ def log_task(
         optuna.visualization.plot_param_importances,
         optuna.visualization.plot_slice,
     ]:
-        outfile = osp.join(outdir, f"{plot_func.__name__}.png")
+        outfile = osp.join(outdir, f"{time_now}-{plot_func.__name__}.png")
         plot_func(study).write_image(outfile)
         mlflow.log_artifact(outfile)
 
