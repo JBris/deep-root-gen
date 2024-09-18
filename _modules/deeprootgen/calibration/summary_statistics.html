@@ -113,10 +113,11 @@
     <span class="n">statistics_comparison</span> <span class="o">=</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">statistics_comparison</span>
 
     <span class="n">distance_metrics</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">distance_metric</span> <span class="ow">in</span> <span class="n">statistics_comparison</span><span class="o">.</span><span class="n">distance_metrics</span><span class="p">:</span>  <span class="c1"># type: ignore[union-attr]</span>
-        <span class="n">distance_func</span> <span class="o">=</span> <span class="n">get_distance_metric_func</span><span class="p">(</span><span class="n">distance_metric</span><span class="p">)</span>
-        <span class="n">distance</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">()</span>
-        <span class="n">distance_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistics_comparison</span><span class="o">.</span><span class="n">distance_metrics</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>  <span class="c1"># type: ignore[union-attr]</span>
+        <span class="k">for</span> <span class="n">distance_metric</span> <span class="ow">in</span> <span class="n">statistics_comparison</span><span class="o">.</span><span class="n">distance_metrics</span><span class="p">:</span>  <span class="c1"># type: ignore[union-attr]</span>
+            <span class="n">distance_func</span> <span class="o">=</span> <span class="n">get_distance_metric_func</span><span class="p">(</span><span class="n">distance_metric</span><span class="p">)</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">()</span>
+            <span class="n">distance_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
 
     <span class="n">statistics_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">input_statistics</span> <span class="o">=</span> <span class="p">[]</span>
@@ -174,15 +175,14 @@
 
 
 
-<div class="viewcode-block" id="calculate_summary_statistic_discrepancy">
-<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepancy">[docs]</a>
-<span class="k">def</span> <span class="nf">calculate_summary_statistic_discrepancy</span><span class="p">(</span>
+<div class="viewcode-block" id="calculate_summary_statistics">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistics">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_summary_statistics</span><span class="p">(</span>
     <span class="n">parameter_specs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootCalibrationModel</span><span class="p">,</span>
     <span class="n">statistics_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SummaryStatisticsModel</span><span class="p">],</span>
-    <span class="n">distances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DistanceMetricBase</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the discrepancy between simulated and observed data.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate summary statistics for observed and simulated data.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parameter_specs (dict):</span>
@@ -191,12 +191,10 @@
 <span class="sd">            The root calibration data model.</span>
 <span class="sd">        statistics_list (list[SummaryStatisticsModel]):</span>
 <span class="sd">            The list of summary statistics.</span>
-<span class="sd">        distances (list[DistanceMetricBase]):</span>
-<span class="sd">            The distance metric object.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        float:</span>
-<span class="sd">            The discrepancy between simulated and observed data.</span>
+<span class="sd">        tuple:</span>
+<span class="sd">            The simulated and observed data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">simulation</span><span class="p">,</span> <span class="n">simulation_parameters</span> <span class="o">=</span> <span class="n">run_calibration_simulation</span><span class="p">(</span>
         <span class="n">parameter_specs</span><span class="p">,</span> <span class="n">input_parameters</span>
@@ -222,6 +220,38 @@
 
     <span class="n">observed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">observed_values</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
     <span class="n">simulated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">simulated_values</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">simulated</span><span class="p">,</span> <span class="n">observed</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_summary_statistic_discrepancy">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepancy">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_summary_statistic_discrepancy</span><span class="p">(</span>
+    <span class="n">parameter_specs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">input_parameters</span><span class="p">:</span> <span class="n">RootCalibrationModel</span><span class="p">,</span>
+    <span class="n">statistics_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SummaryStatisticsModel</span><span class="p">],</span>
+    <span class="n">distances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DistanceMetricBase</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the discrepancy between simulated and observed data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        parameter_specs (dict):</span>
+<span class="sd">            The simulation parameter specification.</span>
+<span class="sd">        input_parameters (RootCalibrationModel):</span>
+<span class="sd">            The root calibration data model.</span>
+<span class="sd">        statistics_list (list[SummaryStatisticsModel]):</span>
+<span class="sd">            The list of summary statistics.</span>
+<span class="sd">        distances (list[DistanceMetricBase]):</span>
+<span class="sd">            The distance metric object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float:</span>
+<span class="sd">            The discrepancy between simulated and observed data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">simulated</span><span class="p">,</span> <span class="n">observed</span> <span class="o">=</span> <span class="n">calculate_summary_statistics</span><span class="p">(</span>
+        <span class="n">parameter_specs</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">statistics_list</span>
+    <span class="p">)</span>
 
     <span class="n">discrepancy_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">distance</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">:</span>

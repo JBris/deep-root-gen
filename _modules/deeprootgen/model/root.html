@@ -949,7 +949,7 @@
                 <span class="n">z</span><span class="o">=</span><span class="n">node_df</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">],</span>
                 <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span>
                 <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="s2">&quot;brwnyl&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
-                <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="s2">&quot;brwnyl&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="s2">&quot;brwnyl&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
                 <span class="n">customdata</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
                     <span class="p">(</span>
                         <span class="n">node_df</span><span class="o">.</span><span class="n">organ_id</span><span class="p">,</span>
@@ -979,7 +979,29 @@
 <span class="s2">                Simulation tag: %</span><span class="si">{customdata[8]}</span><span class="s2">&lt;br&gt;&quot;&quot;&quot;</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
+
+        <span class="n">axis</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">showbackground</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">showline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">zeroline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">showgrid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">showticklabels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
         <span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">connectgaps</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+            <span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">scene</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span>
+                <span class="n">yaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span>
+                <span class="n">zaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+            <span class="n">hovermode</span><span class="o">=</span><span class="s2">&quot;closest&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">fig</span></div>
 
 
