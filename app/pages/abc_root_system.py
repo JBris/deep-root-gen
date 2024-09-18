@@ -392,10 +392,10 @@ def update_summary_data_state(
 
     summary_stats_list = summary_stats[0]
     distance_list = distances[0]
-    if len(summary_stats_list) == 0 or distance_list is None:
+    if len(summary_stats_list) == 0 or len(distance_list) == 0:
         return [summary_label], [True], [False]
 
-    if summary_stats_list[0] is None or distance_list == "":
+    if summary_stats_list[0] is None or distance_list[0] is None:
         return [summary_label], [True], [False]
 
     return [summary_label], [False], [False]
