@@ -126,8 +126,8 @@ def prepare_task(input_parameters: RootCalibrationModel) -> tuple:
 
     prior = pyabc.Distribution(**dist_kwargs)
     transitions = pyabc.AggregatedTransition(mapping=transition_mapping)
-    distance, statistics_list = get_calibration_summary_stats(input_parameters)
-    return distance, statistics_list, prior, transitions
+    distances, statistics_list = get_calibration_summary_stats(input_parameters)
+    return distances, statistics_list, prior, transitions
 
 
 def perform_task(
@@ -135,7 +135,7 @@ def perform_task(
     prior: pyabc.Distribution,
     transitions: pyabc.AggregatedTransition,
     statistics_list: list[SummaryStatisticsModel],
-    distance: DistanceMetricBase,
+    distances: list[DistanceMetricBase],
 ) -> tuple:
     """Perform the Bayesian parameter estimation procedure.
 
@@ -148,7 +148,7 @@ def perform_task(
             The parameter transition kernels.
         statistics_list (list[SummaryStatisticsModel]):
             The list of summary statistics.
-        distance (DistanceMetricBase):
+        distances (list[DistanceMetricBase]):
             The distance metric object.
 
     Returns:
@@ -159,7 +159,7 @@ def perform_task(
     def simulator_func(theta: dict) -> dict:
         parameter_specs = theta.copy()
         discrepancy = calculate_summary_statistic_discrepancy(
-            parameter_specs, input_parameters, statistics_list, distance
+            parameter_specs, input_parameters, statistics_list, distances
         )
 
         return {"discrepancy": discrepancy}
@@ -331,7 +331,7 @@ def run_abc(input_parameters: RootCalibrationModel, simulation_uuid: str) -> Non
     begin_experiment(TASK, simulation_uuid, input_parameters.simulation_tag)
     log_experiment_details(simulation_uuid)
 
-    distance, statistics_list, prior, transitions = prepare_task(input_parameters)
+    distances, statistics_list, prior, transitions = prepare_task(input_parameters)
 
     # @BUG: Issue with SQLite + Prefect multithreading here
     # perform_task cannot be decorated with @task
@@ -342,7 +342,7 @@ def run_abc(input_parameters: RootCalibrationModel, simulation_uuid: str) -> Non
     dispatching_perform_task()
 
     _, history = perform_task(
-        input_parameters, prior, transitions, statistics_list, distance
+        input_parameters, prior, transitions, statistics_list, distances
     )
 
     # @BUG: Issue with SQLite + Prefect multithreading here

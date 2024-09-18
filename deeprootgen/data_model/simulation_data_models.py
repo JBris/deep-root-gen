@@ -158,7 +158,7 @@ class StatisticsComparisonModel(BaseModel):
     """
 
     summary_statistics: Optional[List[str]] = None
-    distance_metric: Optional[str] = ""
+    distance_metrics: Optional[List[str]] = None
     stat_by_soil_layer: Optional[bool] = False
     stat_by_soil_column: Optional[bool] = False
     use_summary_statistics: Optional[bool] = True

@@ -79,10 +79,6 @@ def prepare_task(input_parameters: RootCalibrationModel) -> tuple:
     data_types = []
 
     parameter_intervals = input_parameters.parameter_intervals.dict()
-    distance_metric = input_parameters.statistics_comparison.distance_metric.replace(  # type: ignore[union-attr]
-        "_", " "
-    ).title()
-
     for k, v in parameter_intervals.items():
         names.append(k)
 
@@ -101,13 +97,13 @@ def prepare_task(input_parameters: RootCalibrationModel) -> tuple:
         "bounds": bounds,
         "dists": dists,
         "groups": None,
-        "outputs": [distance_metric],
+        "outputs": ["Discrepancy"],
     }
 
     sp = ProblemSpec(problem)
-    distance, statistics_list = get_calibration_summary_stats(input_parameters)
+    distances, statistics_list = get_calibration_summary_stats(input_parameters)
 
-    return sp, names, data_types, distance, statistics_list
+    return sp, names, data_types, distances, statistics_list
 
 
 @task
@@ -115,7 +111,7 @@ def perform_task(
     sp: ProblemSpec,
     input_parameters: RootCalibrationModel,
     statistics_list: list[SummaryStatisticsModel],
-    distance: DistanceMetricBase,
+    distances: list[DistanceMetricBase],
     names: list[str],
     data_types: list[str],
 ) -> tuple:
@@ -128,7 +124,7 @@ def perform_task(
             The root calibration data model.
         statistics_list (list[SummaryStatisticsModel]):
             The list of summary statistics.
-        distance (DistanceMetricBase):
+        distances (list[DistanceMetricBase]):
             The distance metric object.
         names (list[str]):
             The list of parameter names.
@@ -144,11 +140,10 @@ def perform_task(
     def simulator_func(
         X: np.ndarray,
         statistics_list: list[SummaryStatisticsModel],
-        distance: DistanceMetricBase,
+        distances: list[DistanceMetricBase],
         names: list,
         data_types: list,
         sample_list: list,
-        distance_metric: str,
     ) -> np.ndarray:
         import numpy as np
 
@@ -164,20 +159,17 @@ def perform_task(
                 parameter_specs[k] = parameter_value
 
             discrepancy = calculate_summary_statistic_discrepancy(
-                parameter_specs, input_parameters, statistics_list, distance
+                parameter_specs, input_parameters, statistics_list, distances
             )
 
             discrepancies.append(discrepancy)
-            parameter_specs[distance_metric] = discrepancy
+            parameter_specs["discrepancy"] = discrepancy
             sample_list.append(parameter_specs)
 
         discrepancies = np.array(discrepancies)
         return discrepancies
 
     calibration_parameters = input_parameters.calibration_parameters
-    distance_metric = (
-        input_parameters.statistics_comparison.distance_metric  # type: ignore[union-attr]
-    )
     (
         sp.sample_sobol(
             calibration_parameters["n_samples"],
@@ -188,11 +180,10 @@ def perform_task(
         .evaluate(
             simulator_func,
             statistics_list,
-            distance,
+            distances,
             names,
             data_types,
             sample_list,
-            distance_metric,
         )
         .analyze_sobol()
     )
@@ -310,9 +301,9 @@ def run_sensitivity_analysis(
     begin_experiment(TASK, simulation_uuid, input_parameters.simulation_tag)
     log_experiment_details(simulation_uuid)
 
-    sp, names, data_types, distance, statistics_list = prepare_task(input_parameters)
+    sp, names, data_types, distances, statistics_list = prepare_task(input_parameters)
     sp, sample_list = perform_task(
-        sp, input_parameters, statistics_list, distance, names, data_types
+        sp, input_parameters, statistics_list, distances, names, data_types
     )
     log_task(sp, sample_list, names, input_parameters, simulation_uuid)
 

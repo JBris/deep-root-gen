@@ -34,8 +34,12 @@ def get_calibration_summary_stats(input_parameters: RootCalibrationModel) -> tup
             The calibration distance metric and summary statistics.
     """
     statistics_comparison = input_parameters.statistics_comparison
-    distance_func = get_distance_metric_func(statistics_comparison.distance_metric)  # type: ignore
-    distance = distance_func()
+
+    distance_metrics = []
+    for distance_metric in statistics_comparison.distance_metrics:  # type: ignore[union-attr]
+        distance_func = get_distance_metric_func(distance_metric)
+        distance = distance_func()
+        distance_metrics.append(distance)
 
     statistics_list = []
     input_statistics = []
@@ -59,7 +63,7 @@ def get_calibration_summary_stats(input_parameters: RootCalibrationModel) -> tup
         SummaryStatisticsModel.parse_obj(statistic) for statistic in statistics_records
     ]
 
-    return distance, statistics_list
+    return distance_metrics, statistics_list
 
 
 def run_calibration_simulation(
@@ -93,7 +97,7 @@ def calculate_summary_statistic_discrepancy(
     parameter_specs: dict,
     input_parameters: RootCalibrationModel,
     statistics_list: list[SummaryStatisticsModel],
-    distance: DistanceMetricBase,
+    distances: list[DistanceMetricBase],
 ) -> float:
     """Calculate the discrepancy between simulated and observed data.
 
@@ -104,7 +108,7 @@ def calculate_summary_statistic_discrepancy(
             The root calibration data model.
         statistics_list (list[SummaryStatisticsModel]):
             The list of summary statistics.
-        distance (DistanceMetricBase):
+        distances (list[DistanceMetricBase]):
             The distance metric object.
 
     Returns:
@@ -133,7 +137,13 @@ def calculate_summary_statistic_discrepancy(
         observed_values.append(statistic.statistic_value)
         simulated_values.append(statistic_value)
 
-    observed = np.array(observed_values)
-    simulated = np.array(simulated_values)
-    discrepancy = distance.calculate(observed, simulated)
-    return discrepancy
+    observed = np.array(observed_values).flatten()
+    simulated = np.array(simulated_values).flatten()
+
+    discrepancy_list = []
+    for distance in distances:
+        discrepancy = distance.calculate(observed, simulated)
+        discrepancy_list.append(discrepancy)
+
+    discrepancies: float = np.array(discrepancy_list).flatten().sum()
+    return discrepancies

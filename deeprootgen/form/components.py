@@ -584,7 +584,7 @@ def build_calibration_parameters(
     for i, input in enumerate(form_model.components[task]["children"]):
         k = input["param"]
         calibration_value = calibration_values[i]
-        if k == "summary_statistics" or k == "distance_metric":
+        if k == "summary_statistics" or k == "distance_metrics":
             if (
                 calibration_value is None
                 or len(calibration_value) == 0

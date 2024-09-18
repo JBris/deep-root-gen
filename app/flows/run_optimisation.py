@@ -75,7 +75,7 @@ def prepare_task(input_parameters: RootCalibrationModel) -> tuple:
         tuple:
             The optimisation study, data, and cost function.
     """
-    distance, statistics_list = get_calibration_summary_stats(input_parameters)
+    distances, statistics_list = get_calibration_summary_stats(input_parameters)
     calibration_parameters = input_parameters.calibration_parameters
     sampler = TPESampler(
         n_startup_trials=calibration_parameters["n_startup_trials"],
@@ -89,7 +89,7 @@ def prepare_task(input_parameters: RootCalibrationModel) -> tuple:
         sampler=sampler, study_name="root_model", direction="minimize"
     )
 
-    return study, statistics_list, distance
+    return study, statistics_list, distances
 
 
 @task
@@ -97,7 +97,7 @@ def perform_task(
     input_parameters: RootCalibrationModel,
     study: optuna.study.Study,
     statistics_list: list[SummaryStatisticsModel],
-    distance: DistanceMetricBase,
+    distances: list[DistanceMetricBase],
 ) -> None:
     """Perform the optimisation procedure.
 
@@ -108,7 +108,7 @@ def perform_task(
             The optimisation study.
         statistics_list (list[SummaryStatisticsModel]):
             The list of summary statistics.
-        distance (DistanceMetricBase):
+        distances (list[DistanceMetricBase]):
             The distance metric object.
     """
     calibration_parameters = input_parameters.calibration_parameters
@@ -116,7 +116,7 @@ def perform_task(
 
     study.optimize(
         lambda trial: objective(
-            trial, parameter_intervals, statistics_list, distance, input_parameters
+            trial, parameter_intervals, statistics_list, distances, input_parameters
         ),
         n_trials=calibration_parameters["n_trials"],
         n_jobs=calibration_parameters["n_jobs"],
@@ -129,7 +129,7 @@ def objective(
     trial: optuna.trial.Trial,
     parameter_intervals: dict,
     statistics_list: list[SummaryStatisticsModel],
-    distance: DistanceMetricBase,
+    distances: list[DistanceMetricBase],
     input_parameters: RootCalibrationModel,
 ) -> float:
     """The optimisation objective.
@@ -141,7 +141,7 @@ def objective(
             The simulation parameter intervals.
         statistics_list (list[SummaryStatisticsModel]):
             The list of summary statistics.
-        distance (DistanceMetricBase):
+        distances (list[DistanceMetricBase]):
             The distance metric object.
         input_parameters (RootCalibrationModel):
             The root calibration data model.
@@ -166,7 +166,7 @@ def objective(
             )
 
     discrepancy = calculate_summary_statistic_discrepancy(
-        parameter_specs, input_parameters, statistics_list, distance
+        parameter_specs, input_parameters, statistics_list, distances
     )
     return discrepancy
 
@@ -274,8 +274,8 @@ def run_optimisation(
     begin_experiment(TASK, simulation_uuid, input_parameters.simulation_tag)
     log_experiment_details(simulation_uuid)
 
-    study, statistics_list, distance = prepare_task(input_parameters)
-    perform_task(input_parameters, study, statistics_list, distance)
+    study, statistics_list, distances = prepare_task(input_parameters)
+    perform_task(input_parameters, study, statistics_list, distances)
     simulation, simulation_parameters = log_task(
         study, input_parameters, simulation_uuid
     )
