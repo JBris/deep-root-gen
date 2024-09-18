@@ -3,6 +3,8 @@
 This module defines MLflow compatible models for versioning and deployment as microservices.
 """
 
+from typing import Any
+
 import bentoml
 import mlflow
 import numpy as np
@@ -253,14 +255,14 @@ class SnpeModel(mlflow.pyfunc.PythonModel):
         """
         import joblib
 
-        loaded_data = context.artifacts["inference"]
-        self.inference = joblib.load(loaded_data)
+        def load_data(k: str) -> Any:
+            artifact = context.artifacts[k]
+            return joblib.load(artifact)
 
-        loaded_data = context.artifacts["posterior"]
-        self.posterior = joblib.load(loaded_data)
-
-        loaded_data = context.artifacts["parameter_intervals"]
-        self.parameter_intervals = joblib.load(loaded_data)
+        self.inference = load_data("inference")
+        self.posterior = load_data("posterior")
+        self.parameter_intervals = load_data("parameter_intervals")
+        self.statistics_list = load_data("statistics_list")
 
     def predict(
         self, context: Context, model_input: pd.DataFrame, params: dict | None = None
@@ -283,12 +285,14 @@ class SnpeModel(mlflow.pyfunc.PythonModel):
             pd.DataFrame:
                 The model prediction.
         """
-        if (
-            self.inference is None
-            or self.posterior is None
-            or self.parameter_intervals is None
-        ):
-            raise ValueError(f"The {self.task} calibrator has not been loaded.")
+        for prop in [
+            self.inference,
+            self.posterior,
+            self.parameter_intervals,
+            self.statistics_list,
+        ]:
+            if prop is None:
+                raise ValueError(f"The {self.task} calibrator has not been loaded.")
 
         observed_values = model_input["statistic_value"].values
         posterior_samples = self.posterior.sample((50,), x=observed_values)

@@ -199,6 +199,7 @@ def log_task(
     posterior_samples: torch.Tensor,
     input_parameters: RootCalibrationModel,
     observed_values: list,
+    statistics_list: list[SummaryStatisticsModel],
     names: list[str],
     limits: list[tuple],
     simulation_uuid: str,
@@ -220,6 +221,8 @@ def log_task(
             The root calibration data model.
         observed_values (list):
             The list of observed_values.
+        statistics_list (list[SummaryStatisticsModel]):
+            The list of summary statistics.
         names (list[str]):
             The parameter names.
         limits (list[tuple]):
@@ -327,12 +330,14 @@ def log_task(
         parameter_specs, input_parameters
     )
 
+    statistics_list = [statistic.dict() for statistic in statistics_list]
     parameter_intervals["inference_type"] = "summary_statistics"
     artifacts = {}
     for obj, name in [
         (inference, "inference"),
         (posterior, "posterior"),
         (parameter_intervals, "parameter_intervals"),
+        (statistics_list, "statistics_list"),
     ]:
         outfile = osp.join(outdir, f"{time_now}-{TASK}_{name}.pkl")
         artifacts[name] = outfile
@@ -380,6 +385,7 @@ def run_snpe(input_parameters: RootCalibrationModel, simulation_uuid: str) -> No
         posterior_samples,
         input_parameters,
         observed_values,
+        statistics_list,
         names,
         limits,
         simulation_uuid,
