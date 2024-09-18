@@ -78,6 +78,8 @@
 <span class="sd">This module defines MLflow compatible models for versioning and deployment as microservices.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">import</span> <span class="nn">bentoml</span>
 <span class="kn">import</span> <span class="nn">mlflow</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -362,14 +364,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">joblib</span>
 
-        <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">artifacts</span><span class="p">[</span><span class="s2">&quot;inference&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inference</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">loaded_data</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+            <span class="n">artifact</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">artifacts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
 
-        <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">artifacts</span><span class="p">[</span><span class="s2">&quot;posterior&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">loaded_data</span><span class="p">)</span>
-
-        <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">artifacts</span><span class="p">[</span><span class="s2">&quot;parameter_intervals&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">loaded_data</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inference</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;inference&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;posterior&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;parameter_intervals&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics_list</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;statistics_list&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SnpeModel.predict">
@@ -395,12 +397,14 @@
 <span class="sd">            pd.DataFrame:</span>
 <span class="sd">                The model prediction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">inference</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span> <span class="ow">is</span> <span class="kc">None</span>
-        <span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="si">}</span><span class="s2"> calibrator has not been loaded.&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statistics_list</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="n">prop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="si">}</span><span class="s2"> calibrator has not been loaded.&quot;</span><span class="p">)</span>
 
         <span class="n">observed_values</span> <span class="o">=</span> <span class="n">model_input</span><span class="p">[</span><span class="s2">&quot;statistic_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="n">posterior_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="mi">50</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">observed_values</span><span class="p">)</span>
