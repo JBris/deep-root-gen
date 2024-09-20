@@ -236,9 +236,18 @@ This includes integration with NetworkX and PyTorch Geometric.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.model.hgraph.RootSystemGraph.as_networkx">
-<span class="sig-name descname"><span class="pre">as_networkx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/deeprootgen/model/hgraph.html#RootSystemGraph.as_networkx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.model.hgraph.RootSystemGraph.as_networkx" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_networkx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="reference internal" href="../_modules/deeprootgen/model/hgraph.html#RootSystemGraph.as_networkx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.model.hgraph.RootSystemGraph.as_networkx" title="Link to this definition"></a></dt>
 <dd><p>Return the graph as a NetworkX graph.</p>
 <dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>node_df (pd.DataFrame, optional):</dt><dd><p>The node dataframe. Defaults to None.</p>
+</dd>
+<dt>edge_df (pd.DataFrame, optional):</dt><dd><p>The edge dataframe. Defaults to None.</p>
+</dd>
+<dt>drop (bool, optional):</dt><dd><p>Whether to drop the node ID index. Defaults to False.</p>
+</dd>
+</dl>
+</dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>tuple:</dt><dd><p>The graph in NetworkX format.</p>
 </dd>
@@ -249,11 +258,40 @@ This includes integration with NetworkX and PyTorch Geometric.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="deeprootgen.model.hgraph.RootSystemGraph.as_torch">
-<span class="sig-name descname"><span class="pre">as_torch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Data</span></span></span><a class="reference internal" href="../_modules/deeprootgen/model/hgraph.html#RootSystemGraph.as_torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.model.hgraph.RootSystemGraph.as_torch" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_torch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Data</span></span></span><a class="reference internal" href="../_modules/deeprootgen/model/hgraph.html#RootSystemGraph.as_torch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.model.hgraph.RootSystemGraph.as_torch" title="Link to this definition"></a></dt>
 <dd><p>Return the graph as a PyTorch Geometric graph dataset.</p>
 <dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>node_df (pd.DataFrame, optional):</dt><dd><p>The node dataframe. Defaults to None.</p>
+</dd>
+<dt>edge_df (pd.DataFrame, optional):</dt><dd><p>The edge dataframe. Defaults to None.</p>
+</dd>
+<dt>drop (bool, optional):</dt><dd><p>Whether to drop the node ID index. Defaults to False.</p>
+</dd>
+</dl>
+</dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>tuple:</dt><dd><p>The graph as a PyTorch Geometric graph dataset.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.model.hgraph.RootSystemGraph.from_content_string">
+<span class="sig-name descname"><span class="pre">from_content_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observed_data_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_edge_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="../_modules/deeprootgen/model/hgraph.html#RootSystemGraph.from_content_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.model.hgraph.RootSystemGraph.from_content_string" title="Link to this definition"></a></dt>
+<dd><p>Contruct the node and edge dataframes from raw content strings.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>observed_data_content (str):</dt><dd><p>The node content.</p>
+</dd>
+<dt>raw_edge_content (str):</dt><dd><p>The edge content.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>tuple:</dt><dd><p>The node and edge dataframes.</p>
 </dd>
 </dl>
 </dd>
