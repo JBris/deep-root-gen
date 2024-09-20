@@ -386,21 +386,21 @@ components:
     collapsible: true
     children:
       - id: upload-summary-data-file-button
-        label: Upload  
+        label: Upload statistics
         help: Upload summary statistics data from a csv file
         class_name: dash.dcc.Upload
         handler: file_upload
         kwargs:
           children: Load statistics data
       - id: upload-obs-data-file-button
-        label: Upload  
+        label: Upload simulation
         help: Upload simulated root data from a csv file
         class_name: dash.dcc.Upload
         handler: file_upload
         kwargs:
           children: Load simulation data
       - id: upload-edge-data-file-button
-        label: Upload  
+        label: Upload edges
         help: Upload edge root data from a csv file
         class_name: dash.dcc.Upload
         handler: file_upload
@@ -694,7 +694,7 @@ components:
           type: number
           min: 1
           step: 1
-          value: 10
+          value: 5
           persistence: true
       - id: draws-input
         param: pp_samples
@@ -716,7 +716,7 @@ components:
           type: number
           min: 1
           step: 1
-          value: 50
+          value: 5
           persistence: true
       - id: num-transforms-input
         param: nn_num_transforms

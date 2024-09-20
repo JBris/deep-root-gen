@@ -620,8 +620,8 @@ def run_root_model(
     stats_by_col: list[bool],
     simulation_runs: list,
     summary_data: dict,
-    raw_simulation_data: str,
-    raw_edge_content: str,
+    raw_simulation_data: dict,
+    raw_edge_content: dict,
 ) -> tuple:
     """Run and plot the root model.
 
@@ -642,9 +642,9 @@ def run_root_model(
             A list of simulation run data.
         summary_data (dict):
             The dictionary of observed summary statistic data.
-        raw_simulation_data (str):
+        raw_simulation_data (dict):
             The content string for the simulation data.
-        raw_edge_content (str):
+        raw_edge_content (dict):
             The content string for the edge data.
 
     Returns:
@@ -657,13 +657,20 @@ def run_root_model(
     if n_clicks[0] is None or n_clicks[0] == 0:
         return no_update
 
-    summary_statistics = summary_data.get("values", None)
-    if summary_statistics is None:
-        return no_update
-
     use_summary_stat = use_summary_statistics[0]
     stat_by_layer = stats_by_layer[0]
     stat_by_col = stats_by_col[0]
+
+    summary_statistics = summary_data.get("values", None)
+    observed_data_content = raw_simulation_data.get("values", "")
+    raw_edge_content = raw_edge_content.get("values", "")
+
+    if use_summary_stat:
+        if summary_statistics is None:
+            return no_update
+    else:
+        if observed_data_content == "" or raw_edge_content == "":  # type: ignore
+            return no_update  # type: ignore
 
     form_inputs = build_calibration_parameters(
         FORM_NAME,
@@ -674,8 +681,8 @@ def run_root_model(
         stat_by_layer=stat_by_layer,
         stat_by_col=stat_by_col,
         use_summary_statistics=use_summary_stat,
-        observed_data_content=raw_simulation_data.get("values", ""),
-        raw_edge_content=raw_edge_content.get("values", ""),
+        observed_data_content=observed_data_content,
+        raw_edge_content=raw_edge_content,  # type: ignore
     )
     if form_inputs is None:
         return no_update

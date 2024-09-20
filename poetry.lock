@@ -332,6 +332,16 @@ all = ["bokeh (>=3)", "contourpy", "dask[distributed]", "netcdf4", "numba", "ujs
 preview = ["arviz-base[h5netcdf]", "arviz-plots", "arviz-stats[xarray]"]
 
 [[package]]
+name = "asciitree"
+version = "0.3.3"
+description = "Draws ASCII trees."
+optional = false
+python-versions = "*"
+files = [
+    {file = "asciitree-0.3.3.tar.gz", hash = "sha256:4aa4b9b649f85e3fcb343363d97564aa1fb62e249677f2e18a96765145cc0f6e"},
+]
+
+[[package]]
 name = "asgi-lifespan"
 version = "2.1.0"
 description = "Programmatic startup/shutdown of ASGI apps."
@@ -1858,6 +1868,17 @@ files = [
 tests = ["asttokens (>=2.1.0)", "coverage", "coverage-enable-subprocess", "ipython", "littleutils", "pytest", "rich"]
 
 [[package]]
+name = "fasteners"
+version = "0.19"
+description = "A python package that provides useful locks"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "fasteners-0.19-py3-none-any.whl", hash = "sha256:758819cb5d94cdedf4e836988b74de396ceacb8e2794d21f82d131fd9ee77237"},
+    {file = "fasteners-0.19.tar.gz", hash = "sha256:b4f37c3ac52d8a445af3a66bce57b33b5e90b97c696b7b984f530cf8f0ded09c"},
+]
+
+[[package]]
 name = "filelock"
 version = "3.15.4"
 description = "A platform independent file lock."
@@ -3164,6 +3185,28 @@ websocket-client = ">=0.32.0,<0.40.0 || >0.40.0,<0.41.dev0 || >=0.43.dev0"
 adal = ["adal (>=1.0.2)"]
 
 [[package]]
+name = "lampe"
+version = "0.9.0"
+description = "Likelihood-free AMortized Posterior Estimation with PyTorch"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "lampe-0.9.0-py3-none-any.whl", hash = "sha256:8198844a09c31ff2ec1a43385a8a9649410c33437d3fb271052559b0c3612b7b"},
+    {file = "lampe-0.9.0.tar.gz", hash = "sha256:2d7144e9ca6c0aea9087ac09f45b4502335a824163e934bf48ba0bfc781156dd"},
+]
+
+[package.dependencies]
+h5py = ">=3.0.0"
+matplotlib = ">=3.6.0"
+numpy = ">=1.20.0"
+torch = ">=1.12.0"
+tqdm = ">=4.52.0"
+zuko = ">=0.3.0"
+
+[package.extras]
+dev = ["pytest", "ruff"]
+
+[[package]]
 name = "lightning"
 version = "2.4.0"
 description = "The Deep Learning framework to train, deploy, and ship AI products Lightning fast."
@@ -3982,6 +4025,39 @@ files = [
 [package.dependencies]
 llvmlite = "==0.43.*"
 numpy = ">=1.22,<2.1"
+
+[[package]]
+name = "numcodecs"
+version = "0.13.0"
+description = "A Python package providing buffer compression and transformation codecs for use in data storage and communication applications."
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "numcodecs-0.13.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:56e49f68ce6aeba29f144992524c8897d94f846d02bbcc820dd29d7c5c2a073e"},
+    {file = "numcodecs-0.13.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:17bc4b568214582f4c623700592f633f3afd920848630049c584fa1e535253ad"},
+    {file = "numcodecs-0.13.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:eed420a9c62d0a569aa94a387f93045f068ad3e7bbd787c6ce70bc5fefbaa7d9"},
+    {file = "numcodecs-0.13.0-cp310-cp310-win_amd64.whl", hash = "sha256:e7d3b9693df52eeaf978d2a56971d01cf9b4e284ae769ec764807f2087cce51d"},
+    {file = "numcodecs-0.13.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:f208a1b8b5e66c767ed043812ca74d9045e09b7b2e085d064a585c30b9efc8e7"},
+    {file = "numcodecs-0.13.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:a68368d3ce625ec76fcacd84785f6110d30a232909d5c6093a7aa25628880477"},
+    {file = "numcodecs-0.13.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f5904216811f2e9d312c23ffaad3b3d4c7442a3583d3a8bf81ca8319e9f5deb5"},
+    {file = "numcodecs-0.13.0-cp311-cp311-win_amd64.whl", hash = "sha256:208cab0f4d9cf4409e9c4a4c935e165833786614822c81dee9d865af372da9df"},
+    {file = "numcodecs-0.13.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:f3cf462d2357998d7f6baaa0427657b0eeda3eb79fba2b146d2d04542912a513"},
+    {file = "numcodecs-0.13.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:ac4dd5556fb126271e93bd1a02266e21b01d3617db448d70d00eec8e034506b4"},
+    {file = "numcodecs-0.13.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:820be89729583c91601a6b35c052008cdd2665b25bfedb91b367cc155fb34ba0"},
+    {file = "numcodecs-0.13.0-cp312-cp312-win_amd64.whl", hash = "sha256:d67a859dd8a7f026829e91cb1799c26720cc9d29ee4ae0060cc7a581670abc06"},
+    {file = "numcodecs-0.13.0.tar.gz", hash = "sha256:ba4fac7036ea5a078c7afe1d4dffeb9685080d42f19c9c16b12dad866703aa2e"},
+]
+
+[package.dependencies]
+numpy = ">=1.7"
+
+[package.extras]
+docs = ["mock", "numpydoc", "pydata-sphinx-theme", "sphinx (<7.0.0)", "sphinx-issues"]
+msgpack = ["msgpack"]
+pcodec = ["pcodec (>=0.2.0)"]
+test = ["coverage", "pytest", "pytest-cov"]
+test-extras = ["importlib-metadata"]
+zfpy = ["numpy (<2.0.0)", "zfpy (>=1.0.0)"]
 
 [[package]]
 name = "numpy"
@@ -5782,33 +5858,38 @@ unidecode = ["Unidecode (>=1.1.1)"]
 
 [[package]]
 name = "pytorch-lightning"
-version = "2.4.0"
+version = "1.9.5"
 description = "PyTorch Lightning is the lightweight PyTorch wrapper for ML researchers. Scale your models. Write less boilerplate."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.7"
 files = [
-    {file = "pytorch-lightning-2.4.0.tar.gz", hash = "sha256:6aa897fd9d6dfa7b7b49f37c2f04e13592861831d08deae584dfda423fdb71c8"},
-    {file = "pytorch_lightning-2.4.0-py3-none-any.whl", hash = "sha256:9ac7935229ac022ef06994c928217ed37f525ac6700f7d4fc57009624570e655"},
+    {file = "pytorch-lightning-1.9.5.tar.gz", hash = "sha256:925fe7b80ddf04859fa385aa493b260be4000b11a2f22447afb4a932d1f07d26"},
+    {file = "pytorch_lightning-1.9.5-py3-none-any.whl", hash = "sha256:06821558158623c5d2ecf5d3d0374dc8bd661e0acd3acf54a6d6f71737c156c5"},
 ]
 
 [package.dependencies]
-fsspec = {version = ">=2022.5.0", extras = ["http"]}
-lightning-utilities = ">=0.10.0"
-packaging = ">=20.0"
+fsspec = {version = ">2021.06.0", extras = ["http"]}
+lightning-utilities = ">=0.6.0.post0"
+numpy = ">=1.17.2"
+packaging = ">=17.1"
 PyYAML = ">=5.4"
-torch = ">=2.1.0"
+torch = ">=1.10.0"
 torchmetrics = ">=0.7.0"
 tqdm = ">=4.57.0"
-typing-extensions = ">=4.4.0"
+typing-extensions = ">=4.0.0"
 
 [package.extras]
-all = ["bitsandbytes (>=0.42.0)", "deepspeed (>=0.8.2,<=0.9.3)", "hydra-core (>=1.2.0)", "ipython[all] (<8.15.0)", "jsonargparse[signatures] (>=4.27.7)", "lightning-utilities (>=0.8.0)", "matplotlib (>3.1)", "omegaconf (>=2.2.3)", "requests (<2.32.0)", "rich (>=12.3.0)", "tensorboardX (>=2.2)", "torchmetrics (>=0.10.0)", "torchvision (>=0.16.0)"]
-deepspeed = ["deepspeed (>=0.8.2,<=0.9.3)"]
-dev = ["bitsandbytes (>=0.42.0)", "cloudpickle (>=1.3)", "coverage (==7.3.1)", "deepspeed (>=0.8.2,<=0.9.3)", "fastapi", "hydra-core (>=1.2.0)", "ipython[all] (<8.15.0)", "jsonargparse[signatures] (>=4.27.7)", "lightning-utilities (>=0.8.0)", "matplotlib (>3.1)", "numpy (>=1.17.2)", "omegaconf (>=2.2.3)", "onnx (>=1.12.0)", "onnxruntime (>=1.12.0)", "pandas (>1.0)", "psutil (<5.9.6)", "pytest (==7.4.0)", "pytest-cov (==4.1.0)", "pytest-random-order (==1.1.0)", "pytest-rerunfailures (==12.0)", "pytest-timeout (==2.1.0)", "requests (<2.32.0)", "rich (>=12.3.0)", "scikit-learn (>0.22.1)", "tensorboard (>=2.9.1)", "tensorboardX (>=2.2)", "torchmetrics (>=0.10.0)", "torchvision (>=0.16.0)", "uvicorn"]
-examples = ["ipython[all] (<8.15.0)", "lightning-utilities (>=0.8.0)", "requests (<2.32.0)", "torchmetrics (>=0.10.0)", "torchvision (>=0.16.0)"]
-extra = ["bitsandbytes (>=0.42.0)", "hydra-core (>=1.2.0)", "jsonargparse[signatures] (>=4.27.7)", "matplotlib (>3.1)", "omegaconf (>=2.2.3)", "rich (>=12.3.0)", "tensorboardX (>=2.2)"]
-strategies = ["deepspeed (>=0.8.2,<=0.9.3)"]
-test = ["cloudpickle (>=1.3)", "coverage (==7.3.1)", "fastapi", "numpy (>=1.17.2)", "onnx (>=1.12.0)", "onnxruntime (>=1.12.0)", "pandas (>1.0)", "psutil (<5.9.6)", "pytest (==7.4.0)", "pytest-cov (==4.1.0)", "pytest-random-order (==1.1.0)", "pytest-rerunfailures (==12.0)", "pytest-timeout (==2.1.0)", "scikit-learn (>0.22.1)", "tensorboard (>=2.9.1)", "uvicorn"]
+all = ["colossalai (>=0.2.0)", "deepspeed (>=0.6.0)", "fairscale (>=0.4.5)", "gym[classic-control] (>=0.17.0)", "hivemind (==1.1.5)", "horovod (>=0.21.2,!=0.24.0)", "hydra-core (>=1.0.5)", "ipython[all] (<8.7.1)", "jsonargparse[signatures] (>=4.18.0)", "matplotlib (>3.1)", "omegaconf (>=2.0.5)", "rich (>=10.14.0,!=10.15.0.a)", "tensorboardX (>=2.2)", "torchmetrics (>=0.10.0)", "torchvision (>=0.11.1)"]
+colossalai = ["colossalai (>=0.2.0)"]
+deepspeed = ["deepspeed (>=0.6.0)"]
+dev = ["cloudpickle (>=1.3)", "codecov (==2.1.12)", "colossalai (>=0.2.0)", "coverage (==6.5.0)", "deepspeed (>=0.6.0)", "fairscale (>=0.4.5)", "fastapi (<0.87.0)", "gym[classic-control] (>=0.17.0)", "hivemind (==1.1.5)", "horovod (>=0.21.2,!=0.24.0)", "hydra-core (>=1.0.5)", "ipython[all] (<8.7.1)", "jsonargparse[signatures] (>=4.18.0)", "matplotlib (>3.1)", "omegaconf (>=2.0.5)", "onnx (<1.14.0)", "onnxruntime (<1.14.0)", "pandas (>1.0)", "pre-commit (==2.20.0)", "protobuf (<=3.20.1)", "psutil (<5.9.5)", "pytest (==7.2.0)", "pytest-cov (==4.0.0)", "pytest-forked (==1.4.0)", "pytest-rerunfailures (==10.3)", "rich (>=10.14.0,!=10.15.0.a)", "scikit-learn (>0.22.1)", "tensorboard (>=2.9.1)", "tensorboardX (>=2.2)", "torchmetrics (>=0.10.0)", "torchvision (>=0.11.1)", "uvicorn (<0.19.1)"]
+examples = ["gym[classic-control] (>=0.17.0)", "ipython[all] (<8.7.1)", "torchmetrics (>=0.10.0)", "torchvision (>=0.11.1)"]
+extra = ["hydra-core (>=1.0.5)", "jsonargparse[signatures] (>=4.18.0)", "matplotlib (>3.1)", "omegaconf (>=2.0.5)", "rich (>=10.14.0,!=10.15.0.a)", "tensorboardX (>=2.2)"]
+fairscale = ["fairscale (>=0.4.5)"]
+hivemind = ["hivemind (==1.1.5)"]
+horovod = ["horovod (>=0.21.2,!=0.24.0)"]
+strategies = ["colossalai (>=0.2.0)", "deepspeed (>=0.6.0)", "fairscale (>=0.4.5)", "hivemind (==1.1.5)", "horovod (>=0.21.2,!=0.24.0)"]
+test = ["cloudpickle (>=1.3)", "codecov (==2.1.12)", "coverage (==6.5.0)", "fastapi (<0.87.0)", "onnx (<1.14.0)", "onnxruntime (<1.14.0)", "pandas (>1.0)", "pre-commit (==2.20.0)", "protobuf (<=3.20.1)", "psutil (<5.9.5)", "pytest (==7.2.0)", "pytest-cov (==4.0.0)", "pytest-forked (==1.4.0)", "pytest-rerunfailures (==10.3)", "scikit-learn (>0.22.1)", "tensorboard (>=2.9.1)", "uvicorn (<0.19.1)"]
 
 [[package]]
 name = "pytz"
@@ -7188,6 +7269,32 @@ develop = ["colorama", "cython (>=0.29.33)", "cython (>=3.0.10,<4)", "flake8", "
 docs = ["ipykernel", "jupyter-client", "matplotlib", "nbconvert", "nbformat", "numpydoc", "pandas-datareader", "sphinx"]
 
 [[package]]
+name = "swyft"
+version = "0.4.5"
+description = "Universal scalable simulation-based inference with TMNRE (Truncated Marginal Neural Ratio Estimation) and pytorch-lightning."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "swyft-0.4.5-py3-none-any.whl", hash = "sha256:0b323f2fba2cae1d33f3900d3b081beb72489a76b8bf7838e3b585ea058413bc"},
+    {file = "swyft-0.4.5.tar.gz", hash = "sha256:59b7c8f846fa858c20b15b3fdc7555386a644ef40fb76aedd60277448f61ddf4"},
+]
+
+[package.dependencies]
+fasteners = ">=0.17"
+matplotlib = ">=3.1.3"
+numpy = ">=1.18.1"
+pytorch-lightning = ">=1.5.10,<=1.9.5"
+scipy = ">=1.4.1"
+toolz = ">=0.10.0"
+torch = ">=1.10.2"
+torchist = ">=0.1.7"
+zarr = ">=2.5.0"
+
+[package.extras]
+dev = ["black", "isort", "pre-commit", "pytest"]
+docs = ["furo", "ipykernel", "nbsphinx", "nbsphinx-link", "sphinx", "sphinxcontrib-bibtex"]
+
+[[package]]
 name = "sympy"
 version = "1.13.2"
 description = "Computer algebra system (CAS) in Python"
@@ -7413,6 +7520,20 @@ full = ["ase", "captum (<0.7.0)", "graphviz", "h5py", "matplotlib", "networkx", 
 graphgym = ["hydra-core", "protobuf (<4.21)", "pytorch-lightning", "yacs"]
 modelhub = ["huggingface_hub"]
 test = ["onnx", "onnxruntime", "pytest", "pytest-cov"]
+
+[[package]]
+name = "torchist"
+version = "0.2.3"
+description = "NumPy-style histograms in PyTorch"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "torchist-0.2.3-py3-none-any.whl", hash = "sha256:887702fc55aa74bccebc00c7e9238407844a548443aecc773a5e3985496e103b"},
+    {file = "torchist-0.2.3.tar.gz", hash = "sha256:56423cceb5deb843faaa8b4dbbefc4a6b5ea72a5d5f49b43dc26f32f616d182b"},
+]
+
+[package.dependencies]
+torch = ">=1.6.0"
 
 [[package]]
 name = "torchmetrics"
@@ -8425,6 +8546,27 @@ notebook = ["ipywidgets (>=7.5.1)", "jupyter (>=1.0.0)"]
 unicode = ["tangled-up-in-unicode (==0.2.0)"]
 
 [[package]]
+name = "zarr"
+version = "2.18.3"
+description = "An implementation of chunked, compressed, N-dimensional arrays for Python"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "zarr-2.18.3-py3-none-any.whl", hash = "sha256:b1f7dfd2496f436745cdd4c7bcf8d3b4bc1dceef5fdd0d589c87130d842496dd"},
+    {file = "zarr-2.18.3.tar.gz", hash = "sha256:2580d8cb6dd84621771a10d31c4d777dca8a27706a1a89b29f42d2d37e2df5ce"},
+]
+
+[package.dependencies]
+asciitree = "*"
+fasteners = {version = "*", markers = "sys_platform != \"emscripten\""}
+numcodecs = ">=0.10.0"
+numpy = ">=1.24"
+
+[package.extras]
+docs = ["numcodecs[msgpack]", "numpydoc", "pydata-sphinx-theme", "sphinx", "sphinx-automodapi", "sphinx-copybutton", "sphinx-design", "sphinx-issues"]
+jupyter = ["ipytree (>=0.2.2)", "ipywidgets (>=8.0.0)", "notebook"]
+
+[[package]]
 name = "zict"
 version = "3.0.0"
 description = "Mutable mapping tools"
@@ -8450,7 +8592,25 @@ files = [
 doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
 test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-itertools", "pytest (>=6,!=8.1.*)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy", "pytest-ruff (>=0.2.1)"]
 
+[[package]]
+name = "zuko"
+version = "1.2.0"
+description = "Normalizing flows in PyTorch"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "zuko-1.2.0-py3-none-any.whl", hash = "sha256:ec169e5b2b50c96c4b52bc40911caf998cbe6d660fa6bd31563080ed8e57e160"},
+    {file = "zuko-1.2.0.tar.gz", hash = "sha256:b78decbe919fa07afe2fecce43eadf8ea118ba057b4e6cf8fd2cbd366019af76"},
+]
+
+[package.dependencies]
+numpy = ">=1.20.0"
+torch = ">=1.12.0"
+
+[package.extras]
+dev = ["pre-commit", "pytest", "ruff"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "6bcfc75618c28b6af9dd2994cfc656b418c44ad303645f8fcab8634415b3afbc"
+content-hash = "683be637a6a8a8c72ad256b5009268724ef81af2d7f53ee6c1cd9b41863f1272"
