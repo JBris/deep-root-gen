@@ -267,20 +267,18 @@ def perform_data_task(
             neg_log_p = loss(theta, x)
             step(neg_log_p)
 
-        observed_data_content = input_parameters.observed_data_content
-        raw_edge_content = input_parameters.raw_edge_content
-        node_df, edge_df = G.from_content_string(
-            observed_data_content, raw_edge_content
-        )
-        G = G.as_torch(node_df, edge_df, drop=True)
-        x_star = process_graph(G, organ_keys, transform)
+    observed_data_content = input_parameters.observed_data_content
+    raw_edge_content = input_parameters.raw_edge_content
+    node_df, edge_df = G.from_content_string(observed_data_content, raw_edge_content)
+    G = G.as_torch(node_df, edge_df, drop=True)
+    x_star = process_graph(G, organ_keys, transform)
 
-        n_draws = calibration_parameters["pp_samples"]
-        estimator.eval()
-        with torch.no_grad():
-            samples = estimator.flow(x_star).sample((n_draws,))
+    n_draws = calibration_parameters["pp_samples"]
+    estimator.eval()
+    with torch.no_grad():
+        samples = estimator.flow(x_star).sample((n_draws,))
 
-        return estimator, samples, node_df, edge_df, loader
+    return estimator, samples, node_df, edge_df, loader
 
 
 @task
