@@ -51,10 +51,15 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Calibration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.model_versioning">Model Versioning</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.AbcModel"><code class="docutils literal notranslate"><span class="pre">AbcModel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor"><code class="docutils literal notranslate"><span class="pre">GraphFlowFeatureExtractor</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.OptimisationModel"><code class="docutils literal notranslate"><span class="pre">OptimisationModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.SensitivityAnalysisModel"><code class="docutils literal notranslate"><span class="pre">SensitivityAnalysisModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.SnpeModel"><code class="docutils literal notranslate"><span class="pre">SnpeModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.model_versioning.log_model"><code class="docutils literal notranslate"><span class="pre">log_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.parameters">Parameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.parameters.PriorCollection"><code class="docutils literal notranslate"><span class="pre">PriorCollection</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.summary_statistics">Summary Statistics</a><ul>
@@ -147,6 +152,68 @@
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
 <dt>pd.DataFrame:</dt><dd><p>The model prediction.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.model_versioning.</span></span><span class="sig-name descname"><span class="pre">GraphFlowFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta_dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">organ_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">organ_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#GraphFlowFeatureExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor" title="Link to this definition"></a></dt>
+<dd><p>A graph feature extractor for density estimation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#GraphFlowFeatureExtractor.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.encode" title="Link to this definition"></a></dt>
+<dd><p>Construct graph embeddings from nodes and edges.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>x (torch.Tensor):</dt><dd><p>The node features.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>torch.Tensor:</dt><dd><p>The graph embeddings.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.flow">
+<span class="sig-name descname"><span class="pre">flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Distribution</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#GraphFlowFeatureExtractor.flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.flow" title="Link to this definition"></a></dt>
+<dd><p>Evaluate the normalising flow.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>x (torch.Tensor):</dt><dd><p>The node and edge data.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>dist.Distribution:</dt><dd><p>The normalising flow.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/model_versioning.html#GraphFlowFeatureExtractor.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.forward" title="Link to this definition"></a></dt>
+<dd><p>The forward pass.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>theta (torch.Tensor):</dt><dd><p>The batch of parameter vectors.</p>
+</dd>
+<dt>x (torch.Tensor):</dt><dd><p>The batch tensor.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>torch.Tensor:</dt><dd><p>The graph embedding.</p>
 </dd>
 </dl>
 </dd>
@@ -316,6 +383,35 @@
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+</section>
+<section id="module-deeprootgen.calibration.parameters">
+<span id="parameters"></span><h2>Parameters<a class="headerlink" href="#module-deeprootgen.calibration.parameters" title="Link to this heading"></a></h2>
+<p>Contains utilities for working with simulation parameters and their distributions.</p>
+<p>This module defines various utlities for working with distributions of simulation parameters.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.calibration.parameters.PriorCollection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.parameters.</span></span><span class="sig-name descname"><span class="pre">PriorCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Distribution</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/calibration/parameters.html#PriorCollection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.parameters.PriorCollection" title="Link to this definition"></a></dt>
+<dd><p>A wrapper around a collection of priors.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeprootgen.calibration.parameters.PriorCollection.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/parameters.html#PriorCollection.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.parameters.PriorCollection.sample" title="Link to this definition"></a></dt>
+<dd><p>Sample from the priors.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>batch_shape (tuple, optional):</dt><dd><p>The batch shape of the sampled priors. Defaults to ().</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>torch.Tensor:</dt><dd><p>The sampled priors.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

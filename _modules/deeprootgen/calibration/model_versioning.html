@@ -84,9 +84,17 @@
 <span class="kn">import</span> <span class="nn">mlflow</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">zuko</span>
+<span class="kn">from</span> <span class="nn">lampe.inference</span> <span class="kn">import</span> <span class="n">NPE</span>
 <span class="kn">from</span> <span class="nn">mlflow.client</span> <span class="kn">import</span> <span class="n">MlflowClient</span>
 <span class="kn">from</span> <span class="nn">mlflow.models</span> <span class="kn">import</span> <span class="n">infer_signature</span>
 <span class="kn">from</span> <span class="nn">mlflow.pyfunc.context</span> <span class="kn">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.nn</span> <span class="kn">import</span> <span class="n">SAGEConv</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.nn.pool</span> <span class="kn">import</span> <span class="n">global_max_pool</span>
 
 <span class="kn">from</span> <span class="nn">..data_model</span> <span class="kn">import</span> <span class="n">RootCalibrationModel</span>
 
@@ -417,6 +425,131 @@
 
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">posterior_samples</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="GraphFlowFeatureExtractor">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor">[docs]</a>
+<span class="k">class</span> <span class="nc">GraphFlowFeatureExtractor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A graph feature extractor for density estimation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">theta_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">organ_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">hidden_features</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">transforms</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">organ_features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;GraphFlowFeatureExtractor constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            organ_keys (list[str]):</span>
+<span class="sd">                The list of organ keys for grouping organ features.</span>
+<span class="sd">            hidden_features (tuple[float]):</span>
+<span class="sd">                The number of hidden features for the normalising flow.</span>
+<span class="sd">            transforms (tuple[float]):</span>
+<span class="sd">                The number of autoregressive transformations.</span>
+<span class="sd">            organ_features (list[str]):</span>
+<span class="sd">                The list of organ feature names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">organ_keys</span> <span class="o">=</span> <span class="n">organ_keys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">organ_features</span> <span class="o">=</span> <span class="n">organ_features</span>
+
+        <span class="n">num_organ_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">organ_features</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_organ_features</span> <span class="o">=</span> <span class="n">num_organ_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">SAGEConv</span><span class="p">(</span>
+            <span class="n">num_organ_features</span><span class="p">,</span>
+            <span class="n">num_organ_features</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">aggr</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+            <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">SAGEConv</span><span class="p">(</span>
+            <span class="n">num_organ_features</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">num_organ_features</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">aggr</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+            <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">num_organ_features</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num_organ_features</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">global_max_pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">npe</span> <span class="o">=</span> <span class="n">NPE</span><span class="p">(</span>
+            <span class="n">theta_dim</span><span class="o">=</span><span class="n">theta_dim</span><span class="p">,</span>
+            <span class="n">x_dim</span><span class="o">=</span><span class="n">num_organ_features</span><span class="p">,</span>
+            <span class="n">build</span><span class="o">=</span><span class="n">zuko</span><span class="o">.</span><span class="n">flows</span><span class="o">.</span><span class="n">NSF</span><span class="p">,</span>
+            <span class="n">hidden_features</span><span class="o">=</span><span class="p">[</span><span class="n">hidden_features</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">transforms</span><span class="o">=</span><span class="n">transforms</span><span class="p">,</span>
+            <span class="n">activation</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">ELU</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="GraphFlowFeatureExtractor.encode">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.encode">[docs]</a>
+    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct graph embeddings from nodes and edges.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor):</span>
+<span class="sd">                The node features.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor:</span>
+<span class="sd">                The graph embeddings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">batch_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">batch_index</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="GraphFlowFeatureExtractor.forward">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The forward pass.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            theta (torch.Tensor):</span>
+<span class="sd">                The batch of parameter vectors.</span>
+<span class="sd">            x (torch.Tensor):</span>
+<span class="sd">                The batch tensor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor:</span>
+<span class="sd">                The graph embedding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npe</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="GraphFlowFeatureExtractor.flow">
+<a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor.flow">[docs]</a>
+    <span class="k">def</span> <span class="nf">flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">dist</span><span class="o">.</span><span class="n">Distribution</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the normalising flow.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (torch.Tensor):</span>
+<span class="sd">                The node and edge data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dist.Distribution:</span>
+<span class="sd">                The normalising flow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npe</span><span class="o">.</span><span class="n">flow</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
 </div>
 
 </pre></div>

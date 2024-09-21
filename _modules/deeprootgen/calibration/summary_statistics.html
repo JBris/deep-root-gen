@@ -119,9 +119,12 @@
             <span class="n">distance</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">()</span>
             <span class="n">distance_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
 
-    <span class="n">statistics_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">statistics_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SummaryStatisticsModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">summary_statistics</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">distance_metrics</span><span class="p">,</span> <span class="n">statistics_list</span>
+
     <span class="n">input_statistics</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">summary_statistic</span> <span class="ow">in</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">summary_statistics</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+    <span class="k">for</span> <span class="n">summary_statistic</span> <span class="ow">in</span> <span class="n">input_parameters</span><span class="o">.</span><span class="n">summary_statistics</span><span class="p">:</span>
         <span class="n">statistics_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">summary_statistic</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
         <span class="n">input_statistics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">summary_statistic</span><span class="o">.</span><span class="n">statistic_name</span><span class="p">)</span>
 

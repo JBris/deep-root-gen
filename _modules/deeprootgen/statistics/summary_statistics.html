@@ -755,6 +755,8 @@
 <span class="sd">                The area of the convex hull.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">coordinates</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">coordinates</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">hull</span><span class="o">.</span><span class="n">area</span></div>
 </div>
@@ -785,6 +787,8 @@
 <span class="sd">                The volume of the convex hull.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">coordinates</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">coordinates</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">hull</span><span class="o">.</span><span class="n">volume</span></div>
 </div>
