@@ -685,10 +685,32 @@ components:
   snpe:
     collapsible: true
     children:
+      - id: lr-input
+        param: lr
+        label: Learning rate
+        help: The learning rate for training the Sequential Neural Posterior Estimation model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.0
+          step: 0.01
+          value: 0.01
+          persistence: true
+      - id: num-epochs-snpe-input
+        param: n_epochs
+        label: Number of epochs
+        help: The number of epochs for training the Sequential Neural Posterior Estimation model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 5
+          persistence: true
       - id: num-simulations-snpe-input
         param: n_simulations
         label: Number of simulations
-        help: The number of simulations to run for training the Sequential Neural Posterior Estimation model
+        help: The number of simulations to run for training the Sequential Neural Posterior Estimation model. When supplying graph data, this refers to each epoch.
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number

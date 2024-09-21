@@ -9,9 +9,17 @@ import bentoml
 import mlflow
 import numpy as np
 import pandas as pd
+import torch
+import torch.distributions as dist
+import torch.nn as nn
+import torch.nn.functional as F
+import zuko
+from lampe.inference import NPE
 from mlflow.client import MlflowClient
 from mlflow.models import infer_signature
 from mlflow.pyfunc.context import Context
+from torch_geometric.nn import SAGEConv
+from torch_geometric.nn.pool import global_max_pool
 
 from ..data_model import RootCalibrationModel
 
@@ -305,3 +313,116 @@ class SnpeModel(mlflow.pyfunc.PythonModel):
 
         df = pd.DataFrame(posterior_samples, columns=names)
         return df
+
+
+class GraphFlowFeatureExtractor(torch.nn.Module):
+    """A graph feature extractor for density estimation."""
+
+    def __init__(
+        self,
+        theta_dim: int,
+        organ_keys: list[str],
+        hidden_features: tuple[float],
+        transforms: tuple[float],
+        organ_features: list[str],
+    ) -> None:
+        """GraphFlowFeatureExtractor constructor.
+
+        Args:
+            organ_keys (list[str]):
+                The list of organ keys for grouping organ features.
+            hidden_features (tuple[float]):
+                The number of hidden features for the normalising flow.
+            transforms (tuple[float]):
+                The number of autoregressive transformations.
+            organ_features (list[str]):
+                The list of organ feature names.
+        """
+        super().__init__()
+        self.organ_keys = organ_keys
+        self.organ_features = organ_features
+
+        num_organ_features = len(organ_features)
+        self.num_organ_features = num_organ_features
+        self.conv1 = SAGEConv(
+            num_organ_features,
+            num_organ_features * 4,
+            aggr="mean",
+            normalize=True,
+            bias=True,
+        )
+        self.conv2 = SAGEConv(
+            num_organ_features * 4,
+            num_organ_features * 2,
+            aggr="mean",
+            normalize=True,
+            bias=True,
+        )
+
+        self.fc = torch.nn.Linear(num_organ_features * 2, num_organ_features)
+        self.pool = global_max_pool
+        self.activation = F.elu
+
+        self.npe = NPE(
+            theta_dim=theta_dim,
+            x_dim=num_organ_features,
+            build=zuko.flows.NSF,
+            hidden_features=[hidden_features] * 4,
+            transforms=transforms,
+            activation=nn.ELU,
+        )
+
+    def encode(self, x: torch.Tensor) -> torch.Tensor:
+        """Construct graph embeddings from nodes and edges.
+
+        Args:
+            x (torch.Tensor):
+                The node features.
+
+        Returns:
+            torch.Tensor:
+                The graph embeddings.
+        """
+        x, edge_index = x
+        batch_index = torch.Tensor(np.repeat(0, x.shape[0])).type(torch.int64)
+
+        x = self.conv1(x, edge_index)
+        x = self.activation(x)
+        x = self.conv2(x, edge_index)
+        x = self.activation(x)
+        x = self.pool(x, batch_index)
+        x = self.activation(x)
+        x = self.fc(x)
+        return x.squeeze()
+
+    def forward(self, theta: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
+        """The forward pass.
+
+        Args:
+            theta (torch.Tensor):
+                The batch of parameter vectors.
+            x (torch.Tensor):
+                The batch tensor.
+
+        Returns:
+            torch.Tensor:
+                The graph embedding.
+        """
+        x = self.encode(x)
+        x = self.npe(theta, x)
+        return x
+
+    def flow(self, x: tuple[torch.Tensor]) -> dist.Distribution:
+        """Evaluate the normalising flow.
+
+        Args:
+            x (torch.Tensor):
+                The node and edge data.
+
+        Returns:
+            dist.Distribution:
+                The normalising flow.
+        """
+        x = self.encode(x)
+        x = self.npe.flow(x)
+        return x

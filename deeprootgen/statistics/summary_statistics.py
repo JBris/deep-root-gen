@@ -574,6 +574,8 @@ class ConvexHullArea(SummaryStatisticBase):
                 The area of the convex hull.
         """
         coordinates = df[["x", "y", "z"]].values
+        if not np.any(coordinates):
+            return -1
         hull = ConvexHull(points=coordinates)
         return hull.area
 
@@ -598,6 +600,8 @@ class ConvexHullVolume(SummaryStatisticBase):
                 The volume of the convex hull.
         """
         coordinates = df[["x", "y", "z"]].values
+        if not np.any(coordinates):
+            return -1
         hull = ConvexHull(points=coordinates)
         return hull.volume
 

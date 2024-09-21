@@ -10,7 +10,10 @@ from io import StringIO
 from typing import List
 
 import networkx as nx
+import numpy as np
 import pandas as pd
+import torch
+import torch_geometric.transforms as T
 from torch_geometric.data import Data
 from torch_geometric.utils import from_networkx
 
@@ -321,3 +324,33 @@ class RootSystemGraph:
         edge_df = pd.read_csv(StringIO(decoded_edge))
 
         return node_df, edge_df
+
+
+def process_graph(
+    G: nx.Graph, organ_keys: str, transform: T.Compose
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Process a new NetworkX graph.
+
+    Args:
+        G (nx.Graph):
+            The NetworkX graph.
+        organ_keys (str):
+            The list of organ keys within the graph data object.
+        transform (T.Compose)
+            The composition of graph transformations.
+
+    Returns:
+        tuple:
+            The node and edge features.
+    """
+    for k in organ_keys:
+        G[k] = torch.Tensor(pd.DataFrame(G[k]).values).double()
+
+    train_data = transform(G)
+    organ_features = []
+    for k in organ_keys:
+        organ_features.append(train_data[k])
+
+    x = torch.Tensor(np.hstack(organ_features))
+    edge_index = train_data.edge_index
+    return x, edge_index

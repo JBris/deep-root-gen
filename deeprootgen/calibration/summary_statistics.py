@@ -42,9 +42,12 @@ def get_calibration_summary_stats(input_parameters: RootCalibrationModel) -> tup
             distance = distance_func()
             distance_metrics.append(distance)
 
-    statistics_list = []
+    statistics_list: list[SummaryStatisticsModel] = []
+    if input_parameters.summary_statistics is None:
+        return distance_metrics, statistics_list
+
     input_statistics = []
-    for summary_statistic in input_parameters.summary_statistics:  # type: ignore
+    for summary_statistic in input_parameters.summary_statistics:
         statistics_list.append(summary_statistic.dict())
         input_statistics.append(summary_statistic.statistic_name)
 
