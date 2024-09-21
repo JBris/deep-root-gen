@@ -61,6 +61,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.parameters">Parameters</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.parameters.PriorCollection"><code class="docutils literal notranslate"><span class="pre">PriorCollection</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.parameters.get_simulation_parameters"><code class="docutils literal notranslate"><span class="pre">get_simulation_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.parameters.lhc_sample"><code class="docutils literal notranslate"><span class="pre">lhc_sample()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.summary_statistics">Summary Statistics</a><ul>
@@ -68,6 +69,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.summary_statistics.calculate_summary_statistics"><code class="docutils literal notranslate"><span class="pre">calculate_summary_statistics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.summary_statistics.get_calibration_summary_stats"><code class="docutils literal notranslate"><span class="pre">get_calibration_summary_stats()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.summary_statistics.run_calibration_simulation"><code class="docutils literal notranslate"><span class="pre">run_calibration_simulation()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeprootgen.calibration.surrogates">Surrogates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeprootgen.calibration.surrogates.EarlyStopper"><code class="docutils literal notranslate"><span class="pre">EarlyStopper</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -433,6 +438,24 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="deeprootgen.calibration.parameters.lhc_sample">
+<span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.parameters.</span></span><span class="sig-name descname"><span class="pre">lhc_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationModel" title="deeprootgen.data_model.simulation_data_models.RootCalibrationModel"><span class="pre">RootCalibrationModel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/deeprootgen/calibration/parameters.html#lhc_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.parameters.lhc_sample" title="Link to this definition"></a></dt>
+<dd><p>Sample from the parameter space.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>input_parameters (RootCalibrationModel):</dt><dd><p>The root calibration data model.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>pd.DataFrame:</dt><dd><p>The sample dataframe.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-deeprootgen.calibration.summary_statistics">
 <span id="summary-statistics"></span><h2>Summary Statistics<a class="headerlink" href="#module-deeprootgen.calibration.summary_statistics" title="Link to this heading"></a></h2>
@@ -525,6 +548,17 @@
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+</section>
+<section id="module-deeprootgen.calibration.surrogates">
+<span id="surrogates"></span><h2>Surrogates<a class="headerlink" href="#module-deeprootgen.calibration.surrogates" title="Link to this heading"></a></h2>
+<p>Contains methods for implementing surrogate models for the root generator.</p>
+<p>This module defines various utlities and methods for working with surrogate models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeprootgen.calibration.surrogates.EarlyStopper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeprootgen.calibration.surrogates.</span></span><span class="sig-name descname"><span class="pre">EarlyStopper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deeprootgen/calibration/surrogates.html#EarlyStopper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeprootgen.calibration.surrogates.EarlyStopper" title="Link to this definition"></a></dt>
+<dd><p>Early stopping for training.</p>
 </dd></dl>
 
 </section>
