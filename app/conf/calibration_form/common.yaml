@@ -685,6 +685,34 @@ components:
   surrogate:
     collapsible: true
     children:
+      - id: include-parameters-dropdown
+        param: include_parameters 
+        label: Include parameters
+        help: Select the simulation parameters to sample from when training the surrogate model. If both "Include parameters" and "Exclude parameters" are empty, then all parameters will be sampled from
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.calibration.get_simulation_parameters
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select include parameters
+          persistence: true
+      - id: exclude-parameters-dropdown
+        param: exclude_parameters 
+        label: Exclude parameters
+        help: Select the simulation parameters to excldue from sampling from when training the surrogate model. If both "Include parameters" and "Exclude parameters" are empty, then all parameters will be sampled from
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.calibration.get_simulation_parameters
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select exclude parameters
+          persistence: true
       - id: lr-input
         param: lr
         label: Learning rate

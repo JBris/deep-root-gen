@@ -405,7 +405,6 @@ def update_input_output_data_state(simulation_data: dict) -> tuple:
     Input({"index": f"{PAGE_ID}-select-summary-stats-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-distance-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-use-cost-emulation-switch", "type": ALL}, "on"),
-    Input({"index": f"{PAGE_ID}-input-column-dropdown", "type": ALL}, "value"),
     Input({"index": f"{PAGE_ID}-output-column-dropdown", "type": ALL}, "value"),
 )
 def update_uploaded_data_state(
@@ -415,7 +414,6 @@ def update_uploaded_data_state(
     summary_stats: list,
     distances: list,
     use_cost_emulations: list[bool],
-    input_column_list: list[str],
     output_column_list: list[str],
 ) -> tuple:
     """Update the state of the uploaded data.
@@ -433,8 +431,6 @@ def update_uploaded_data_state(
             The list of distance metrics.
         use_cost_emulations (list):
             Whether to use cost emulation rather than output emulation.
-        input_column_list (list):
-            The list of simulation input data.
         output_column_list (list):
             The list of simulation output data.
 
@@ -486,7 +482,6 @@ def update_uploaded_data_state(
 
     stats_list = summary_stats[0]
     distance = distances[0]
-    input_columns = input_column_list[0]
     output_columns = output_column_list[0]
 
     if not run_disabled:
@@ -496,9 +491,9 @@ def update_uploaded_data_state(
             elif stats_list[0] is None or distance[0] is None:
                 run_disabled = True
         else:
-            if len(input_columns) == 0 or len(output_columns) == 0:
+            if len(output_columns) == 0:
                 run_disabled = True
-            elif input_columns[0] is None or output_columns[0] is None:
+            elif output_columns[0] is None:
                 run_disabled = True
 
     return [stats_bttn], [sim_bttn], [edge_bttn], [run_disabled], [clear_disabled]

@@ -6,7 +6,7 @@ from .model_versioning import (
     SnpeModel,
     log_model,
 )
-from .parameters import PriorCollection
+from .parameters import PriorCollection, get_simulation_parameters
 from .summary_statistics import (
     calculate_summary_statistic_discrepancy,
     calculate_summary_statistics,

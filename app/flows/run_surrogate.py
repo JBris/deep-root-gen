@@ -22,6 +22,7 @@ from matplotlib import pyplot as plt
 from prefect import flow, task
 from prefect.artifacts import create_table_artifact
 from prefect.task_runners import SequentialTaskRunner
+from scipy.stats import qmc
 
 from deeprootgen.calibration import (
     AbcModel,
@@ -57,6 +58,9 @@ TASK = "surrogate"
 ######################################
 # Main
 ######################################
+
+# class SurrogateSampler:
+#     def sample() -> pd.DataFrame:
 
 
 @task
