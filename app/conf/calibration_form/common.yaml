@@ -682,6 +682,136 @@ components:
           clearable: true
           placeholder: Select distance metric
           persistence: true
+  surrogate:
+    collapsible: true
+    children:
+      - id: lr-input
+        param: lr
+        label: Learning rate
+        help: The learning rate for training the surrogate model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.0
+          step: 0.01
+          value: 0.01
+          persistence: true
+      - id: num-epochs-snpe-input
+        param: n_epochs
+        label: Number of epochs
+        help: The number of epochs for training the surrogate model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 5
+          persistence: true
+      - id: num-simulations-snpe-input
+        param: n_simulations
+        label: Number of simulations
+        help: The number of simulations to run for training the surrogate model. Parameter sets are constructed using Latin Hypercube sampling
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 5
+          persistence: true
+      - id: num-holdout-simulations-snpe-input
+        param: n_holdout_simulations
+        label: Number of holdout simulations
+        help: The number of simulations to evaluate the fidelity of the surrogate model. Parameter sets are constructed using Latin Hypercube sampling
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 1
+          persistence: true
+      - id: use-cost-emulation-switch
+        param: use_summary_statistics
+        label: Use cost emulation
+        help: Whether to train a surrogate model on the discrepancy between simulated and observed data (cost emulation), rather than simulation output data (output emulation)
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
+      - id: select-summary-stats-dropdown
+        param: summary_statistics
+        label: Summary statistics  
+        help: Select summary statistics for comparing simulated and observed data
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_summary_statistics
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select summary statistics
+          persistence: true
+      - id: stat-by-soil-layer-switch
+        param: stat_by_soil_layer
+        label: Statistics by soil layer
+        help: Enable the calculation of summary statistics by soil layer within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
+      - id: stat-by-soil-col-switch
+        param: stat_by_soil_column
+        label: Statistics by soil column
+        help: Enable the calculation of summary statistics by soil column within the voxel grid
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        handler: boolean_switch
+        statistic_parameter: true
+        kwargs: 
+          persistence: true
+      - id: distance-dropdown
+        param: distance_metrics
+        label: Distance metrics
+        help: The distance metrics to calculate the dissimilarity value
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.statistics.get_distance_metrics
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select distance metric
+          persistence: true
+      - id: input-column-dropdown
+        param: input_columns
+        label: Input columns
+        help: Select the input columns when training the surrogate on simulation output data (output emulation)
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: list
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select input columns
+          persistence: true
+      - id: output-column-dropdown
+        param: output_columns
+        label: Output columns
+        help: Select the output columns when training the surrogate on simulation output data (output emulation)
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: list
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select output columns
+          persistence: true
   snpe:
     collapsible: true
     children:

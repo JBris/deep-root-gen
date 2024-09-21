@@ -53,3 +53,10 @@ deployments:
   parameters: {}
   work_pool:
     name: default
+
+- name: run_surrogate_flow
+  description: Train a surrogate model for the root model.
+  entrypoint: /app/flows/run_surrogate.py:run_surrogate_flow
+  parameters: {}
+  work_pool:
+    name: default
