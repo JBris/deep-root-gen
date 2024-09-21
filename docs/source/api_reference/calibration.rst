@@ -18,3 +18,9 @@ Summary Statistics
 
 .. automodule:: deeprootgen.calibration.summary_statistics
    :members:
+
+Surrogates
+----------
+
+.. automodule:: deeprootgen.calibration.surrogates
+   :members:

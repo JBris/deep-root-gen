@@ -13,5 +13,6 @@ from .simulation_data_models import (
     RootSimulationModel,
     RootType,
     RootTypeModel,
+    StatisticsComparisonModel,
     SummaryStatisticsModel,
 )

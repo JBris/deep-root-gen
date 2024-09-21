@@ -724,7 +724,7 @@ components:
           step: 0.01
           value: 0.01
           persistence: true
-      - id: num-epochs-snpe-input
+      - id: num-epochs-surrogate-input
         param: n_epochs
         label: Number of epochs
         help: The number of epochs for training the surrogate model
@@ -735,7 +735,29 @@ components:
           step: 1
           value: 5
           persistence: true
-      - id: num-simulations-snpe-input
+      - id: early-stopping-surrogate-input
+        param: early_stopping_patience
+        label: Early stopping
+        help: The patience (in terms of epochs) for performing early stopping with training the surrogate model
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 5
+          persistence: true
+      - id: num-inducing-points-input
+        param: num_inducing_points
+        label: Number of inducing points
+        help: The number of inducing points to train the Gaussian process surrogate model. A smaller value will result in a faster training time, but poorer accuracy
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 64
+          persistence: true
+      - id: num-simulations-surrogate-input
         param: n_simulations
         label: Number of simulations
         help: The number of simulations to run for training the surrogate model. Parameter sets are constructed using Latin Hypercube sampling
@@ -746,10 +768,21 @@ components:
           step: 1
           value: 5
           persistence: true
-      - id: num-holdout-simulations-snpe-input
+      - id: num-validation-simulations-surrogate-input
+        param: n_validation_simulations
+        label: Number of validation simulations
+        help: The number of simulations for early stopping of training
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 1
+          persistence: true
+      - id: num-holdout-simulations-surrogate-input
         param: n_holdout_simulations
         label: Number of holdout simulations
-        help: The number of simulations to evaluate the fidelity of the surrogate model. Parameter sets are constructed using Latin Hypercube sampling
+        help: The number of simulations to evaluate the fidelity of the surrogate model
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
