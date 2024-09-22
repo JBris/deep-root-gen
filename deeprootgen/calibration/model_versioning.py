@@ -6,6 +6,7 @@ This module defines MLflow compatible models for versioning and deployment as mi
 from typing import Any
 
 import bentoml
+import gpytorch
 import mlflow
 import numpy as np
 import pandas as pd
@@ -14,6 +15,7 @@ import torch.distributions as dist
 import torch.nn as nn
 import torch.nn.functional as F
 import zuko
+from gpytorch.models import ApproximateGP
 from lampe.inference import NPE
 from mlflow.client import MlflowClient
 from mlflow.models import infer_signature
@@ -22,6 +24,7 @@ from torch_geometric.nn import SAGEConv
 from torch_geometric.nn.pool import global_max_pool
 
 from ..data_model import RootCalibrationModel
+from .surrogates import SingleTaskVariationalGPModel
 
 
 def log_model(
@@ -32,6 +35,7 @@ def log_model(
     simulation_uuid: str,
     signature_x: pd.DataFrame | np.ndarray | list | None = None,
     signature_y: pd.DataFrame | np.ndarray | list | None = None,
+    model_config: dict = None,  # type: ignore [assignment]
 ) -> None:
     """Log the calibrator model to the registry.
 
@@ -49,7 +53,9 @@ def log_model(
         signature_x (pd.DataFrame | np.ndarray | list | None, optional):
             The signature for data inputs. Defaults to None.
         signature_y (pd.DataFrame | np.ndarray | list | None, optional):
-            The signature for data outputs. Defaults to None.. Defaults to None.
+            The signature for data outputs. Defaults to None.
+        model_config (dict, optional):
+            The model configuration. Defaults to None.
     """
     if signature_x is None and signature_y is None:
         signature = None
@@ -61,6 +67,7 @@ def log_model(
         artifact_path=task,
         artifacts=artifacts,
         signature=signature,
+        model_config=model_config,
     )
     model_uri = logged_model.model_uri
     model_version = mlflow.register_model(
@@ -426,3 +433,97 @@ class GraphFlowFeatureExtractor(torch.nn.Module):
         x = self.encode(x)
         x = self.npe.flow(x)
         return x
+
+
+class SurrogateModel(mlflow.pyfunc.PythonModel):
+    """A surrogate calibration model."""
+
+    def __init__(self) -> None:
+        """The SurrogateModel constructor."""
+        self.task = "surrogate"
+        self.state_dict = None
+        self.X_scaler = None
+        self.Y_scaler = None
+        self.model = None
+        self.likelihood = None
+        self.column_names = None
+
+    def load_context(self, context: Context) -> None:
+        """Load the model context.
+
+        Args:
+            context (Context):
+                The model context.
+        """
+        import joblib
+
+        def load_data(k: str) -> Any:
+            artifact = context.artifacts[k]
+            return joblib.load(artifact)
+
+        state_dict_path = context.artifacts["state_dict"]
+        self.state_dict = torch.load(state_dict_path)
+
+        if context.model_config["surrogate_type"] == "cost_emulator":
+            inducing_points_path = context.artifacts["inducing_points"]
+            inducing_points = torch.load(inducing_points_path).double()
+            self.model = SingleTaskVariationalGPModel(inducing_points).double()
+            self.likelihood = gpytorch.likelihoods.GaussianLikelihood().double()
+
+        self.model.eval()
+        self.X_scaler = load_data("X_scaler")
+        self.Y_scaler = load_data("Y_scaler")
+        self.column_names = load_data("column_names")
+
+    def predict(
+        self, context: Context, model_input: pd.DataFrame, params: dict | None = None
+    ) -> pd.DataFrame:
+        """Make a model prediction.
+
+        Args:
+            context (Context):
+                The model context.
+            model_input (pd.DataFrame):
+                The model input data.
+            params (dict, optional):
+                Optional model parameters. Defaults to None.
+
+        Raises:
+            ValueError:
+                Error raised when the calibrator has not been loaded.
+
+        Returns:
+            pd.DataFrame:
+                The model prediction.
+        """
+        for prop in [
+            self.state_dict,
+            self.X_scaler,
+            self.Y_scaler,
+            self.model,
+            self.likelihood,
+            self.column_names,
+        ]:
+            if prop is None:
+                raise ValueError(f"The {self.task} calibrator has not been loaded.")
+
+        filtered_df = model_input[self.column_names]
+        X = self.X_scaler.transform(filtered_df.values)
+        X = torch.Tensor(X).double()
+        predictions = self.likelihood(self.model(X))
+
+        mean = predictions.mean.detach().cpu().numpy()
+        lower, upper = predictions.confidence_region()
+        lower, upper = lower.detach().cpu().numpy(), upper.detach().cpu().numpy()
+
+        print(mean.shape)
+
+        mean = self.Y_scaler.inverse_transform(mean.reshape(-1, 1)).flatten()
+        lower = self.Y_scaler.inverse_transform(lower.reshape(-1, 1)).flatten()
+        upper = self.Y_scaler.inverse_transform(upper.reshape(-1, 1)).flatten()
+
+        df = pd.DataFrame(
+            {"discrepancy": mean, "lower_bound": lower, "upper_bound": upper}
+        )
+
+        return df

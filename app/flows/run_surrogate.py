@@ -26,32 +26,27 @@ from matplotlib import pyplot as plt
 from prefect import flow, task
 from prefect.artifacts import create_table_artifact
 from prefect.task_runners import SequentialTaskRunner
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from torch.optim.lr_scheduler import StepLR
-from torch.utils.data import DataLoader, TensorDataset
 
 from deeprootgen.calibration import (
-    AbcModel,
     EarlyStopper,
+    SingleTaskVariationalGPModel,
+    SurrogateModel,
     calculate_summary_statistic_discrepancy,
     get_calibration_summary_stats,
     lhc_sample,
     log_model,
+    prepare_surrogate_data,
     run_calibration_simulation,
+    training_loop,
 )
-from deeprootgen.data_model import (
-    RootCalibrationModel,
-    StatisticsComparisonModel,
-    SummaryStatisticsModel,
-)
-from deeprootgen.io import save_graph_to_db
+from deeprootgen.data_model import RootCalibrationModel, SummaryStatisticsModel
 from deeprootgen.pipeline import (
     begin_experiment,
     get_datetime_now,
     get_outdir,
     log_config,
     log_experiment_details,
-    log_simulation,
 )
 from deeprootgen.statistics import DistanceMetricBase
 
@@ -89,28 +84,6 @@ def prepare_task(input_parameters: RootCalibrationModel) -> tuple:
     distances, statistics_list = get_calibration_summary_stats(input_parameters)
 
     return sample_df, distances, statistics_list
-
-
-class GPModel(gpytorch.models.ApproximateGP):
-    def __init__(self, inducing_points):
-        variational_distribution = gpytorch.variational.CholeskyVariationalDistribution(
-            inducing_points.size(0)
-        )
-        variational_strategy = gpytorch.variational.VariationalStrategy(
-            self,
-            inducing_points,
-            variational_distribution,
-            learn_inducing_locations=True,
-        )
-        super().__init__(variational_strategy)
-        self.mean_module = gpytorch.means.ConstantMean()
-        self.covar_module = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
-        self.likelihood = gpytorch.likelihoods.GaussianLikelihood()
-
-    def forward(self, x):
-        mean_x = self.mean_module(x)
-        covar_x = self.covar_module(x)
-        return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
 
 
 class MultitaskVariationalGPModel(gpytorch.models.ApproximateGP):
@@ -159,7 +132,23 @@ def perform_summary_stat_task(
     sample_df: pd.DataFrame,
     distances: list[DistanceMetricBase],
     statistics_list: list[SummaryStatisticsModel],
-) -> None:
+) -> tuple:
+    """Train a surrogate model using cost emulation.
+
+    Args:
+        input_parameters (RootCalibrationModel):
+            The root calibration data model.
+        sample_df (pd.DataFrame):
+            The data produced using Latin Hypercube sampling.
+        distances (list[DistanceMetricBase]):
+            The list of distance metrics.
+        statistics_list (list[SummaryStatisticsModel]):
+            The list of summary statistics.
+
+    Returns:
+        tuple:
+            The trained surrogate.
+    """
     discrepancies = []
     parameter_intervals = input_parameters.parameter_intervals.dict()
     for sample_row in sample_df.to_dict("records"):
@@ -171,114 +160,91 @@ def perform_summary_stat_task(
             parameter_specs, input_parameters, statistics_list, distances
         )
         discrepancies.append(discrepancy)
-
     sample_df["discrepancy"] = discrepancies
 
-    training_df = sample_df.loc[:, sample_df.nunique() != 1]
-    splits = []
-    for i in range(3):
-        split_df = training_df.query(f"training_data_split == {i}").drop(
-            columns=["training_data_split", "sim_ids"]
-        )
-        X = split_df.drop(columns="discrepancy").values
-        y = split_df["discrepancy"].values.reshape(-1, 1)
-        splits.append((X, y))
-
-    train, val, test = splits
-    X_train, y_train = train
-    X_scaler = MinMaxScaler()
-    X_scaler.fit(X_train)
-    y_scaler = MinMaxScaler()
-    y_scaler.fit(y_train)
+    loaders, scalers, training_df, num_data = prepare_surrogate_data(sample_df)
+    train_loader, val_loader, _ = loaders
 
     calibration_parameters = input_parameters.calibration_parameters
     num_inducing_points = calibration_parameters["num_inducing_points"]
-
-    def prepare_data(split: tuple, shuffle: bool = True) -> tuple:
-        X, y = split
-        X = torch.Tensor(X_scaler.transform(X)).double()
-        y = torch.Tensor(y).double()
-        y = torch.Tensor(y_scaler.transform(y)).double()
-        dataset = TensorDataset(X, y)
-        loader = DataLoader(dataset, batch_size=num_inducing_points, shuffle=shuffle)
-        return loader
-
-    train_loader = prepare_data(train)
-    val_loader = prepare_data(val)
-    test_loader = prepare_data(test, shuffle=False)
-    early_stopper = EarlyStopper(patience=5, min_delta=0)
-
-    n_epochs = calibration_parameters["n_epochs"]
-    lr = calibration_parameters["lr"]
-
-    # model = MultitaskVariationalGPModel(
-    #     n_features= X_train.shape[-1],
-    #     num_latents = num_inducing_points,
-    #     num_tasks = y_train.shape[-1]
-    # ).train().double()
-
-    for X_batch, _ in train_loader:
-        model = GPModel(inducing_points=X_batch).double()
+    for inducing_points, _ in train_loader:
+        inducing_points = inducing_points[:num_inducing_points, :]
         break
+    model = SingleTaskVariationalGPModel(inducing_points).double()
+    likelihood = gpytorch.likelihoods.GaussianLikelihood().double()
+    model.train()
+    likelihood.train()
 
-    mll = gpytorch.mlls.VariationalELBO(
-        model.likelihood, model, num_data=y_train.shape[0]
+    variational_ngd_optimizer = gpytorch.optim.NGD(
+        model.variational_parameters(), num_data=num_data, lr=0.1
     )
-
-    # variational_ngd_optimizer = gpytorch.optim.NGD(
-    #     model.variational_parameters(),
-    #     num_data=y_train.shape[0],
-    #     lr = 0.1
-    # )
-    hyperparameter_optimizer = torch.optim.Adam(
+    lr = calibration_parameters["lr"]
+    optimizer = torch.optim.Adam(
         [
-            {"params": model.parameters()},
-            # {"params": model.hyperparameters()},
+            {"params": model.hyperparameters()},
+            {"params": likelihood.parameters()},
         ],
         lr=lr,
     )
 
+    mll = gpytorch.mlls.VariationalELBO(likelihood, model, num_data=num_data)
+
+    n_epochs = calibration_parameters["n_epochs"]
     scheduler = StepLR(
-        hyperparameter_optimizer,
+        optimizer,
         step_size=int(n_epochs * 0.7),
         gamma=0.1,  # type: ignore[operator]
     )
 
-    validation_check: int = np.ceil(n_epochs * 0.05).astype("int")  # type: ignore[operator]
-    for epoch in range(n_epochs):  # type: ignore
-        model.train()
-        for X_batch, y_batch in train_loader:
-            # variational_ngd_optimizer.zero_grad()
-            hyperparameter_optimizer.zero_grad()
-            out = model(X_batch)
-            loss = -mll(out, y_batch).mean()
-            loss.backward()
-            # variational_ngd_optimizer.step()
-            hyperparameter_optimizer.step()
-            scheduler.step()
+    patience = calibration_parameters["early_stopping_patience"]
+    early_stopper = EarlyStopper(patience=patience, min_delta=0)
+    training_loop(
+        model,
+        train_loader,
+        val_loader,
+        n_epochs,
+        mll,
+        optimizer,
+        variational_ngd_optimizer,
+        scheduler,
+        early_stopper,
+    )
 
-        if (epoch % validation_check) == 0:
-            model.eval()
-            with torch.no_grad(), gpytorch.settings.fast_pred_var():
-                validation_loss = 0
-                for X_batch, y_batch in val_loader:
-                    out = model(X_batch)
-                    validation_loss += -mll(out, y_batch).mean().item()
-                if early_stopper.early_stop(validation_loss):
-                    break
-            print(
-                f"Epoch: {epoch}, Training loss: {loss.item()} Validation loss: {validation_loss}",
-            )
+    return model, likelihood, sample_df, loaders, scalers, training_df, inducing_points
 
-    model.eval()
-    X_test = []
-    y_test = []
-    for X_batch, y_batch in test_loader:
-        X_test.extend(X_batch)
-        y_test.extend(y_batch)
-    X_test = torch.stack(X_test)
-    y_test = torch.stack(y_test)
 
+@task
+def log_summary_stat_task(
+    input_parameters: RootCalibrationModel,
+    model: gpytorch.models.ApproximateGP,
+    likelihood: gpytorch.likelihoods.GaussianLikelihood,
+    sample_df: pd.DataFrame,
+    loaders: tuple,
+    scalers: tuple,
+    training_df: pd.DataFrame,
+    inducing_points: torch.Tensor,
+    simulation_uuid: str,
+) -> None:
+    """Log the surrogate model results.
+
+    Args:
+        input_parameters (RootCalibrationModel):
+            The root calibration data model.
+        model (gpytorch.models.ApproximateGP):
+            The surrogate model.
+        likelihood (gpytorch.likelihoods.GaussianLikelihood):
+            The surrogate model likelihood.
+        sample_df (pd.DataFrame):
+            The sample simulation data.
+        loaders (tuple):
+            The data loaders.
+        scalers (tuple):
+            The data scalers.
+        training_df (pd.DataFrame):
+            The model training data.
+        simulation_uuid (str):
+            The simulation UUID.
+    """
     time_now = get_datetime_now()
     outdir = get_outdir()
 
@@ -286,49 +252,151 @@ def perform_summary_stat_task(
     sample_df.to_csv(outfile, index=False)
     mlflow.log_artifact(outfile)
 
-    with torch.no_grad(), gpytorch.settings.fast_pred_var():
-        predictions = model.likelihood(model(X_test))
-        mean = predictions.mean.cpu().numpy()
-        lower, upper = predictions.confidence_region()
-        lower, upper = lower.cpu().numpy(), upper.cpu().numpy()
+    train_loader, val_loader, test_loader = loaders
+    X_scaler, y_scaler = scalers
 
-    metrics = []
-    for metric_func in [
-        gpytorch.metrics.mean_standardized_log_loss,
-        gpytorch.metrics.mean_squared_error,
-        gpytorch.metrics.mean_absolute_error,
-        gpytorch.metrics.quantile_coverage_error,
-        gpytorch.metrics.negative_log_predictive_density,
+    def log_performance(loader: torch.utils.data.DataLoader, split_name: str) -> None:
+        model.eval()
+        X_data = []
+        y_data = []
+
+        for X_batch, y_batch in loader:
+            X_data.extend(X_batch)
+            y_data.extend(y_batch)
+
+        X_data = torch.stack(X_data)
+        y_data = torch.stack(y_data)
+
+        with torch.no_grad(), gpytorch.settings.fast_pred_var():
+            predictions = likelihood(model(X_data))
+            mean = predictions.mean.detach().cpu().numpy()
+            lower, upper = predictions.confidence_region()
+            lower, upper = lower.detach().cpu().numpy(), upper.detach().cpu().numpy()
+
+        metrics = []
+        for metric_func in [
+            gpytorch.metrics.mean_standardized_log_loss,
+            gpytorch.metrics.mean_squared_error,
+            gpytorch.metrics.mean_absolute_error,
+            gpytorch.metrics.quantile_coverage_error,
+            gpytorch.metrics.negative_log_predictive_density,
+        ]:
+            metric_name = metric_func.__name__
+            metric_score = (
+                metric_func(predictions, y_data).cpu().detach().numpy().item()
+            )
+            mlflow.log_metric(f"{split_name}_{metric_name}", metric_score)
+            metrics.append({"metric_name": metric_name, "metric_score": metric_score})
+
+        metric_df = pd.DataFrame(metrics)
+        outfile = osp.join(outdir, f"{time_now}-{TASK}_{split_name}_metrics.csv")
+        metric_df.to_csv(outfile, index=False)
+        mlflow.log_artifact(outfile)
+
+        create_table_artifact(
+            key=f"surrogate-metrics-{split_name}-data",
+            table=metric_df.to_dict(orient="records"),
+            description=f"# Surrogate metrics on {split_name} data.",
+        )
+
+        y_data = y_data.detach().cpu().numpy().reshape(-1, 1)
+        mean = y_scaler.inverse_transform(mean.reshape(-1, 1)).flatten()
+        actual = y_scaler.inverse_transform(y_data).flatten()
+        lower = y_scaler.inverse_transform(lower.reshape(-1, 1)).flatten()
+        upper = y_scaler.inverse_transform(upper.reshape(-1, 1)).flatten()
+        index = np.arange(len(mean))
+
+        first_col = sample_df.columns[0]
+        X_data = X_scaler.inverse_transform(X_data.detach().cpu().numpy())
+        x = X_data[:, 0]
+        out_df = pd.DataFrame(
+            {
+                f"{split_name}_predicted": mean,
+                f"{split_name}_actual": actual,
+                f"{split_name}_{first_col}": x,
+                "index": index,
+            }
+        )
+        out_df.plot.scatter(f"{split_name}_actual", f"{split_name}_predicted")
+        outfile = osp.join(
+            outdir, f"{time_now}-{TASK}_{split_name}_actual_predicted.png"
+        )
+        plt.tight_layout()
+        plt.savefig(outfile)
+        mlflow.log_artifact(outfile)
+
+        out_df.plot.scatter(
+            f"{split_name}_{first_col}",
+            f"{split_name}_actual",
+            title=f"{split_name}_actual",
+        )
+        outfile = osp.join(outdir, f"{time_now}-{TASK}_{split_name}_actual.png")
+        plt.tight_layout()
+        plt.savefig(outfile)
+        mlflow.log_artifact(outfile)
+
+        fig = out_df.plot.scatter(
+            f"{split_name}_{first_col}",
+            f"{split_name}_predicted",
+            title=f"{split_name}_predicted",
+        )
+        fig.fill_between(mean, lower, upper, alpha=0.5)
+        outfile = osp.join(outdir, f"{time_now}-{TASK}_{split_name}_predicted.png")
+        plt.tight_layout()
+        plt.savefig(outfile)
+        mlflow.log_artifact(outfile)
+
+        outfile = osp.join(
+            outdir, f"{time_now}-{TASK}_{split_name}_actual_predicted.csv"
+        )
+        out_df.to_csv(outfile, index=False)
+        mlflow.log_artifact(outfile)
+
+        return mean, lower, upper
+
+    log_performance(val_loader, "validation")
+    log_performance(train_loader, "train")
+    mean, lower, upper = log_performance(test_loader, "test")
+
+    mlflow.set_tag("surrogate_type", "cost emulation")
+    artifacts = {}
+    for obj, name in [
+        (model.state_dict(), "state_dict"),
+        (inducing_points, "inducing_points"),
     ]:
-        metric_name = metric_func.__name__
-        metric_score = metric_func(predictions, y_test).cpu().detach().numpy().item()
-        mlflow.log_metric(metric_name, metric_score)
-        metrics.append({"metric_name": metric_name, "metric_score": metric_score})
+        outfile = osp.join(outdir, f"{time_now}-{TASK}_{name}.pth")
+        artifacts[name] = outfile
+        torch.save(obj, outfile)
 
-    metric_df = pd.DataFrame(metrics)
-    outfile = osp.join(outdir, f"{time_now}-{TASK}_metrics.csv")
-    metric_df.to_csv(outfile, index=False)
-    mlflow.log_artifact(outfile)
+    drop_columns = ["training_data_split", "sim_ids", "discrepancy"]
+    column_names = training_df.drop(columns=drop_columns).columns
 
-    create_table_artifact(
-        key="surrogate-metrics",
-        table=metric_df.to_dict(orient="records"),
-        description="# Surrogate metrics.",
+    for obj, name in [
+        (X_scaler, "X_scaler"),
+        (y_scaler, "Y_scaler"),
+        (column_names, "column_names"),
+    ]:
+        outfile = osp.join(outdir, f"{time_now}-{TASK}_{name}.pkl")
+        artifacts[name] = outfile
+        calibrator_dump(obj, outfile)
+
+    signature_x = training_df.drop(columns=drop_columns).head(5).to_dict("records")
+    signature_y = pd.DataFrame(
+        {"discrepancy": mean, "lower_bound": lower, "upper_bound": upper}
     )
 
-    mean = y_scaler.inverse_transform(mean).flatten()
-    actual = y_scaler.inverse_transform(y_test.cpu().numpy()).flatten()
-    lower = y_scaler.inverse_transform(lower).flatten()
-    upper = y_scaler.inverse_transform(upper).flatten()
-    index = np.arange(len(mean))
-    out_df = pd.DataFrame(
-        {"test_predicted": mean, "test_actual": actual, "index": index}
+    calibration_model = SurrogateModel()
+
+    log_model(
+        TASK,
+        input_parameters,
+        calibration_model,
+        artifacts,
+        simulation_uuid,
+        signature_x,
+        signature_y,
+        {"surrogate_type": "cost_emulator", "n_tasks": 1},
     )
-    out_df.plot.scatter("test_actual", "test_predicted")
-    outfile = osp.join(outdir, f"{time_now}-{TASK}_actual_predicted.png")
-    plt.tight_layout()
-    plt.savefig(outfile)
-    mlflow.log_artifact(outfile)
 
 
 @task
@@ -350,8 +418,22 @@ def run_surrogate(input_parameters: RootCalibrationModel, simulation_uuid: str) 
         input_parameters.statistics_comparison.use_summary_statistics  # type: ignore
     )
     if use_summary_statistics:
-        perform_summary_stat_task(
-            input_parameters, sample_df, distances, statistics_list
+        model, likelihood, sample_df, loaders, scalers, training_df, inducing_points = (
+            perform_summary_stat_task(
+                input_parameters, sample_df, distances, statistics_list
+            )
+        )
+
+        log_summary_stat_task(
+            input_parameters,
+            model,
+            likelihood,
+            sample_df,
+            loaders,
+            scalers,
+            training_df,
+            inducing_points,
+            simulation_uuid,
         )
 
     config = input_parameters.dict()

@@ -292,6 +292,30 @@ def log_data_task(
     statistics_list: list[SummaryStatisticsModel],
     simulation_uuid: str,
 ) -> tuple:
+    """Log the Bayesian SNPE model for output data.
+
+    Args:
+        input_parameters (RootCalibrationModel):
+            The root calibration data model.
+        estimator (GraphFlowFeatureExtractor):
+            The normalising flow model.
+        posterior_samples (torch.Tensor):
+            Samples from the posterior.
+        node_df (pd.DataFrame):
+            The node dataframe.
+        edge_df (pd.DataFrame):
+            The edge dataframe.
+        loader (JointLoader):
+            The data loader.
+        statistics_list (list[SummaryStatisticsModel]):
+            The list of summary statistics.
+        simulation_uuid (str):
+            The simulation UUID.
+
+    Returns:
+        tuple:
+            The simulation and its parameters.
+    """
     time_now = get_datetime_now()
     outdir = get_outdir()
 
