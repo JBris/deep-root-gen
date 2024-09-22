@@ -749,7 +749,7 @@ components:
       - id: num-inducing-points-input
         param: num_inducing_points
         label: Number of inducing points
-        help: The number of inducing points to train the Gaussian process surrogate model. A smaller value will result in a faster training time, but poorer accuracy
+        help: The number of inducing points to train the Gaussian process surrogate model. A smaller value will result in a faster training time, but a poorer approximation
         class_name: dash_bootstrap_components.Input 
         kwargs:
           type: number
