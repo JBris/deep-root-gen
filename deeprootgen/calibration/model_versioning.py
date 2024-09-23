@@ -260,6 +260,7 @@ class SnpeModel(mlflow.pyfunc.PythonModel):
         self.inference = None
         self.posterior = None
         self.parameter_intervals = None
+        self.statistics_df = None
 
     def load_context(self, context: Context) -> None:
         """Load the model context.
@@ -277,7 +278,8 @@ class SnpeModel(mlflow.pyfunc.PythonModel):
         self.inference = load_data("inference")
         self.posterior = load_data("posterior")
         self.parameter_intervals = load_data("parameter_intervals")
-        self.statistics_list = load_data("statistics_list")
+        statistics_list = load_data("statistics_list")
+        self.statistics_df = pd.DataFrame(statistics_list)
 
     def predict(
         self, context: Context, model_input: pd.DataFrame, params: dict | None = None
@@ -304,19 +306,26 @@ class SnpeModel(mlflow.pyfunc.PythonModel):
             self.inference,
             self.posterior,
             self.parameter_intervals,
-            self.statistics_list,
+            self.statistics_df,
         ]:
             if prop is None:
                 raise ValueError(f"The {self.task} calibrator has not been loaded.")
 
-        observed_values = model_input["statistic_value"].values
-        posterior_samples = self.posterior.sample((50,), x=observed_values)
+        if context.model_config["inference_type"] == "summary_statistics":
+            statistic_names = self.statistics_df.statistic_name.unique()
+            filtered_inputs = model_input.query("statistic_name in @statistic_names")
+            if len(filtered_inputs) == 0:
+                return filtered_inputs
+            filtered_inputs = filtered_inputs.set_index("statistic_name")
+            filtered_inputs = filtered_inputs.loc[statistic_names]
+            observed_values = filtered_inputs["statistic_value"].values
+            posterior_samples = self.posterior.sample((100,), x=observed_values)
 
-        names = []
-        for name in self.parameter_intervals:
-            if name == "inference_type":
-                continue
-            names.append(name)
+            names = []
+            for name in self.parameter_intervals:
+                names.append(name)
+        else:
+            raise NotImplementedError("Inference for outputs unsupported.")
 
         df = pd.DataFrame(posterior_samples, columns=names)
         return df
@@ -515,8 +524,6 @@ class SurrogateModel(mlflow.pyfunc.PythonModel):
         mean = predictions.mean.detach().cpu().numpy()
         lower, upper = predictions.confidence_region()
         lower, upper = lower.detach().cpu().numpy(), upper.detach().cpu().numpy()
-
-        print(mean.shape)
 
         mean = self.Y_scaler.inverse_transform(mean.reshape(-1, 1)).flatten()
         lower = self.Y_scaler.inverse_transform(lower.reshape(-1, 1)).flatten()

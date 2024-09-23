@@ -1,0 +1,556 @@
+_target_: deeprootgen.data_model.FormModel
+components:
+  parameters:
+    collapsible: true
+    children:
+      - id: max-order-slider
+        param: max_order
+        label: Maximum order
+        help: The maximum root order
+        class_name: dash.dcc.Slider
+        kwargs:
+          min: 1
+          max: 10
+          value: 2
+          step: 1
+          persistence: true
+      - id: root-ratio-input
+        param: root_ratio
+        label: Root ratio
+        help: The ratio between structural and fine roots
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 1
+          step: 0.1
+          value: 0.5
+          persistence: true
+      - id: fine-root-threshold-input
+        param: fine_root_threshold
+        label: Fine root threshold
+        help: Threshold for classifying a root as a fine root, rather than a structural root (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 0.01
+          value: 0.06
+          persistence: true
+      - id: outer-primary-root-num-input
+        param: outer_root_num
+        label: Number of outer roots
+        help: The number of outer primary roots to be generated
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 20
+          step: 1
+          value: 10
+          persistence: true
+      - id: inner-primary-root-num-input
+        param: inner_root_num
+        label: Number of inner roots
+        help: The number of inner primary roots to be generated
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 20
+          step: 1
+          value: 8
+          persistence: true
+      - id: min-length-primary-root-input
+        param: min_primary_length
+        label: Primary root minimum length
+        help: The minimum length of each primary root (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          max: 50
+          step: 1
+          value: 20
+          persistence: true
+      - id: max-length-primary-root-input
+        param: max_primary_length
+        label: Primary root maximum length
+        help: The maximum length of each primary root (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          max: 50
+          step: 1
+          value: 30
+          persistence: true
+      - id: base-diameter-root-input
+        param: base_diameter
+        label: Base root diameter
+        help: The base diameter of the first segment of each root (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.001
+          max: 1
+          step: 0.01
+          value: 0.11
+          persistence: true
+      - id: root-apex-input
+        param: apex_diameter
+        label: Apex diameter
+        help: The diameter of the root apex (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.01
+          max: 1
+          step: 0.01
+          value: 0.02
+          persistence: true
+      - id: diameter-reduction-factor-input
+        param: diameter_reduction
+        label: Diameter reduction
+        help: The diameter reduction factor for subsequent root segments.
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 1
+          step: 0.1
+          value: 0.2
+          persistence: true
+      - id: min-num-secondary-roots-input
+        param: min_sec_root_num
+        label: Minimum number of secondary roots
+        help: The minimum number of secondary roots to be generated
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true
+      - id: max-num-secondary-roots-input
+        param: max_sec_root_num
+        label: Maximum number of secondary roots
+        help: The maximum number of secondary roots to be generated
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 20
+          step: 1
+          value: 3
+          persistence: true
+      - id: secondary-root-growth-input
+        param: growth_sec_root
+        label: Secondary root growth rate
+        help: The growth rate for the number of secondary roots per root order
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 0.1
+          value: 0.2
+          persistence: true
+      - id: min-length-secondary-root-input
+        param: min_sec_root_length
+        label: Secondary root minimum length
+        help: The minimum length of each secondary root (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          max: 250
+          step: 1
+          value: 100
+          persistence: true
+      - id: max-length-secondary-root-input
+        param: max_sec_root_length
+        label: Secondary root maximum length
+        help: The maximum length of each secondary root (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          max: 500
+          step: 1
+          value: 220
+          persistence: true
+      - id: segments-per-root-input
+        param: segments_per_root
+        label: Segments per root
+        help: The number of segments per root
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          max: 500
+          step: 1
+          value: 50
+          persistence: true
+      - id: root-length-reduction-input
+        param: length_reduction
+        label: Length reduction
+        help: The root length reduction factor
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 1
+          step: 0.1
+          value: 0.5
+          persistence: true
+      - id: root-vary-input
+        param: root_vary
+        label: Root segment variance
+        help: Random variation in degrees of subsequent root segments along x, y, and z axes
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 360
+          step: 1
+          value: 30
+          persistence: true
+      - id: interbranch-distance-input
+        param: interbranch_distance
+        label: Interbranch distance
+        help: The interbranch distance between roots
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.001
+          max: 0.01
+          step: 0.001
+          value: 0.0078
+          persistence: true
+      - id: mechanical-constraints-input
+        param: mechanical_constraints
+        label: Mechanical constraints
+        help: The mechanical constraints of the roots (radial degrees/cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.1
+          max: 1
+          step: 0.1
+          value: 0.5
+          persistence: true
+      - id: root-tissue-density-input
+        param: root_tissue_density
+        label: Root tissue density
+        help: The root tissue density (g/cm3)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0.01
+          max: 0.1
+          step: 0.01
+          value: 0.05
+          persistence: true
+      - id: gravitropism-input
+        param: gravitropism
+        label: Gravitropism factor
+        help: The gravitropism factor for root development
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          max: 10
+          step: 1
+          value: 7.5
+          persistence: true
+      - id: enable-soil-input
+        param: enable_soil
+        label: Enable soil
+        help: Enable the soil voxel grid into the simulation.
+        class_name: dash_daq.BooleanSwitch.BooleanSwitch 
+        handler: boolean_switch
+        kwargs: 
+          persistence: true
+      - id: soil-layer-height-input
+        param: soil_layer_height
+        label: Soil layer height
+        help: The height of each soil layer (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 100
+          step: 10
+          value: 10
+          persistence: true
+      - id: soil-layer-width-input
+        param: soil_layer_width
+        label: Soil layer width
+        help: The width of each soil layer (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 100
+          step: 10
+          value: 10
+          persistence: true
+      - id: soil-n-layers
+        param: soil_n_layers
+        label: Number soil layers
+        help: The number of vertical soil layers
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 20
+          step: 1
+          value: 1
+          persistence: true
+      - id: soil-n-cols
+        param: soil_n_cols
+        label: Number soil columns
+        help: The number of horizontal soil layers/columns
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          max: 20
+          step: 1
+          value: 1
+          persistence: true          
+      - id: random-seed-input
+        param: random_seed
+        label: Random seed
+        help: The simulation random seed to ensure replicability
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          step: 1
+          value: 0
+          persistence: true
+  summary_data:
+    collapsible: true
+    children:
+      - id: upload-obs-data-file-button
+        label: Upload  
+        help: Upload summary statistics data from a csv file
+        class_name: dash.dcc.Upload
+        handler: file_upload
+        kwargs:
+          children: Load statistics data
+      - id: clear-obs-data-file-button
+        label: Clear
+        help: Clear the summary statistics data from the form
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Clear statistics data
+          color: primary
+          className: me-1
+  deployments:
+    collapsible: true
+    children:
+      - id: n-trials-input
+        param: n_trials
+        label: Number of trials
+        help: The number of optimisation trials to retrieve
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 1
+          step: 1
+          value: 1
+          persistence: true
+      - id: parameter-names-dropdown
+        param: parameter_names
+        label: Parameter names
+        help: Parameter names to retrieve sensitivity indices for
+        class_name: dash.dcc.Dropdown
+        handler: dropdown
+        options_func: deeprootgen.calibration.get_simulation_parameters
+        statistic_parameter: true
+        kwargs:
+          multi: true
+          searchable: true
+          clearable: true
+          placeholder: Select summary statistics
+          persistence: true
+      - id: t-input
+        param: abc_t
+        label: Monte Carlo time step
+        help: The time step for the Sequential Monte Carlo sampler. Parameter samples are drawn at each time step, and ideally become increasingly more precise over time  
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true   
+  summary_statistics:
+    collapsible: true
+    children:
+      - id: total-volume-input
+        param: total_volume
+        label: Total volume
+        help: The total volume of the root system (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true   
+      - id: average-volume-input
+        param: average_volume
+        label: Average volume
+        help: The average volume of the root system (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true   
+      - id: total-length-input
+        param: total_length
+        label: Total length
+        help: The total length of the roots (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true   
+      - id: average-length-input
+        param: average_length
+        label: Average length
+        help: The average length of the roots (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true 
+      - id: total-diameter-input
+        param: total_diameter
+        label: Total diameter
+        help: The total diameter of the roots (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true
+      - id: average-diameter-input
+        param: average_diameter
+        label: Average diameter
+        help: The average diameter of the roots (cm)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true
+      - id: total-weight-input
+        param: total_weight
+        label: Total weight
+        help: The total weight of the root system (g)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true 
+      - id: average-weight-input
+        param: average_weight
+        label: Average weight
+        help: The average weight of the root system (g)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true 
+      - id: convex-hull-area-input
+        param: convex_hull_area
+        label: Convex hull area
+        help: The area of the convex hull of the root system
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true   
+      - id: convex-hull-volume-input
+        param: convex_hull_volume
+        label: Convex hull volume
+        help: The volume of the convex hull of the root system
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true     
+  simulation:
+    collapsible: true
+    children:
+      - id: call-optimiser-button
+        label: Optimisation
+        help: Make a web request to the deployed optimisation calibrator
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Optimisation calibrator
+          color: primary
+          className: me-1
+      - id: call-sa-button
+        label: Sensitivity analysis
+        help: Make a web request to the deployed sensitivity analysis calibrator
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Sensitivity calibrator
+          color: primary
+          className: me-1
+      - id: call-abc-button
+        label: Approximate Bayesian Computation
+        help: Make a web request to the deployed Approximate Bayesian Computation calibrator
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Bayesian calibrator
+          color: primary
+          className: me-1
+      - id: call-snpe-button
+        label: Neural posterior estimation
+        help: Make a web request to the deployed sequential neural posterior estimation calibrator
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Neural density calibrator
+          color: primary
+          className: me-1
+      - id: call-surrogate-modelling-button
+        label: Surrogate model
+        help: Make a web request to the deployed surrogate model calibrator
+        class_name: dash_bootstrap_components.Button 
+        kwargs:
+          children: Emulation calibrator
+          color: primary
+          className: me-1
+  results:
+    children:
+      - id: deployments-nav
+        label: Deployment Links
+        help: Links for model calibration deployments
+        class_name: dash_bootstrap_components.Nav
+        handler: nav
+        children_func: deeprootgen.form.get_deployment_links
+        kwargs:
+          pills: true
+          justified: true
+          vertical: md

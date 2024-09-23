@@ -370,8 +370,7 @@ def log_data_task(
     )
 
     statistics_list = [statistic.dict() for statistic in statistics_list]
-    parameter_intervals["inference_type"] = "data"
-    mlflow.set_tag("inference_type", parameter_intervals["inference_type"])
+    mlflow.set_tag("inference_type", "data")
     artifacts = {}
     for obj, name in [
         (estimator, "inference"),
@@ -398,6 +397,7 @@ def log_data_task(
         simulation_uuid,
         signature_x,
         signature_y,
+        {"inference_type": "data"},
     )
 
     return simulation, simulation_parameters
@@ -545,8 +545,7 @@ def log_summary_stat_task(
     )
 
     statistics_list = [statistic.dict() for statistic in statistics_list]
-    parameter_intervals["inference_type"] = "summary_statistics"
-    mlflow.set_tag("inference_type", parameter_intervals["inference_type"])
+    mlflow.set_tag("inference_type", "summary_statistics")
     artifacts = {}
     for obj, name in [
         (inference, "inference"),
@@ -570,6 +569,7 @@ def log_summary_stat_task(
         simulation_uuid,
         signature_x,
         signature_y,
+        {"inference_type": "summary_statistics"},
     )
 
     return simulation, simulation_parameters

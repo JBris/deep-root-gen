@@ -6,6 +6,7 @@ components that are specific to a given page.
 
 """
 
+import os
 from pydoc import locate
 
 import dash_bootstrap_components as dbc
@@ -78,6 +79,11 @@ def build_common_components(
         component_instance.style = {"padding-left": "0.5em"}
 
         if hasattr(component_spec, "handler"):
+            if component_spec.handler == "nav":
+                children_func = locate(component_spec.children_func)
+                children = children_func()  # type: ignore
+                component_instance.children = children
+
             if component_spec.handler == "boolean_switch":
                 component_instance.on = False
 
@@ -215,6 +221,63 @@ def build_collapsible(
     )
 
     return collapsible
+
+
+def get_deployment_links() -> list[dbc.NavItem]:
+    """Get a list of model calibration deployment links.
+
+    Returns:
+        list[dbc.NavItem]:
+            The list of model calibration deployment links.
+    """
+    return [
+        dbc.NavItem(
+            dbc.NavLink(
+                "Optimisation",
+                href=os.environ.get(
+                    "DEPLOYMENT_OPTIMISATION_EXTERNAL_LINK", "http://127.0.0.1:5001"
+                ),
+                target="_blank",
+            )
+        ),
+        dbc.NavItem(
+            dbc.NavLink(
+                "Sensitivity Analysis",
+                href=os.environ.get(
+                    "DEPLOYMENT_SENSITIVITY_ANALYSIS_EXTERNAL_LINK",
+                    "http://127.0.0.1:5002",
+                ),
+                target="_blank",
+            )
+        ),
+        dbc.NavItem(
+            dbc.NavLink(
+                "Approximate Bayesian Computation",
+                href=os.environ.get(
+                    "DEPLOYMENT_ABC_EXTERNAL_LINK", "http://127.0.0.1:5003"
+                ),
+                target="_blank",
+            )
+        ),
+        dbc.NavItem(
+            dbc.NavLink(
+                "Sequential Neural Posterior Estimation",
+                href=os.environ.get(
+                    "DEPLOYMENT_SNPE_EXTERNAL_LINK", "http://127.0.0.1:5004"
+                ),
+                target="_blank",
+            )
+        ),
+        dbc.NavItem(
+            dbc.NavLink(
+                "Surrogate Modelling",
+                href=os.environ.get(
+                    "DEPLOYMENT_SURROGATE_EXTERNAL_LINK", "http://127.0.0.1:5005"
+                ),
+                target="_blank",
+            )
+        ),
+    ]
 
 
 def get_external_links() -> dbc.Nav:
@@ -476,6 +539,18 @@ def get_common_layout(
                 calibration_components, page_id, "Calibration Parameters"
             )
             input_components.append(calibration_components)
+
+        k = "summary_statistics"
+        if simulation_form.components.get(k) is not None:
+            calibration_components = build_common_components(
+                parameter_form.components[k]["children"], page_id, k
+            )
+
+            if parameter_form.components[k].get("collapsible"):
+                calibration_components = build_collapsible(
+                    calibration_components, page_id, "Summary statistics"
+                )
+                input_components.append(calibration_components)
 
     k = "simulation"
     if simulation_form.components.get(k) is not None:

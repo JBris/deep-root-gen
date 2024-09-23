@@ -1,6 +1,7 @@
 defaults:
   - _self_
   - calibration_form: common
+  - deployments_form: common
   - eda_form: common
   - experiment: mlflow
   - object_storage: minio
