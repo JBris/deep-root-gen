@@ -367,6 +367,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inference</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics_df</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="SnpeModel.load_context">
 <a class="viewcode-back" href="../../../api_reference/calibration.html#deeprootgen.calibration.model_versioning.SnpeModel.load_context">[docs]</a>
@@ -386,7 +387,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inference</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;inference&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;posterior&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;parameter_intervals&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">statistics_list</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;statistics_list&quot;</span><span class="p">)</span></div>
+        <span class="n">statistics_list</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;statistics_list&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistics_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">statistics_list</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SnpeModel.predict">
@@ -416,19 +418,26 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">inference</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">statistics_list</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statistics_df</span><span class="p">,</span>
         <span class="p">]:</span>
             <span class="k">if</span> <span class="n">prop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="si">}</span><span class="s2"> calibrator has not been loaded.&quot;</span><span class="p">)</span>
 
-        <span class="n">observed_values</span> <span class="o">=</span> <span class="n">model_input</span><span class="p">[</span><span class="s2">&quot;statistic_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">posterior_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="mi">50</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">observed_values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;inference_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;summary_statistics&quot;</span><span class="p">:</span>
+            <span class="n">statistic_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistics_df</span><span class="o">.</span><span class="n">statistic_name</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+            <span class="n">filtered_inputs</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;statistic_name in @statistic_names&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_inputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">filtered_inputs</span>
+            <span class="n">filtered_inputs</span> <span class="o">=</span> <span class="n">filtered_inputs</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;statistic_name&quot;</span><span class="p">)</span>
+            <span class="n">filtered_inputs</span> <span class="o">=</span> <span class="n">filtered_inputs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">statistic_names</span><span class="p">]</span>
+            <span class="n">observed_values</span> <span class="o">=</span> <span class="n">filtered_inputs</span><span class="p">[</span><span class="s2">&quot;statistic_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">posterior_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="mi">100</span><span class="p">,),</span> <span class="n">x</span><span class="o">=</span><span class="n">observed_values</span><span class="p">)</span>
 
-        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;inference_type&quot;</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_intervals</span><span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Inference for outputs unsupported.&quot;</span><span class="p">)</span>
 
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">posterior_samples</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span></div>
@@ -648,8 +657,6 @@
         <span class="n">mean</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">mean</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">confidence_region</span><span class="p">()</span>
         <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">lower</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">upper</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="n">mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y_scaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
         <span class="n">lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Y_scaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">lower</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>

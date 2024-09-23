@@ -81,6 +81,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pydoc</span> <span class="kn">import</span> <span class="n">locate</span>
 
 <span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
@@ -155,6 +156,11 @@
         <span class="n">component_instance</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;padding-left&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5em&quot;</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">component_spec</span><span class="p">,</span> <span class="s2">&quot;handler&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">handler</span> <span class="o">==</span> <span class="s2">&quot;nav&quot;</span><span class="p">:</span>
+                <span class="n">children_func</span> <span class="o">=</span> <span class="n">locate</span><span class="p">(</span><span class="n">component_spec</span><span class="o">.</span><span class="n">children_func</span><span class="p">)</span>
+                <span class="n">children</span> <span class="o">=</span> <span class="n">children_func</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+                <span class="n">component_instance</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">children</span>
+
             <span class="k">if</span> <span class="n">component_spec</span><span class="o">.</span><span class="n">handler</span> <span class="o">==</span> <span class="s2">&quot;boolean_switch&quot;</span><span class="p">:</span>
                 <span class="n">component_instance</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -295,6 +301,66 @@
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">collapsible</span></div>
+
+
+
+<div class="viewcode-block" id="get_deployment_links">
+<a class="viewcode-back" href="../../../api_reference/form.html#deeprootgen.form.components.get_deployment_links">[docs]</a>
+<span class="k">def</span> <span class="nf">get_deployment_links</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">dbc</span><span class="o">.</span><span class="n">NavItem</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a list of model calibration deployment links.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dbc.NavItem]:</span>
+<span class="sd">            The list of model calibration deployment links.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">NavItem</span><span class="p">(</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">NavLink</span><span class="p">(</span>
+                <span class="s2">&quot;Optimisation&quot;</span><span class="p">,</span>
+                <span class="n">href</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;DEPLOYMENT_OPTIMISATION_EXTERNAL_LINK&quot;</span><span class="p">,</span> <span class="s2">&quot;http://127.0.0.1:5001&quot;</span>
+                <span class="p">),</span>
+                <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">NavItem</span><span class="p">(</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">NavLink</span><span class="p">(</span>
+                <span class="s2">&quot;Sensitivity Analysis&quot;</span><span class="p">,</span>
+                <span class="n">href</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;DEPLOYMENT_SENSITIVITY_ANALYSIS_EXTERNAL_LINK&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;http://127.0.0.1:5002&quot;</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">NavItem</span><span class="p">(</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">NavLink</span><span class="p">(</span>
+                <span class="s2">&quot;Approximate Bayesian Computation&quot;</span><span class="p">,</span>
+                <span class="n">href</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;DEPLOYMENT_ABC_EXTERNAL_LINK&quot;</span><span class="p">,</span> <span class="s2">&quot;http://127.0.0.1:5003&quot;</span>
+                <span class="p">),</span>
+                <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">NavItem</span><span class="p">(</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">NavLink</span><span class="p">(</span>
+                <span class="s2">&quot;Sequential Neural Posterior Estimation&quot;</span><span class="p">,</span>
+                <span class="n">href</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;DEPLOYMENT_SNPE_EXTERNAL_LINK&quot;</span><span class="p">,</span> <span class="s2">&quot;http://127.0.0.1:5004&quot;</span>
+                <span class="p">),</span>
+                <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">NavItem</span><span class="p">(</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">NavLink</span><span class="p">(</span>
+                <span class="s2">&quot;Surrogate Modelling&quot;</span><span class="p">,</span>
+                <span class="n">href</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;DEPLOYMENT_SURROGATE_EXTERNAL_LINK&quot;</span><span class="p">,</span> <span class="s2">&quot;http://127.0.0.1:5005&quot;</span>
+                <span class="p">),</span>
+                <span class="n">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">]</span></div>
 
 
 
@@ -568,6 +634,18 @@
                 <span class="n">calibration_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="s2">&quot;Calibration Parameters&quot;</span>
             <span class="p">)</span>
             <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibration_components</span><span class="p">)</span>
+
+        <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;summary_statistics&quot;</span>
+        <span class="k">if</span> <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">calibration_components</span> <span class="o">=</span> <span class="n">build_common_components</span><span class="p">(</span>
+                <span class="n">parameter_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;children&quot;</span><span class="p">],</span> <span class="n">page_id</span><span class="p">,</span> <span class="n">k</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">parameter_form</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;collapsible&quot;</span><span class="p">):</span>
+                <span class="n">calibration_components</span> <span class="o">=</span> <span class="n">build_collapsible</span><span class="p">(</span>
+                    <span class="n">calibration_components</span><span class="p">,</span> <span class="n">page_id</span><span class="p">,</span> <span class="s2">&quot;Summary statistics&quot;</span>
+                <span class="p">)</span>
+                <span class="n">input_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibration_components</span><span class="p">)</span>
 
     <span class="n">k</span> <span class="o">=</span> <span class="s2">&quot;simulation&quot;</span>
     <span class="k">if</span> <span class="n">simulation_form</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
