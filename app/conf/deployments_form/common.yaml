@@ -534,7 +534,7 @@ components:
           children: Neural density calibrator
           color: primary
           className: me-1
-      - id: call-surrogate-modelling-button
+      - id: call-surrogate-button
         label: Surrogate model
         help: Make a web request to the deployed surrogate model calibrator
         class_name: dash_bootstrap_components.Button 
