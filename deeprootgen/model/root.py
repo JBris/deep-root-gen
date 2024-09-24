@@ -68,6 +68,7 @@ class RootOrgan:
             [input_parameters.min_sec_root_length, input_parameters.max_sec_root_length]
         )
         self.length_reduction = input_parameters.length_reduction
+        self.mass = 0
 
         self.reset_transform()
         self.simulation_tag = simulation_tag
@@ -225,6 +226,20 @@ class RootOrgan:
         coordinates[:, 2] *= -1
         return coordinates
 
+    def calculate_mass(self) -> float:
+        """Calculate the mass of the root organ.
+
+        Returns:
+            float:
+                The mass.
+        """
+        diameters = self.get_diameters()
+        radius = diameters / 2
+        heights = self.get_lengths()
+        volume = np.pi * radius**2 * heights
+        mass = volume * self.input_parameters.root_tissue_density
+        return sum(mass)
+
     def construct_root(
         self, segments_per_root: int, apex_diameter: int, root_tissue_density: float
     ) -> List[RootNode]:
@@ -270,6 +285,7 @@ class RootOrgan:
                 new_organ=False,
             )
 
+        self.mass = self.calculate_mass()
         return self.segments
 
     def add_child_organ(
@@ -360,6 +376,7 @@ class RootOrgan:
                 new_organ=False,
             )
 
+        self.mass = self.calculate_mass()
         return self.segments
 
     def reset_transform(self) -> np.ndarray:
@@ -456,8 +473,12 @@ class RootOrgan:
                 scale=scale,
             )
 
-    def get_coordinates(self) -> np.ndarray:
+    def get_coordinates(self, as_array: bool = True) -> np.ndarray:
         """Get the coordinates of the root segments.
+
+        Args:
+            as_array (bool, optional):
+                Return the coordinates as a Numpy array. Defaults to True.
 
         Returns:
             np.ndarray:
@@ -469,8 +490,49 @@ class RootOrgan:
             coordinate = [node_data.x, node_data.y, node_data.z]
             coordinates.append(coordinate)
 
-        coordinates = np.array(coordinates)
+        if as_array:
+            coordinates = np.array(coordinates)
         return coordinates
+
+    def get_diameters(self, as_array: bool = True) -> np.ndarray:
+        """Get the diameters of the root segments.
+
+        Args:
+            as_array (bool, optional):
+                Return the coordinates as a Numpy array. Defaults to True.
+
+        Returns:
+            np.ndarray:
+                The coordinates of the root segments
+        """
+        diameters = []
+        for segment in self.segments:
+            node_data = segment.node_data
+            diameters.append(node_data.diameter)
+
+        if as_array:
+            diameters = np.array(diameters)
+        return diameters
+
+    def get_lengths(self, as_array: bool = True) -> np.ndarray:
+        """Get the lengths of the root segments.
+
+        Args:
+            as_array (bool, optional):
+                Return the coordinates as a Numpy array. Defaults to True.
+
+        Returns:
+            np.ndarray:
+                The coordinates of the root segments
+        """
+        lengths = []
+        for segment in self.segments:
+            node_data = segment.node_data
+            lengths.append(node_data.length)
+
+        if as_array:
+            lengths = np.array(lengths)
+        return lengths
 
     def transform(self) -> np.ndarray:
         """Apply the transformation matrix to the root system coordinates.
@@ -609,6 +671,72 @@ class RootOrgan:
             parent_coordinates = np.around(self.get_parent_origin())
             if np.any(np.not_equal(local_origin, parent_coordinates)):
                 return self.cascading_set_invalid_root()
+
+    def grow(
+        self, simulation: "RootSystemSimulation", input_parameters: RootSimulationModel
+    ) -> None:
+        """Grow the root organ.
+
+        Args:
+            simulation (RootSystemSimulation):
+                The root simulation model.
+            input_parameters (RootSimulationModel):
+                The root simulation parameters.
+        """
+        diameter_growth = self.rng.uniform(1.01, 1.05)
+        diameters = self.get_diameters()
+        last_diameter = diameters[-1]
+        diameters *= diameter_growth
+
+        for i, segment in enumerate(self.segments):
+            segment.node_data.diameter = diameters[i]
+
+        diameters = diameters.tolist()
+        diameters.append(last_diameter)
+        diameters = np.array(diameters)
+
+        lengths = self.get_lengths(False)
+        new_length = self.init_lengths(1) / (len(lengths) + 1)
+        lengths.append(new_length.item())
+        lengths = np.array(lengths)
+
+        coordinates = self.get_coordinates(False)
+        new_coordinate = self.init_segment_coordinates(1, new_length)
+        new_coordinate += coordinates[-1]
+        new_coordinate = new_coordinate[1, :]
+        coordinates.append(new_coordinate)
+        coordinates = np.array(coordinates)
+
+        apex_segment = self.segments[-1]
+        root_tissue_density = input_parameters.root_tissue_density
+        self.add_child_node(
+            apex_segment,
+            diameters=diameters,
+            lengths=lengths,
+            coordinates=coordinates,
+            root_type=self.root_type,
+            root_tissue_density=root_tissue_density,
+            i=i + 1,
+            new_organ=False,
+        )
+
+        mass = self.calculate_mass()
+        if mass <= self.mass * 1.5:
+            return
+        self.mass = mass
+        next_order = self.base_node.node_data.order + 1
+        if simulation.organs.get(next_order) is None:
+            simulation.organs[next_order] = []
+
+        child_organ = self.add_child_organ(
+            floor_threshold=input_parameters.floor_threshold,
+            ceiling_threshold=input_parameters.ceiling_threshold,
+        )
+        simulation.organs[next_order].append(child_organ)
+        child_organ.construct_root_from_parent(
+            input_parameters.segments_per_root,
+            input_parameters.apex_diameter,
+        )
 
 
 class RootSystemSimulation:
@@ -1051,6 +1179,22 @@ class RootSystemSimulation:
                     input_parameters.max_val_attempts,
                 )
 
+    def grow(
+        self, simulation: RootSimulationModel, input_parameters: RootSimulationModel
+    ) -> None:
+        """Model the growth of root organs.
+
+        Args:
+            simulation (RootSimulationModel):
+                The root simulation model.
+            input_parameters (RootSimulationModel):
+                The simulation input parameters.
+        """
+        for _ in range(input_parameters.t):
+            for order in range(2, input_parameters.max_order + 1):
+                for organ in self.organs[order]:
+                    organ.grow(simulation, input_parameters)
+
     def run(self, input_parameters: RootSimulationModel) -> None:
         """Run a root system architecture simulation.
 
@@ -1063,6 +1207,7 @@ class RootSystemSimulation:
                 The simulation results.
         """
         self.init_organs(input_parameters)
+        self.grow(self, input_parameters)
         self.position_secondary_roots(input_parameters)
         self.position_primary_roots(input_parameters)
         self.validate(input_parameters, pitch=60)

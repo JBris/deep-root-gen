@@ -263,6 +263,17 @@ components:
           step: 1
           value: 7.5
           persistence: true
+      - id: sim-t-input
+        param: t
+        label: Time steps
+        help: The number of time steps to run the model (hourly)
+        class_name: dash_bootstrap_components.Input 
+        kwargs:
+          type: number
+          min: 0
+          step: 1
+          value: 1
+          persistence: true
       - id: enable-soil-input
         param: enable_soil
         label: Enable soil

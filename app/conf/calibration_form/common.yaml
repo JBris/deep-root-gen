@@ -333,6 +333,21 @@ components:
           persistence: true
           pushable: false
           allowCross: false
+      - id: sim-t-slider
+        param: t
+        label: Time steps
+        help: The number of time steps to run the model (hourly)
+        data_type: discrete
+        class_name: dash.dcc.RangeSlider
+        handler: range_slider
+        min_value: 0
+        max_value: 20
+        kwargs:
+          min: 0
+          max: 100
+          persistence: true
+          pushable: false
+          allowCross: false
       - id: random-seed-input
         param: random_seed
         label: Random seed

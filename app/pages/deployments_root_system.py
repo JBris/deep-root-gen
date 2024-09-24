@@ -315,7 +315,6 @@ def endpoint_predict(task: str, endpoint: str, json: dict) -> str:
     """
     res = requests.post(url=f"{endpoint}/predict", json=json)
     json_data = res.json()
-    print(json_data)
     df = pd.DataFrame(json_data)
     outdir = get_outdir()
     date_now = get_datetime_now()

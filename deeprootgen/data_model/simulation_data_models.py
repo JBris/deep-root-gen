@@ -108,6 +108,7 @@ class RootSimulationModel(BaseModel):
     mechanical_constraints: float
     root_tissue_density: float
     gravitropism: float
+    t: int
     origin_min: Optional[float] = 1e-3
     origin_max: Optional[float] = 1e-2
     enable_soil: Optional[bool] = False
@@ -199,6 +200,7 @@ class RootCalibrationIntervals(BaseModel):
     mechanical_constraints: ParameterIntervalModel
     root_tissue_density: ParameterIntervalModel
     gravitropism: ParameterIntervalModel
+    t: ParameterIntervalModel
 
 
 class RootCalibrationModel(BaseModel):
