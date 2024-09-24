@@ -737,23 +737,23 @@ class RootOrgan:
             new_organ=False,
         )
 
-        mass = self.calculate_mass()
-        if mass <= self.mass * 1.5:
-            return
-        self.mass = mass
-        next_order = self.base_node.node_data.order + 1
-        if simulation.organs.get(next_order) is None:
-            simulation.organs[next_order] = []
+        # mass = self.calculate_mass()
+        # if mass <= self.mass * 1.5:
+        #     return
+        # self.mass = mass
+        # next_order = self.base_node.node_data.order + 1
+        # if simulation.organs.get(next_order) is None:
+        #     simulation.organs[next_order] = []
 
-        child_organ = self.add_child_organ(
-            floor_threshold=input_parameters.floor_threshold,
-            ceiling_threshold=input_parameters.ceiling_threshold,
-        )
-        simulation.organs[next_order].append(child_organ)
-        child_organ.construct_root_from_parent(
-            input_parameters.segments_per_root,
-            input_parameters.apex_diameter,
-        )
+        # child_organ = self.add_child_organ(
+        #     floor_threshold=input_parameters.floor_threshold,
+        #     ceiling_threshold=input_parameters.ceiling_threshold,
+        # )
+        # simulation.organs[next_order].append(child_organ)
+        # child_organ.construct_root_from_parent(
+        #     input_parameters.segments_per_root,
+        #     input_parameters.apex_diameter,
+        # )
 
 
 class RootSystemSimulation:
