@@ -494,6 +494,22 @@ class RootOrgan:
             coordinates = np.array(coordinates)
         return coordinates
 
+    def set_coordinates(self, coordinates: list[tuple]) -> np.ndarray:
+        """Get the coordinates of the root segments.
+
+        Args:
+            as_array (bool, optional):
+                Return the coordinates as a Numpy array. Defaults to True.
+
+        Returns:
+            np.ndarray:
+                The coordinates of the root segments
+        """
+        for i, segment in enumerate(self.segments):
+            node_data = segment.node_data
+            node_data.x, node_data.y, node_data.z = coordinates[i]
+        return coordinates
+
     def get_diameters(self, as_array: bool = True) -> np.ndarray:
         """Get the diameters of the root segments.
 
@@ -644,8 +660,6 @@ class RootOrgan:
         if coin_flip == 1:
             pitch *= -1
 
-        # No upwards growing roots
-        # Gravitropism
         iter_count = 0
         current_order = self.segments[0].node_data.order
         if current_order > 1:
@@ -655,9 +669,12 @@ class RootOrgan:
                 __transform(pitch=pitch)
                 iter_count += 1
 
-        # Coordinates above no root zone
         iter_count = 0
         coordinates = self.get_coordinates()
+        if np.any(coordinates[:, 2] > no_root_zone):
+            coordinates[:, 2] *= -1
+            self.set_coordinates(coordinates)
+
         while np.any(coordinates[:, 2] > no_root_zone):
             if iter_count > max_attempts:
                 return self.cascading_set_invalid_root()
