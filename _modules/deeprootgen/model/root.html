@@ -604,6 +604,25 @@
         <span class="k">return</span> <span class="n">coordinates</span></div>
 
 
+<div class="viewcode-block" id="RootOrgan.set_coordinates">
+<a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.root.RootOrgan.set_coordinates">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the coordinates of the root segments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            as_array (bool, optional):</span>
+<span class="sd">                Return the coordinates as a Numpy array. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray:</span>
+<span class="sd">                The coordinates of the root segments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">segment</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">):</span>
+            <span class="n">node_data</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">node_data</span>
+            <span class="n">node_data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">node_data</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">node_data</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">coordinates</span></div>
+
+
 <div class="viewcode-block" id="RootOrgan.get_diameters">
 <a class="viewcode-back" href="../../../api_reference/model.html#deeprootgen.model.root.RootOrgan.get_diameters">[docs]</a>
     <span class="k">def</span> <span class="nf">get_diameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">as_array</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -786,8 +805,6 @@
         <span class="k">if</span> <span class="n">coin_flip</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">pitch</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
 
-        <span class="c1"># No upwards growing roots</span>
-        <span class="c1"># Gravitropism</span>
         <span class="n">iter_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">current_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">order</span>
         <span class="k">if</span> <span class="n">current_order</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -797,9 +814,12 @@
                 <span class="n">__transform</span><span class="p">(</span><span class="n">pitch</span><span class="o">=</span><span class="n">pitch</span><span class="p">)</span>
                 <span class="n">iter_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="c1"># Coordinates above no root zone</span>
         <span class="n">iter_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_coordinates</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">no_root_zone</span><span class="p">):</span>
+            <span class="n">coordinates</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_coordinates</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+
         <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">no_root_zone</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">iter_count</span> <span class="o">&gt;</span> <span class="n">max_attempts</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cascading_set_invalid_root</span><span class="p">()</span>
@@ -863,27 +883,27 @@
             <span class="n">root_tissue_density</span><span class="o">=</span><span class="n">root_tissue_density</span><span class="p">,</span>
             <span class="n">i</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
             <span class="n">new_organ</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">mass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_mass</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">mass</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="n">mass</span>
-        <span class="n">next_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_node</span><span class="o">.</span><span class="n">node_data</span><span class="o">.</span><span class="n">order</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">organs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">next_order</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">simulation</span><span class="o">.</span><span class="n">organs</span><span class="p">[</span><span class="n">next_order</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="n">child_organ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_child_organ</span><span class="p">(</span>
-            <span class="n">floor_threshold</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">floor_threshold</span><span class="p">,</span>
-            <span class="n">ceiling_threshold</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ceiling_threshold</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">simulation</span><span class="o">.</span><span class="n">organs</span><span class="p">[</span><span class="n">next_order</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child_organ</span><span class="p">)</span>
-        <span class="n">child_organ</span><span class="o">.</span><span class="n">construct_root_from_parent</span><span class="p">(</span>
-            <span class="n">input_parameters</span><span class="o">.</span><span class="n">segments_per_root</span><span class="p">,</span>
-            <span class="n">input_parameters</span><span class="o">.</span><span class="n">apex_diameter</span><span class="p">,</span>
         <span class="p">)</span></div>
 </div>
 
+
+        <span class="c1"># mass = self.calculate_mass()</span>
+        <span class="c1"># if mass &lt;= self.mass * 1.5:</span>
+        <span class="c1">#     return</span>
+        <span class="c1"># self.mass = mass</span>
+        <span class="c1"># next_order = self.base_node.node_data.order + 1</span>
+        <span class="c1"># if simulation.organs.get(next_order) is None:</span>
+        <span class="c1">#     simulation.organs[next_order] = []</span>
+
+        <span class="c1"># child_organ = self.add_child_organ(</span>
+        <span class="c1">#     floor_threshold=input_parameters.floor_threshold,</span>
+        <span class="c1">#     ceiling_threshold=input_parameters.ceiling_threshold,</span>
+        <span class="c1"># )</span>
+        <span class="c1"># simulation.organs[next_order].append(child_organ)</span>
+        <span class="c1"># child_organ.construct_root_from_parent(</span>
+        <span class="c1">#     input_parameters.segments_per_root,</span>
+        <span class="c1">#     input_parameters.apex_diameter,</span>
+        <span class="c1"># )</span>
 
 
 <div class="viewcode-block" id="RootSystemSimulation">
