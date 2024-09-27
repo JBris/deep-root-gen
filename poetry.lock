@@ -7586,6 +7586,17 @@ modelhub = ["huggingface_hub"]
 test = ["onnx", "onnxruntime", "pytest", "pytest-cov"]
 
 [[package]]
+name = "torchcp"
+version = "0.1.3"
+description = "A Python toolbox for conformal prediction on deep learning models."
+optional = false
+python-versions = "*"
+files = [
+    {file = "torchcp-0.1.3-py3-none-any.whl", hash = "sha256:c88e565d9146d11fd5070c2175d95ab162f3411056f32fb9983463869f08fd25"},
+    {file = "torchcp-0.1.3.tar.gz", hash = "sha256:7afca4c00e89f8ea5fd633253719f2ed5569b474d20f84a7f573ed7afcdf61ed"},
+]
+
+[[package]]
 name = "torchist"
 version = "0.2.3"
 description = "NumPy-style histograms in PyTorch"
@@ -8677,4 +8688,4 @@ dev = ["pre-commit", "pytest", "ruff"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "4aa8543384cc30270d68de881c7a1ba0efa21d4f61406f29003c2de08b4e0f67"
+content-hash = "82bb0f6a9dcff5ae66f6036a39291421e1b4f769217bc726ee379e8d6b5125bf"
