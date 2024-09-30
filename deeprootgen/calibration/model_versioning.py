@@ -418,11 +418,11 @@ class GraphFlowFeatureExtractor(torch.nn.Module):
             theta (torch.Tensor):
                 The batch of parameter vectors.
             x (torch.Tensor):
-                The batch tensor.
+                The batch tensor data.
 
         Returns:
             torch.Tensor:
-                The graph embedding.
+                The normalising flow.
         """
         x = self.encode(x)
         x = self.npe(theta, x)
@@ -479,6 +479,7 @@ class SurrogateModel(mlflow.pyfunc.PythonModel):
             self.model = SingleTaskVariationalGPModel(inducing_points).double()
             self.likelihood = gpytorch.likelihoods.GaussianLikelihood().double()
 
+        self.model.load_state_dict(self.state_dict)
         self.model.eval()
         self.X_scaler = load_data("X_scaler")
         self.Y_scaler = load_data("Y_scaler")
@@ -525,12 +526,13 @@ class SurrogateModel(mlflow.pyfunc.PythonModel):
         lower, upper = predictions.confidence_region()
         lower, upper = lower.detach().cpu().numpy(), upper.detach().cpu().numpy()
 
-        mean = self.Y_scaler.inverse_transform(mean.reshape(-1, 1)).flatten()
-        lower = self.Y_scaler.inverse_transform(lower.reshape(-1, 1)).flatten()
-        upper = self.Y_scaler.inverse_transform(upper.reshape(-1, 1)).flatten()
+        if context.model_config["surrogate_type"] == "cost_emulator":
+            mean = self.Y_scaler.inverse_transform(mean.reshape(-1, 1)).flatten()
+            lower = self.Y_scaler.inverse_transform(lower.reshape(-1, 1)).flatten()
+            upper = self.Y_scaler.inverse_transform(upper.reshape(-1, 1)).flatten()
 
-        df = pd.DataFrame(
-            {"discrepancy": mean, "lower_bound": lower, "upper_bound": upper}
-        )
+            df = pd.DataFrame(
+                {"discrepancy": mean, "lower_bound": lower, "upper_bound": upper}
+            )
 
-        return df
+            return df
