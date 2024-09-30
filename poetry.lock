@@ -5689,27 +5689,28 @@ test = ["black (>=21.4b0)", "graphviz (>=0.8)", "ipywidgets", "matplotlib (>=1.3
 
 [[package]]
 name = "pytensor"
-version = "2.25.2"
+version = "2.25.4"
 description = "Optimizing compiler for evaluating mathematical expressions on CPUs and GPUs."
 optional = false
 python-versions = "<3.13,>=3.10"
 files = [
-    {file = "pytensor-2.25.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:1973ecb30d33d09c2154ecc754219e1f05645e3d5d34cb60a3b81ce23b8773b0"},
-    {file = "pytensor-2.25.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bc47007812dd0f96e90e1aa3d3344d1500953f08d81cc7d92efde54dac8c9716"},
-    {file = "pytensor-2.25.2-cp310-cp310-musllinux_1_2_i686.whl", hash = "sha256:725fe95e1ef979c5ffde174b8bad74b9e58471b257f1d4ff5f0d97bbfbc73bf1"},
-    {file = "pytensor-2.25.2-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:c9bfef093723117fb24cfd9e742846cbf4428e92ecfcb089e32f2c639837054d"},
-    {file = "pytensor-2.25.2-cp310-cp310-win_amd64.whl", hash = "sha256:d3a6840b783956aaf7ab2d6352f9b1cacd97ff4f2a877cbea060bc21237f9d4f"},
-    {file = "pytensor-2.25.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:2b0372c7cf163751d143f2af9c286c35b0579aa038019b6708ac8a2649d70b51"},
-    {file = "pytensor-2.25.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:285b823d60a2a125df4bfffb4201e2bd8f0c551cbc3cb8b1b89fbc4fcc8ee99c"},
-    {file = "pytensor-2.25.2-cp311-cp311-musllinux_1_2_i686.whl", hash = "sha256:2d56a6e623a2d2893a5840f1a46b4f8d5de8db6c2181570b896b3be94cf92d52"},
-    {file = "pytensor-2.25.2-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:7c7465bde71b69e233c9685df72c362a5d4d77afc0902603fe0ad35aafac07c5"},
-    {file = "pytensor-2.25.2-cp311-cp311-win_amd64.whl", hash = "sha256:ba5c4759f3df4395ab536eb67753e46983cb45037f29902599da9594e2808746"},
-    {file = "pytensor-2.25.2-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:b082af99a2c09fb2204c2092d600793fc2466411348ddf7ec09033ba1a22cc0a"},
-    {file = "pytensor-2.25.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:034e92036f193c408679bced4a66be79d069f4aeff63eee5fbfb1631d7663c8c"},
-    {file = "pytensor-2.25.2-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:e557de79fd20d6c8def70303e30e846bf4169e71dfe9700c4b5c4e8fd2a5d11b"},
-    {file = "pytensor-2.25.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:fce0e3382c1f351b6c39ed2f098de71879ef778fc50db06f815a33ac957e2e47"},
-    {file = "pytensor-2.25.2-cp312-cp312-win_amd64.whl", hash = "sha256:ef3ef16c7b3e80008a68d34586e914129be9db1a09cd40d6a3f0588d57e3f958"},
-    {file = "pytensor-2.25.2.tar.gz", hash = "sha256:bf181c8c40543498991fa818450cba2b778ba19732b13b2d21882317d97ca038"},
+    {file = "pytensor-2.25.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:61086fea85b5bdb06db7f25faf0bfb0d35fc28b2d7b0d0ce02b678b943af61f6"},
+    {file = "pytensor-2.25.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:35e162b755772411708162c4b3503bab723bc600449070c8af189555194db6ea"},
+    {file = "pytensor-2.25.4-cp310-cp310-musllinux_1_2_i686.whl", hash = "sha256:ca20bb49ee704333ffc0997a859ef876506c1b852b01c7a3400c005e1cbcd841"},
+    {file = "pytensor-2.25.4-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:5df66d39cf4e1d9f4c3d723e52e8afcd469e9320127c98fe052b484e238f4335"},
+    {file = "pytensor-2.25.4-cp310-cp310-win_amd64.whl", hash = "sha256:b36bb02f46dd4303b538b6d62ce1e8fee34df29c977111a56c2aba17daf7e540"},
+    {file = "pytensor-2.25.4-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:cb62b25aa15692602b1b4f3b587f721f44c48f24734eb7138133f3d5e85f1c30"},
+    {file = "pytensor-2.25.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e51d3fb48f52e0e5c80c9c49245c5ff485528208a7ffb1bd3225561703e5ae28"},
+    {file = "pytensor-2.25.4-cp311-cp311-musllinux_1_2_i686.whl", hash = "sha256:d848ee67654244de4ce24de9469f5b589f302d972b1ac1d24129c906c3db6f31"},
+    {file = "pytensor-2.25.4-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:4bfbde49c76adca3ab77646cb0a986ee5cf8c1d10fa2fae72afc55a494706be5"},
+    {file = "pytensor-2.25.4-cp311-cp311-win_amd64.whl", hash = "sha256:2aca5afc40910ef8526abe5a516bc14a61d2d817a0de8a4b1228c9bfa9714c03"},
+    {file = "pytensor-2.25.4-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:cbd4b0b5b1d4d12a885f50595ae213b52487f3fed7b191b9edb2a6a353d4b2d8"},
+    {file = "pytensor-2.25.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ff23f845ae6908de8bdb561fe7f19e9d543e712f2371b16f5f5ff2201c5d1bcb"},
+    {file = "pytensor-2.25.4-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:dc0fc3f99fe86c76974e41be45afc9e8e1159fe542c7e12193b8aea3cc70b72d"},
+    {file = "pytensor-2.25.4-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:2d27c3a82671186a2d9ddffdb6181c80e2f416cf1198c06d33eb3385f09f563a"},
+    {file = "pytensor-2.25.4-cp312-cp312-win_amd64.whl", hash = "sha256:37877b8b8ec7c43a2e8cf8b7d95211300b4b4320c119e47510bf611d320b6c3e"},
+    {file = "pytensor-2.25.4-py2.py3-none-any.whl", hash = "sha256:f0d8981714982f31f87ceb6c5a321d6e186655c6a6d0f3a33686f0e020f499ce"},
+    {file = "pytensor-2.25.4.tar.gz", hash = "sha256:6951037301f852acd0964dabf556a27a8710e7b64cc26b58856ddca0d23238cb"},
 ]
 
 [package.dependencies]
@@ -5719,7 +5720,7 @@ filelock = ">=3.15"
 logical-unification = "*"
 miniKanren = "*"
 numpy = ">=1.17.0,<2"
-scipy = ">=0.14,<1.14"
+scipy = ">=1,<2"
 setuptools = ">=59.0.0"
 
 [package.extras]
@@ -7702,11 +7703,6 @@ files = [
     {file = "triton-3.0.0-1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:34e509deb77f1c067d8640725ef00c5cbfcb2052a1a3cb6a6d343841f92624eb"},
     {file = "triton-3.0.0-1-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:bcbf3b1c48af6a28011a5c40a5b3b9b5330530c3827716b5fbf6d7adcc1e53e9"},
     {file = "triton-3.0.0-1-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:6e5727202f7078c56f91ff13ad0c1abab14a0e7f2c87e91b12b6f64f3e8ae609"},
-    {file = "triton-3.0.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:39b052da883351fdf6be3d93cedae6db3b8e3988d3b09ed221bccecfa9612230"},
-    {file = "triton-3.0.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:cd34f19a8582af96e6291d4afce25dac08cb2a5d218c599163761e8e0827208e"},
-    {file = "triton-3.0.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0d5e10de8c011adeb7c878c6ce0dd6073b14367749e34467f1cff2bde1b78253"},
-    {file = "triton-3.0.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e8903767951bf86ec960b4fe4e21bc970055afc65e9d57e916d79ae3c93665e3"},
-    {file = "triton-3.0.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:41004fb1ae9a53fcb3e970745feb87f0e3c94c6ce1ba86e95fa3b8537894bef7"},
 ]
 
 [package.dependencies]
@@ -8686,4 +8682,4 @@ dev = ["pre-commit", "pytest", "ruff"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "e6eee204d971e826dc14963b2b13ce5a499f5e83a236dd07d077fc0604a9038c"
+content-hash = "41665cf45ad807373686cde23deaac5ad1a217544ea516c213a175a6d460c8be"
