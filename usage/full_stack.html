@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Running the full application with Docker &mdash; DeepRootGen 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Run the model independently" href="standalone.html" />
+    <link rel="prev" title="Usage" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/project_guide.html">DeepRootGen</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Usage</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Running the full application with Docker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clone-and-configure">Clone and configure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-the-main-application">Start the main application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model-deployment-services-optional">Model deployment services (optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logs-and-shutdown">Logs and shutdown</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="standalone.html">Run the model independently</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faqs.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelogs/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Usage</a></li>
+      <li class="breadcrumb-item active">Running the full application with Docker</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/usage/full_stack.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="running-the-full-application-with-docker">
+<h1>Running the full application with Docker<a class="headerlink" href="#running-the-full-application-with-docker" title="Link to this heading"></a></h1>
+<p>DeepRootGen uses Docker Compose to run its interactive application and the
+services supporting simulation, calibration and experiment tracking. You do
+<strong>not</strong> need Docker to run the simulation model by itself; see <a class="reference internal" href="standalone.html"><span class="doc">Run the model independently</span></a>.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Install Git, Docker Engine or Docker Desktop, and the Docker Compose plugin.
+Ensure the machine has sufficient memory and storage for multiple services.</p>
+</section>
+<section id="clone-and-configure">
+<h2>Clone and configure<a class="headerlink" href="#clone-and-configure" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone https://github.com/Plant-Food-Research-Open/deep-root-gen.git</span>
+<span class="go">cd deep-root-gen</span>
+<span class="go">docker compose -f docker-compose.yaml config --services</span>
+<span class="go">docker compose -f docker-compose.yaml config --variables</span>
+</pre></div>
+</div>
+<p>Review the values in <code class="docutils literal notranslate"><span class="pre">.env</span></code> and the Compose file. In particular, verify
+image version, database connection settings, credentials, host names, object
+storage settings, and exposed ports. Keep secrets out of published files and
+replace any development credentials before exposing the stack externally.</p>
+</section>
+<section id="start-the-main-application">
+<h2>Start the main application<a class="headerlink" href="#start-the-main-application" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">docker compose -f docker-compose.yaml up -d</span>
+<span class="go">docker compose -f docker-compose.yaml ps</span>
+</pre></div>
+</div>
+<p>The stack includes the Dash interface, Prefect workflow orchestration, MLflow
+experiment tracking, PostgreSQL, MinIO object storage and ArangoDB graph
+storage. To determine the actual host ports for an installation, use
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">compose</span> <span class="pre">-f</span> <span class="pre">docker-compose.yaml</span> <span class="pre">ps</span></code>; do not assume that container
+ports equal host ports.</p>
+</section>
+<section id="model-deployment-services-optional">
+<h2>Model deployment services (optional)<a class="headerlink" href="#model-deployment-services-optional" title="Link to this heading"></a></h2>
+<p>The repository’s <code class="docutils literal notranslate"><span class="pre">docker-compose.model-deploy.yaml</span></code> defines additional
+BentoML services. These are <strong>optional</strong> and use the same Docker network and
+back-end services as the primary Compose file.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Service</p></th>
+<th class="head"><p>Host port</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Optimisation</p></td>
+<td><p>5001</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sensitivity analysis</p></td>
+<td><p>5002</p></td>
+</tr>
+<tr class="row-even"><td><p>ABC</p></td>
+<td><p>5003</p></td>
+</tr>
+<tr class="row-odd"><td><p>SNPE</p></td>
+<td><p>5004</p></td>
+</tr>
+<tr class="row-even"><td><p>Surrogate modelling</p></td>
+<td><p>5005</p></td>
+</tr>
+</tbody>
+</table>
+<p>Run both configurations together:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">docker compose -f docker-compose.yaml -f docker-compose.model-deploy.yaml up -d</span>
+<span class="go">docker compose -f docker-compose.yaml -f docker-compose.model-deploy.yaml ps</span>
+</pre></div>
+</div>
+<p>The deployed endpoints and readiness depend on their associated BentoML
+services and their dependencies. A container starting is not equivalent to a
+model being ready to receive requests.</p>
+</section>
+<section id="logs-and-shutdown">
+<h2>Logs and shutdown<a class="headerlink" href="#logs-and-shutdown" title="Link to this heading"></a></h2>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">docker compose -f docker-compose.yaml logs -f</span>
+<span class="go">docker compose -f docker-compose.yaml down</span>
+</pre></div>
+</div>
+<p>For an installation started with both files, supply both files when stopping:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">docker compose -f docker-compose.yaml -f docker-compose.model-deploy.yaml down</span>
+</pre></div>
+</div>
+<p>Do not add <code class="docutils literal notranslate"><span class="pre">-v</span></code> to <code class="docutils literal notranslate"><span class="pre">down</span></code> unless deliberately deleting persistent volumes.</p>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">compose</span> <span class="pre">-f</span> <span class="pre">docker-compose.yaml</span> <span class="pre">config</span></code> to validate variable
+expansion and the resulting service definitions.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">compose</span> <span class="pre">-f</span> <span class="pre">docker-compose.yaml</span> <span class="pre">ps</span></code> and <code class="docutils literal notranslate"><span class="pre">logs</span> <span class="pre">--tail=100</span></code> to
+diagnose containers that fail or restart.</p></li>
+<li><p>Confirm that all requested host ports are available.</p></li>
+<li><p>Confirm that MLflow and BentoML can reach the relevant storage endpoints
+using <em>container</em> network names rather than <code class="docutils literal notranslate"><span class="pre">localhost</span></code>.</p></li>
+<li><p>Use <a class="reference internal" href="standalone.html"><span class="doc">Run the model independently</span></a> if only a local root architecture simulation is
+needed.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="standalone.html" class="btn btn-neutral float-right" title="Run the model independently" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

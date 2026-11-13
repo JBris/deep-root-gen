@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepRootGen &mdash; DeepRootGen 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Usage" href="../usage/index.html" />
+    <link rel="prev" title="Introduction" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DeepRootGen</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-with-poetry">Install with Poetry</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-root-graph-data">Working with Root Graph Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#node-table">Node table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edge-table">Edge table</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#development">Development</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#repository-resources">Repository resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pre-commit-hooks">Pre-commit hooks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-documentation">Building the documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#community-and-support">Community and Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faqs.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelogs/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">DeepRootGen</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/introduction/project_guide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deeprootgen">
+<h1>DeepRootGen<a class="headerlink" href="#deeprootgen" title="Link to this heading"></a></h1>
+<p>This page describes how to install DeepRootGen, run a root system simulation,
+work with its exported graph data, and contribute to the project. For the
+scientific background and an overview of the modelling framework, see the
+Introduction page.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<section id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h3>
+<p>DeepRootGen targets Python <code class="docutils literal notranslate"><span class="pre">&gt;=3.10,&lt;3.11</span></code> and uses Poetry to manage its
+project dependencies. For reproducible installations, use the committed
+<code class="docutils literal notranslate"><span class="pre">poetry.lock</span></code> file.</p>
+</section>
+<section id="install-with-poetry">
+<h3>Install with Poetry<a class="headerlink" href="#install-with-poetry" title="Link to this heading"></a></h3>
+<p>Clone the repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Plant-Food-Research-Open/deep-root-gen.git
+<span class="nb">cd</span><span class="w"> </span>deep-root-gen
+</pre></div>
+</div>
+<p>Install Poetry if necessary and then install the project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>poetry
+poetry<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Run commands inside the Poetry environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>python
+</pre></div>
+</div>
+<p>For more detailed setup instructions, refer to the
+<a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/docs/DEVELOPMENT.md">development and setup guide</a>.</p>
+</section>
+</section>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading"></a></h2>
+<p>The following example creates a stochastic three-dimensional root system and
+exports its hierarchical graph as separate node and edge tables.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">deeprootgen.data_model</span> <span class="kn">import</span> <span class="n">RootSimulationModel</span>
+<span class="kn">from</span> <span class="nn">deeprootgen.model</span> <span class="kn">import</span> <span class="n">RootSystemSimulation</span>
+
+<span class="n">parameters</span> <span class="o">=</span> <span class="n">RootSimulationModel</span><span class="p">(</span>
+    <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">max_order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">root_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">fine_root_threshold</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+    <span class="n">outer_root_num</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">inner_root_num</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">min_primary_length</span><span class="o">=</span><span class="mf">15.0</span><span class="p">,</span>
+    <span class="n">max_primary_length</span><span class="o">=</span><span class="mf">40.0</span><span class="p">,</span>
+    <span class="n">base_diameter</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">diameter_reduction</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">apex_diameter</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">min_sec_root_num</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">max_sec_root_num</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">growth_sec_root</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">min_sec_root_length</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">max_sec_root_length</span><span class="o">=</span><span class="mf">15.0</span><span class="p">,</span>
+    <span class="n">segments_per_root</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">length_reduction</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">root_vary</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">interbranch_distance</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">mechanical_constraints</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">root_tissue_density</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+    <span class="n">gravitropism</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">enable_soil</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">soil_layer_height</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">soil_n_layers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">soil_layer_width</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">soil_n_cols</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">simulation</span> <span class="o">=</span> <span class="n">RootSystemSimulation</span><span class="p">(</span><span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">simulation</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+
+<span class="n">node_df</span><span class="p">,</span> <span class="n">edge_df</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span>
+
+<span class="n">node_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;root_nodes.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">edge_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;root_edges.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nodes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span><span class="si">}</span><span class="s2">; edges: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">edge_df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A fixed random seed makes it possible to reproduce an individual stochastic
+realisation, subject to the software environment and model implementation.
+Different seeds can produce different root architectures under the same
+parameter configuration.</p>
+</section>
+<section id="working-with-root-graph-data">
+<h2>Working with Root Graph Data<a class="headerlink" href="#working-with-root-graph-data" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">RootSystemGraph.as_df()</span></code> method exports a node table and an edge table.
+The node schema is defined by <code class="docutils literal notranslate"><span class="pre">RootNodeModel</span></code> in
+<code class="docutils literal notranslate"><span class="pre">deeprootgen/data_model/simulation_data_models.py</span></code>. The tables can be used
+for plotting, architectural statistics, or external analysis.</p>
+<section id="node-table">
+<h3>Node table<a class="headerlink" href="#node-table" title="Link to this heading"></a></h3>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Node fields</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 28.0%" />
+<col style="width: 72.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">node_id</span></code></p></td>
+<td><p>Unique graph node identifier.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">parent_id</span></code></p></td>
+<td><p>Identifier of the parent node; the base node uses <code class="docutils literal notranslate"><span class="pre">-1</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plant_id</span></code></p></td>
+<td><p>Plant identifier.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">organ_id</span></code></p></td>
+<td><p>Root organ identifier.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">order</span></code></p></td>
+<td><p>Root branching order; base node is order zero.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">segment_rank</span></code></p></td>
+<td><p>Segment position within a root organ.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code></p></td>
+<td><p>Spatial coordinates (cm).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">diameter</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code></p></td>
+<td><p>Recorded segment dimensions (cm).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">root_tissue_density</span></code></p></td>
+<td><p>Root tissue density (g/cm³).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">root_type</span></code></p></td>
+<td><p>Classification such as <code class="docutils literal notranslate"><span class="pre">structural</span></code>, <code class="docutils literal notranslate"><span class="pre">fine</span></code> or <code class="docutils literal notranslate"><span class="pre">base</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">order_type</span></code>, <code class="docutils literal notranslate"><span class="pre">position_type</span></code></p></td>
+<td><p>Additional classifications.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">simulation_tag</span></code></p></td>
+<td><p>Simulation grouping tag.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">invalid_root</span></code></p></td>
+<td><p>Flag identifying segments retained in the export but marked invalid.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="edge-table">
+<h3>Edge table<a class="headerlink" href="#edge-table" title="Link to this heading"></a></h3>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Edge fields</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 28.0%" />
+<col style="width: 72.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">parent_id</span></code></p></td>
+<td><p>Parent node identifier.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">child_id</span></code></p></td>
+<td><p>Child node identifier.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The node and edge tables jointly preserve the explicit parent-child
+connectivity of the simulated root system. Reconstruct segment geometry from
+the coordinates of each child and its parent rather than assuming the rows
+are already ordered into root paths.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The export can retain segments marked <code class="docutils literal notranslate"><span class="pre">invalid_root=True</span></code>. Apply a
+consistent validity filter when calculating summary statistics. Some
+statistics use recorded segment lengths; geometric analyses may instead
+use the distance between parent and child coordinates. Whole-root totals
+may also differ from lengths clipped to a finite soil voxel grid.</p>
+</div>
+<p>The current export should not be assumed to use older field conventions such
+as <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">parent</span></code>, a combined <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> field, or numeric root types.
+Check downstream data consumers before translating or renaming identifiers.</p>
+</section>
+</section>
+<section id="development">
+<h2>Development<a class="headerlink" href="#development" title="Link to this heading"></a></h2>
+<section id="repository-resources">
+<h3>Repository resources<a class="headerlink" href="#repository-resources" title="Link to this heading"></a></h3>
+<p>Useful starting points for contributors include:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/docs/DEVELOPMENT.md">Development and setup guide</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/docs/ARCHITECTURE.md">Architecture and code map</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/docs/REVIEW_NOTES.md">Review notes</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/AGENTS.md">Agent instructions</a></p></li>
+</ul>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h3>
+<p>Run the project’s existing test suite with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>pytest
+</pre></div>
+</div>
+<p>Passing the existing automated tests does not, by itself, establish the
+scientific validity of generated root systems. Changes to the simulator or
+statistics should also be checked for geometric consistency, graph integrity,
+root branching behaviour, and agreement between summary calculations.</p>
+</section>
+<section id="pre-commit-hooks">
+<h3>Pre-commit hooks<a class="headerlink" href="#pre-commit-hooks" title="Link to this heading"></a></h3>
+<p>Install and run the configured hooks using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
+poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+</pre></div>
+</div>
+</section>
+<section id="building-the-documentation">
+<h3>Building the documentation<a class="headerlink" href="#building-the-documentation" title="Link to this heading"></a></h3>
+<p>The online documentation is available from the
+<a class="reference external" href="https://Plant-Food-Research-Open.github.io/deep-root-gen/">DeepRootGen website</a>.
+The documentation uses Sphinx and the Read the Docs theme.</p>
+<p>From the repository root, build the HTML pages using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
+make<span class="w"> </span>html
+</pre></div>
+</div>
+<p>Open <code class="docutils literal notranslate"><span class="pre">docs/build/html/index.html</span></code> to view the generated documentation.</p>
+</section>
+</section>
+<section id="community-and-support">
+<h2>Community and Support<a class="headerlink" href="#community-and-support" title="Link to this heading"></a></h2>
+<p>For questions, bug reports, and feature requests, use the repository’s
+<a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/issues">GitHub Issues</a>.
+For proposed code changes, see
+<a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/pulls">GitHub Pull Requests</a>.</p>
+<p>When reporting a simulation issue, include the input parameters, random seed,
+Python environment, relevant errors, and steps to reproduce the behaviour.</p>
+<p>Contributions are welcome. Review the project’s
+<a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/docs/source/community/CONTRIBUTING.md">contribution guidelines</a>
+and
+<a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/docs/source/community/CODE_OF_CONDUCT.md">code of conduct</a>
+before contributing.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p>DeepRootGen is distributed under the GNU General Public License v3.0 (GPL-3.0).
+See the <a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen/blob/main/LICENSE">LICENSE file</a>
+for the full licence terms.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../usage/index.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -12,3 +12,4 @@ API Reference
     spatial.rst
     pipeline.rst
     statistics.rst
+    utils.rst

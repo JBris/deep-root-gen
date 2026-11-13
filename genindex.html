@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; DeepRootGen 0.1.0 documentation</title>
+  <title>Index &mdash; DeepRootGen 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -44,8 +44,13 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction/project_guide.html">DeepRootGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/index.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faqs.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference/index.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelogs/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses/license.html">License</a></li>
 </ul>
 
         </div>
@@ -82,6 +87,7 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -90,7 +96,6 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
- | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  
 </div>
@@ -100,14 +105,14 @@
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.model_versioning.AbcModel">AbcModel (class in deeprootgen.calibration.model_versioning)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootNode.add_child_node">add_child_node() (deeprootgen.model.hgraph.RootNode method)</a>
-
-      <ul>
-        <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.add_child_node">(deeprootgen.model.root.RootOrgan method)</a>
 </li>
-      </ul></li>
+      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.add_child_organ">add_child_organ() (deeprootgen.model.root.RootOrgan method)</a>
+</li>
       <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.add_edge">add_edge() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.add_node">add_node() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
+</li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.root_grid_aggregation.aggregate_root_grid">aggregate_root_grid() (in module deeprootgen.statistics.root_grid_aggregation)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.as_df">as_df() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
 </li>
@@ -174,54 +179,20 @@
 </li>
         <li><a href="api_reference/statistics.html#deeprootgen.statistics.distance_metrics.RootMeanSquaredError.calculate">(deeprootgen.statistics.distance_metrics.RootMeanSquaredError method)</a>
 </li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageDiameter.calculate">(deeprootgen.statistics.summary_statistics.AverageDiameter method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageLength.calculate">(deeprootgen.statistics.summary_statistics.AverageLength method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageSpecificRootLength.calculate">(deeprootgen.statistics.summary_statistics.AverageSpecificRootLength method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageVolume.calculate">(deeprootgen.statistics.summary_statistics.AverageVolume method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.AverageWeight.calculate">(deeprootgen.statistics.summary_statistics.AverageWeight method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullArea.calculate">(deeprootgen.statistics.summary_statistics.ConvexHullArea method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.ConvexHullVolume.calculate">(deeprootgen.statistics.summary_statistics.ConvexHullVolume method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.DepthDistribution.calculate">(deeprootgen.statistics.summary_statistics.DepthDistribution method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RadialDistribution.calculate">(deeprootgen.statistics.summary_statistics.RadialDistribution method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.calculate">(deeprootgen.statistics.summary_statistics.SummaryStatisticBase method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalDiameter.calculate">(deeprootgen.statistics.summary_statistics.TotalDiameter method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalLength.calculate">(deeprootgen.statistics.summary_statistics.TotalLength method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength.calculate">(deeprootgen.statistics.summary_statistics.TotalSpecificRootLength method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalVolume.calculate">(deeprootgen.statistics.summary_statistics.TotalVolume method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalWeight.calculate">(deeprootgen.statistics.summary_statistics.TotalWeight method)</a>
-</li>
       </ul></li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.spatial_rld.calculate_core_rld">calculate_core_rld() (in module deeprootgen.statistics.spatial_rld)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.calculate_mass">calculate_mass() (deeprootgen.model.root.RootOrgan method)</a>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootLengthDensity.calculate_statistic_per_layer">calculate_statistic_per_layer() (deeprootgen.statistics.summary_statistics.RootLengthDensity method)</a>
+
+      <ul>
+        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.calculate_statistic_per_layer">(deeprootgen.statistics.summary_statistics.SummaryStatisticBase method)</a>
 </li>
-      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.calculate_statistic_per_layer">calculate_statistic_per_layer() (deeprootgen.statistics.summary_statistics.SummaryStatisticBase method)</a>
-</li>
+      </ul></li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistic_discrepancy">calculate_summary_statistic_discrepancy() (in module deeprootgen.calibration.summary_statistics)</a>
 </li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.summary_statistics.calculate_summary_statistics">calculate_summary_statistics() (in module deeprootgen.calibration.summary_statistics)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.cascading_set_invalid_root">cascading_set_invalid_root() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.cascading_to_world_origin">cascading_to_world_origin() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.cascading_transform">cascading_transform() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.cascading_update_transform">cascading_update_transform() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.construct_root">construct_root() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
@@ -304,8 +275,6 @@
         <li><a href="api_reference/model.html#module-deeprootgen.model.hgraph">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     deeprootgen.model.root
 
@@ -313,6 +282,8 @@
         <li><a href="api_reference/model.html#module-deeprootgen.model.root">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     deeprootgen.model.soil
 
@@ -349,10 +320,31 @@
 </li>
       </ul></li>
       <li>
+    deeprootgen.statistics.root_grid_aggregation
+
+      <ul>
+        <li><a href="api_reference/statistics.html#module-deeprootgen.statistics.root_grid_aggregation">module</a>
+</li>
+      </ul></li>
+      <li>
+    deeprootgen.statistics.spatial_rld
+
+      <ul>
+        <li><a href="api_reference/statistics.html#module-deeprootgen.statistics.spatial_rld">module</a>
+</li>
+      </ul></li>
+      <li>
     deeprootgen.statistics.summary_statistics
 
       <ul>
         <li><a href="api_reference/statistics.html#module-deeprootgen.statistics.summary_statistics">module</a>
+</li>
+      </ul></li>
+      <li>
+    deeprootgen.utils.branching
+
+      <ul>
+        <li><a href="api_reference/utils.html#module-deeprootgen.utils.branching">module</a>
 </li>
       </ul></li>
       <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.DepthDistribution">DepthDistribution (class in deeprootgen.statistics.summary_statistics)</a>
@@ -401,19 +393,13 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_apex_coordinates">get_apex_coordinates() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.summary_statistics.get_calibration_summary_stats">get_calibration_summary_stats() (in module deeprootgen.calibration.summary_statistics)</a>
 </li>
       <li><a href="api_reference/form.html#deeprootgen.form.components.get_common_layout">get_common_layout() (in module deeprootgen.form.components)</a>
 </li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_coordinates">get_coordinates() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
       <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.get_datetime_now">get_datetime_now() (in module deeprootgen.pipeline.experiment)</a>
 </li>
       <li><a href="api_reference/form.html#deeprootgen.form.components.get_deployment_links">get_deployment_links() (in module deeprootgen.form.components)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_diameters">get_diameters() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
       <li><a href="api_reference/statistics.html#deeprootgen.statistics.distance_metrics.get_distance_metric_func">get_distance_metric_func() (in module deeprootgen.statistics.distance_metrics)</a>
 </li>
@@ -421,54 +407,36 @@
 </li>
       <li><a href="api_reference/form.html#deeprootgen.form.components.get_external_links">get_external_links() (in module deeprootgen.form.components)</a>
 </li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_lengths">get_lengths() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_local_origin">get_local_origin() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
-      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.get_number_of_roots">get_number_of_roots() (deeprootgen.statistics.summary_statistics.SummaryStatisticBase method)</a>
-</li>
       <li><a href="api_reference/form.html#deeprootgen.form.components.get_out_table_df">get_out_table_df() (in module deeprootgen.form.components)</a>
-</li>
-      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.get_outdir">get_outdir() (in module deeprootgen.pipeline.experiment)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.get_parent_origin">get_parent_origin() (deeprootgen.model.root.RootOrgan method)</a>
+      <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.get_outdir">get_outdir() (in module deeprootgen.pipeline.experiment)</a>
 </li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.parameters.get_simulation_parameters">get_simulation_parameters() (in module deeprootgen.calibration.parameters)</a>
 </li>
       <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.get_simulation_uuid">get_simulation_uuid() (in module deeprootgen.pipeline.experiment)</a>
 </li>
-      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.get_summary_statistic_func">get_summary_statistic_func() (in module deeprootgen.statistics.summary_statistics)</a>
-</li>
-      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.get_summary_statistics">get_summary_statistics() (in module deeprootgen.statistics.summary_statistics)</a>
-</li>
       <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_transform_matrix">get_transform_matrix() (in module deeprootgen.spatial.transform)</a>
 </li>
       <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_x_rotation_matrix">get_x_rotation_matrix() (in module deeprootgen.spatial.transform)</a>
 </li>
-      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.DepthDistribution.get_xy_comparison_data">get_xy_comparison_data() (deeprootgen.statistics.summary_statistics.DepthDistribution method)</a>
-
-      <ul>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RadialDistribution.get_xy_comparison_data">(deeprootgen.statistics.summary_statistics.RadialDistribution method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.get_xy_comparison_data">(deeprootgen.statistics.summary_statistics.SummaryStatisticBase method)</a>
-</li>
-      </ul></li>
       <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_y_rotation_matrix">get_y_rotation_matrix() (in module deeprootgen.spatial.transform)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.get_yaw">get_yaw() (deeprootgen.model.root.RootSystemSimulation method)</a>
 </li>
       <li><a href="api_reference/spatial.html#deeprootgen.spatial.transform.get_z_rotation_matrix">get_z_rotation_matrix() (in module deeprootgen.spatial.transform)</a>
 </li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.model_versioning.GraphFlowFeatureExtractor">GraphFlowFeatureExtractor (class in deeprootgen.calibration.model_versioning)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.grow">grow() (deeprootgen.model.root.RootOrgan method)</a>
-
-      <ul>
-        <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.grow">(deeprootgen.model.root.RootSystemSimulation method)</a>
 </li>
-      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.HorizontalRootLengthDistribution">HorizontalRootLengthDistribution (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -479,14 +447,8 @@
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootSystemGraph.increment_organ_id">increment_organ_id() (deeprootgen.model.hgraph.RootSystemGraph method)</a>
 </li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.init_diameters">init_diameters() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.init_fig">init_fig() (deeprootgen.model.root.RootSystemSimulation method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.init_lengths">init_lengths() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.init_organs">init_organs() (deeprootgen.model.root.RootSystemSimulation method)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.init_segment_coordinates">init_segment_coordinates() (deeprootgen.model.root.RootOrgan method)</a>
@@ -659,7 +621,13 @@
 </li>
         <li><a href="api_reference/statistics.html#module-deeprootgen.statistics.distance_metrics">deeprootgen.statistics.distance_metrics</a>
 </li>
+        <li><a href="api_reference/statistics.html#module-deeprootgen.statistics.root_grid_aggregation">deeprootgen.statistics.root_grid_aggregation</a>
+</li>
+        <li><a href="api_reference/statistics.html#module-deeprootgen.statistics.spatial_rld">deeprootgen.statistics.spatial_rld</a>
+</li>
         <li><a href="api_reference/statistics.html#module-deeprootgen.statistics.summary_statistics">deeprootgen.statistics.summary_statistics</a>
+</li>
+        <li><a href="api_reference/utils.html#module-deeprootgen.utils.branching">deeprootgen.utils.branching</a>
 </li>
       </ul></li>
   </ul></td>
@@ -683,14 +651,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.ParameterIntervalModel">ParameterIntervalModel (class in deeprootgen.data_model.simulation_data_models)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.plot_hierarchical_graph">plot_hierarchical_graph() (deeprootgen.model.root.RootSystemSimulation method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.plot_root_system">plot_root_system() (deeprootgen.model.root.RootSystemSimulation method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.position_primary_roots">position_primary_roots() (deeprootgen.model.root.RootSystemSimulation method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.position_secondary_roots">position_secondary_roots() (deeprootgen.model.root.RootSystemSimulation method)</a>
 </li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.model_versioning.AbcModel.predict">predict() (deeprootgen.calibration.model_versioning.AbcModel method)</a>
 
@@ -720,25 +680,43 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RadialDistribution">RadialDistribution (class in deeprootgen.statistics.summary_statistics)</a>
 </li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.reset_transform">reset_transform() (deeprootgen.model.root.RootOrgan method)</a>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootBranchingAngleDistribution">RootBranchingAngleDistribution (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootBranchingFrequency">RootBranchingFrequency (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootBranchingOrderDistribution">RootBranchingOrderDistribution (class in deeprootgen.statistics.summary_statistics)</a>
 </li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationIntervals">RootCalibrationIntervals (class in deeprootgen.data_model.simulation_data_models)</a>
 </li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootCalibrationModel">RootCalibrationModel (class in deeprootgen.data_model.simulation_data_models)</a>
 </li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootDiameterDistribution">RootDiameterDistribution (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootDryMassByDiameter">RootDryMassByDiameter (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
       <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootEdge">RootEdge (class in deeprootgen.model.hgraph)</a>
 </li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootEdgeModel">RootEdgeModel (class in deeprootgen.data_model.simulation_data_models)</a>
+</li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootingExtent">RootingExtent (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootLengthDensity">RootLengthDensity (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootLengthDistribution">RootLengthDistribution (class in deeprootgen.statistics.summary_statistics)</a>
 </li>
       <li><a href="api_reference/statistics.html#deeprootgen.statistics.distance_metrics.RootMeanSquaredError">RootMeanSquaredError (class in deeprootgen.statistics.distance_metrics)</a>
 </li>
       <li><a href="api_reference/model.html#deeprootgen.model.hgraph.RootNode">RootNode (class in deeprootgen.model.hgraph)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootNodeModel">RootNodeModel (class in deeprootgen.data_model.simulation_data_models)</a>
 </li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootNumber">RootNumber (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
       <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan">RootOrgan (class in deeprootgen.model.root)</a>
+</li>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RootOrientationDistribution">RootOrientationDistribution (class in deeprootgen.statistics.summary_statistics)</a>
 </li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootSimulationModel">RootSimulationModel (class in deeprootgen.data_model.simulation_data_models)</a>
 </li>
@@ -749,8 +727,6 @@
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootType">RootType (class in deeprootgen.data_model.simulation_data_models)</a>
 </li>
       <li><a href="api_reference/data_model.html#deeprootgen.data_model.simulation_data_models.RootTypeModel">RootTypeModel (class in deeprootgen.data_model.simulation_data_models)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.run">run() (deeprootgen.model.root.RootSystemSimulation method)</a>
 </li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.summary_statistics.run_calibration_simulation">run_calibration_simulation() (in module deeprootgen.calibration.summary_statistics)</a>
 </li>
@@ -764,15 +740,13 @@
 </li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.parameters.PriorCollection.sample">sample() (deeprootgen.calibration.parameters.PriorCollection method)</a>
 </li>
+      <li><a href="api_reference/utils.html#deeprootgen.utils.branching.sample_branch_sites">sample_branch_sites() (in module deeprootgen.utils.branching)</a>
+</li>
       <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.save_form_parameters">save_form_parameters() (in module deeprootgen.pipeline.experiment)</a>
 </li>
       <li><a href="api_reference/pipeline.html#deeprootgen.pipeline.experiment.save_simulation_runs">save_simulation_runs() (in module deeprootgen.pipeline.experiment)</a>
 </li>
       <li><a href="api_reference/calibration.html#deeprootgen.calibration.model_versioning.SensitivityAnalysisModel">SensitivityAnalysisModel (class in deeprootgen.calibration.model_versioning)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.set_coordinates">set_coordinates() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.set_invalid_root">set_invalid_root() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -800,23 +774,13 @@
 </li>
       <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalLength">TotalLength (class in deeprootgen.statistics.summary_statistics)</a>
 </li>
-      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength">TotalSpecificRootLength (class in deeprootgen.statistics.summary_statistics)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalSpecificRootLength">TotalSpecificRootLength (class in deeprootgen.statistics.summary_statistics)</a>
+</li>
       <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalVolume">TotalVolume (class in deeprootgen.statistics.summary_statistics)</a>
 </li>
       <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.TotalWeight">TotalWeight (class in deeprootgen.statistics.summary_statistics)</a>
-</li>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.transform">transform() (deeprootgen.model.root.RootOrgan method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="U">U</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.update_transform">update_transform() (deeprootgen.model.root.RootOrgan method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -824,22 +788,8 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/model.html#deeprootgen.model.root.RootOrgan.validate">validate() (deeprootgen.model.root.RootOrgan method)</a>
-
-      <ul>
-        <li><a href="api_reference/model.html#deeprootgen.model.root.RootSystemSimulation.validate">(deeprootgen.model.root.RootSystemSimulation method)</a>
+      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.VerticalRootLengthDistribution">VerticalRootLengthDistribution (class in deeprootgen.statistics.summary_statistics)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.DepthDistribution.visualise">visualise() (deeprootgen.statistics.summary_statistics.DepthDistribution method)</a>
-
-      <ul>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.RadialDistribution.visualise">(deeprootgen.statistics.summary_statistics.RadialDistribution method)</a>
-</li>
-        <li><a href="api_reference/statistics.html#deeprootgen.statistics.summary_statistics.SummaryStatisticBase.visualise">(deeprootgen.statistics.summary_statistics.SummaryStatisticBase method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 

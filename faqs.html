@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ &mdash; DeepRootGen 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api_reference/index.html" />
+    <link rel="prev" title="Run the model independently" href="usage/standalone.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            DeepRootGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction/project_guide.html">DeepRootGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage/index.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-format-should-spatial-rld-observations-use-is-the-feature-available">1. What format should spatial RLD observations use? Is the feature available?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#can-the-code-and-parameter-definitions-be-reviewed-before-fieldwork">2. Can the code and parameter definitions be reviewed before fieldwork?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-is-the-location-and-sampled-volume-of-rld-incorporated">3. How is the location and sampled volume of RLD incorporated?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#is-the-apple-calibration-input-and-run-script-available-as-a-template">4. Is the apple calibration input and run script available as a template?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-does-a-secondary-root-represent-structural-branches-or-fine-roots">5. What does a secondary root represent: structural branches or fine roots?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommendation">Recommendation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelogs/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeepRootGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">FAQ</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/faqs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="faq">
+<span id="grapevine-calibration-faq"></span><h1>FAQ<a class="headerlink" href="#faq" title="Link to this heading"></a></h1>
+<p>This page responds to the five questions in the <code class="docutils literal notranslate"><span class="pre">Questions</span></code> worksheet of
+<code class="docutils literal notranslate"><span class="pre">Paper2_data_preparation_draft_oct_checked.xlsx</span></code>. It refers to the workbook’s
+<code class="docutils literal notranslate"><span class="pre">README</span></code>, <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">description</span></code>, <code class="docutils literal notranslate"><span class="pre">what</span> <span class="pre">can</span> <span class="pre">my</span> <span class="pre">datasets</span> <span class="pre">inform</span></code>,
+<code class="docutils literal notranslate"><span class="pre">possible</span> <span class="pre">model</span> <span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">RLD</span> <span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>, <code class="docutils literal notranslate"><span class="pre">Root</span> <span class="pre">size</span> <span class="pre">summary</span> <span class="pre">example</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">Root</span> <span class="pre">angle</span> <span class="pre">summary</span> <span class="pre">example</span></code> worksheets.</p>
+<p>The intended application is reconstruction of a <strong>plausible representative
+root system for each site</strong>, not an exact reconstruction of the excavated
+subject vine. The source code interpretation below is based on the
+<code class="docutils literal notranslate"><span class="pre">RootOrgan</span></code> and <code class="docutils literal notranslate"><span class="pre">RootSystemSimulation</span></code> implementation supplied for review.
+Where functionality has been proposed but not integrated, this is stated
+explicitly. The public project is at
+<a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen">DeepRootGen on GitHub</a>.</p>
+<section id="what-format-should-spatial-rld-observations-use-is-the-feature-available">
+<h2>1. What format should spatial RLD observations use? Is the feature available?<a class="headerlink" href="#what-format-should-spatial-rld-observations-use-is-the-feature-available" title="Link to this heading"></a></h2>
+<p><strong>Recommended exchange format:</strong> a UTF-8 CSV file with <strong>one row per sampled
+core depth increment</strong>, retaining the sampling location, depth, observed RLD,
+sampling status, and soil volume. This is a proposed convention rather than
+an existing mandatory DeepRootGen input schema.</p>
+<p>The workbook already contains an appropriate source layout in the
+<code class="docutils literal notranslate"><span class="pre">RLD</span> <span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> worksheet:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Example taken from the workbook, Site 1, <code class="docutils literal notranslate"><span class="pre">tube4</span></code></span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 11.8%" />
+<col style="width: 11.8%" />
+<col style="width: 8.8%" />
+<col style="width: 8.8%" />
+<col style="width: 11.8%" />
+<col style="width: 15.7%" />
+<col style="width: 22.5%" />
+<col style="width: 8.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>site</p></th>
+<th class="head"><p>core_id</p></th>
+<th class="head"><p>x_cm</p></th>
+<th class="head"><p>y_cm</p></th>
+<th class="head"><p>z_mid_cm</p></th>
+<th class="head"><p>core_volume_cm3</p></th>
+<th class="head"><p>grapevine_rld_cm_cm^-3</p></th>
+<th class="head"><p>sampled</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Site 1</p></td>
+<td><p>tube4</p></td>
+<td><p>8.5</p></td>
+<td><p>-27</p></td>
+<td><p>5</p></td>
+<td><p>74.22</p></td>
+<td><p>0.487</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>Site 1</p></td>
+<td><p>tube4</p></td>
+<td><p>8.5</p></td>
+<td><p>-27</p></td>
+<td><p>15</p></td>
+<td><p>74.22</p></td>
+<td><p>0.503</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>Site 1</p></td>
+<td><p>tube4</p></td>
+<td><p>8.5</p></td>
+<td><p>-27</p></td>
+<td><p>25</p></td>
+<td><p>74.22</p></td>
+<td><p>0.255</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>Site 1</p></td>
+<td><p>tube4</p></td>
+<td><p>8.5</p></td>
+<td><p>-27</p></td>
+<td><p>145</p></td>
+<td><p>74.22</p></td>
+<td><p>0</p></td>
+<td><p>N</p></td>
+</tr>
+</tbody>
+</table>
+<p>Retain <code class="docutils literal notranslate"><span class="pre">site</span></code> and <code class="docutils literal notranslate"><span class="pre">core_id</span></code> as identifiers. Their names do not affect
+the numerical model, but are necessary for matching repeated increments and
+site-specific fitting. <code class="docutils literal notranslate"><span class="pre">vine_dw_g</span></code> may be retained as an optional extra
+column. A descriptive filename such as
+<code class="docutils literal notranslate"><span class="pre">grapevine_core_rld_observations.csv</span></code> is suggested; the code has no
+special required filename.</p>
+<p><strong>Coordinate convention:</strong> the workbook uses positive <code class="docutils literal notranslate"><span class="pre">z_mid_cm</span></code> for depth
+below the surface, whereas the simulator uses <code class="docutils literal notranslate"><span class="pre">z=0</span></code> at ground level and
+negative <code class="docutils literal notranslate"><span class="pre">z</span></code> below ground. Each increment is 10 cm thick. A workbook
+midpoint of 5 cm therefore corresponds to <code class="docutils literal notranslate"><span class="pre">z_lower_bound=-10</span></code> and
+<code class="docutils literal notranslate"><span class="pre">z_upper_bound=0</span></code> in the simulator; 15 cm corresponds to -20 to -10 cm.
+The <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> coordinates are measured relative to the subject vine
+trunk. Establish their orientation relative to the vine row and the model
+axes before fitting.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">observations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;grapevine_core_rld_observations.csv&quot;</span><span class="p">)</span>
+<span class="n">observations</span> <span class="o">=</span> <span class="n">observations</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="n">observations</span><span class="p">[</span><span class="s2">&quot;sampled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Workbook depths are positive downward; model z is negative downward.</span>
+<span class="n">observations</span><span class="p">[</span><span class="s2">&quot;z_lower_bound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">observations</span><span class="p">[</span><span class="s2">&quot;z_mid_cm&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">observations</span><span class="p">[</span><span class="s2">&quot;z_upper_bound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">observations</span><span class="p">[</span><span class="s2">&quot;z_mid_cm&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">observations</span><span class="p">[</span><span class="s2">&quot;observed_rld_cm_cm3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">observations</span><span class="p">[</span><span class="s2">&quot;grapevine_rld_cm_cm^-3&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>A <strong>measured zero with ``sampled=’Y’`` remains a valid observation</strong>.
+Rows marked <code class="docutils literal notranslate"><span class="pre">sampled='N'</span></code> must be excluded rather than interpreted as
+zero RLD. This matters for the 145 and 155 cm increments in the workbook
+example, and for unsampled shallow increments at Site 3.</p>
+<p><strong>Implementation status:</strong> the existing spatial RLD tools can calculate
+simulated voxel-level values. The model’s older calibration input
+(<code class="docutils literal notranslate"><span class="pre">SummaryStatisticsModel</span></code>) accepts scalar observations and optional depth
+bounds, but not a complete field-core location. A proposed extension adds
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, depth bounds and <code class="docutils literal notranslate"><span class="pre">core_radius</span></code> to each observation, together
+with spatial matching in the calibration objective. The proposal has <strong>not
+been verified as merged</strong> into the application; the CSV above is not yet a
+plug-and-play calibration input.</p>
+</section>
+<section id="can-the-code-and-parameter-definitions-be-reviewed-before-fieldwork">
+<h2>2. Can the code and parameter definitions be reviewed before fieldwork?<a class="headerlink" href="#can-the-code-and-parameter-definitions-be-reviewed-before-fieldwork" title="Link to this heading"></a></h2>
+<p><strong>Yes.</strong> The source is in the public
+<a class="reference external" href="https://github.com/Plant-Food-Research-Open/deep-root-gen">DeepRootGen repository</a>.
+The relevant code to review is <code class="docutils literal notranslate"><span class="pre">RootOrgan</span></code> and <code class="docutils literal notranslate"><span class="pre">RootSystemSimulation</span></code>
+(in <code class="docutils literal notranslate"><span class="pre">deeprootgen/model</span></code>), the <code class="docutils literal notranslate"><span class="pre">RootSimulationModel</span></code> schema (in
+<code class="docutils literal notranslate"><span class="pre">deeprootgen/data_model.py</span></code>), and the rotation utilities (in
+<code class="docutils literal notranslate"><span class="pre">deeprootgen/spatial.py</span></code>). The following definitions reflect the
+implementation supplied for this documentation, not inferred botanical
+interpretations.</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Angle and length parameter definitions</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 49.0%" />
+<col style="width: 31.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field concept</p></th>
+<th class="head"><p>Implemented model behaviour</p></th>
+<th class="head"><p>Implication for the workbook</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Starting / insertion angle</p></td>
+<td><p>No direct measured insertion-angle input. Primary roots begin from a
+model displacement direction, then the outer group receives a random
+pitch between -20 and -15 degrees; the inner group receives a pitch
+between 0 and 45 degrees. Yaw positions are spread around the trunk
+with random variation.</p></td>
+<td><p>The measured 2D angles in <code class="docutils literal notranslate"><span class="pre">Root</span> <span class="pre">angle</span> <span class="pre">summary</span> <span class="pre">example</span></code> are <strong>not</strong>
+directly the pitch parameters. Compare final generated root directions
+with the observed angle convention instead.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Branching angle</p></td>
+<td><p>No single explicit child-to-parent branching-angle parameter. Secondary
+organs receive rotations including a random yaw from -30 to 240
+degrees, random pitch and roll from 60 to 110 degrees, and additional
+fixed rotations.</p></td>
+<td><p>A measured 3D angle cannot currently be passed as a direct prior on a
+named branching-angle parameter without modifying the model.</p></td>
+</tr>
+<tr class="row-even"><td><p>Mechanical constraint</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">mechanical_constraints</span></code> input is not applied in the supplied
+simulation methods. Validation uses <code class="docutils literal notranslate"><span class="pre">no_root_zone</span></code>, iterative pitch
+rotations, and a maximum number of attempts. <code class="docutils literal notranslate"><span class="pre">gravitropism</span></code> is a
+separate downward bending operation.</p></td>
+<td><p>Do <strong>not</strong> interpret the workbook’s absolute rooting angle as a direct
+prior for <code class="docutils literal notranslate"><span class="pre">mechanical_constraints</span></code> in the current implementation.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Segment variance (<code class="docutils literal notranslate"><span class="pre">root_vary</span></code>)</p></td>
+<td><p>Each segment draws two angular perturbations independently from
+<code class="docutils literal notranslate"><span class="pre">Uniform(-root_vary,</span> <span class="pre">+root_vary)</span></code>, used for pitch and yaw. Despite
+the workbook description, this is a uniform range/half-width in
+degrees, <strong>not</strong> a variance statistic or three-axis variance.</p></td>
+<td><p>The available 2D field angles do not directly estimate this
+per-segment perturbation; root-path tracings would help.</p></td>
+</tr>
+<tr class="row-even"><td><p>Segment length</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">init_lengths</span></code> draws a total organ length from a uniform range,
+splits it into <code class="docutils literal notranslate"><span class="pre">segments_per_root</span></code> positive, decreasing random
+proportions, and makes their sum equal the sampled organ length.
+Secondary lengths are also adjusted using parent-segment length.</p></td>
+<td><p>Excavated ‘length to next branch or recovered end’ is not necessarily
+a model segment length or full organ length. Many observed values are
+lower bounds because roots were broken during excavation.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Length reduction (<code class="docutils literal notranslate"><span class="pre">length_reduction</span></code>)</p></td>
+<td><p>Applied by parent/branching order to secondary length intervals,
+not as a fixed reduction from one segment to the next.</p></td>
+<td><p>Use root-order summaries cautiously, distinguishing the observed
+truncated pieces from complete simulated organs.</p></td>
+</tr>
+<tr class="row-even"><td><p>Inter-branch distance</p></td>
+<td><p>Child attachment currently selects an existing parent segment index
+within a configured fraction of the parent organ. The supplied code
+does not use <code class="docutils literal notranslate"><span class="pre">interbranch_distance</span></code> to set physical spacing.</p></td>
+<td><p>The measured Site 1 inter-branch distances cannot yet constrain this
+parameter without implementing a distance-based branching rule.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">Root</span> <span class="pre">angle</span> <span class="pre">summary</span> <span class="pre">example</span></code> gives mean first-order angles (positive
+downwards) of 17.3, 8.8, -2.2, 31.0 and 15.6 degrees for Sites 1–5,
+respectively. These are 2D field estimates; they should not be equated to
+3D pitch, roll, yaw or parent-child branching angle without a consistent
+coordinate transformation. Because the workbook identifies 3D remeasurement
+as time-consuming, first assess sensitivity to angular parameters and whether
+existing 2D angles discriminate simulated architectures.</p>
+</section>
+<section id="how-is-the-location-and-sampled-volume-of-rld-incorporated">
+<h2>3. How is the location and sampled volume of RLD incorporated?<a class="headerlink" href="#how-is-the-location-and-sampled-volume-of-rld-incorporated" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">description</span></code> worksheet specifies <strong>14 core locations per site</strong>,
+with 10 cm depth increments of <strong>74.22 cm3</strong>. An observation therefore
+represents the average RLD of a small <strong>cylindrical sampling volume</strong>, not a
+point sample at <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z_mid)</span></code>. The simulator’s voxel table instead
+represents an entire rectangular soil cell. Matching the closest voxel alone
+would change the observation support and may bias calibration, especially
+near sharp spatial gradients.</p>
+<p>For an increment of height 10 cm and volume 74.22 cm3, the implied core
+radius is approximately <strong>1.537 cm</strong>, assuming a right circular cylinder.
+The appropriate forward observation operator is:</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{RLD}_{\mathrm{core}} =
+\frac{\sum_i L_i(\mathrm{segment}_i\cap\mathrm{core})}
+     {\pi r^2 (z_{\mathrm{upper}}-z_{\mathrm{lower}})}.\]</div>
+<p>Here each numerator term is the length of a simulated root segment inside
+the specific core cylinder; select the root diameters consistent with the
+observational protocol (the workbook’s primary grapevine RLD target includes
+roots up to approximately <strong>2.5 mm</strong>). The original simulation stores root
+diameter in <strong>cm</strong>, so 2.5 mm corresponds to <strong>0.25 cm</strong>.</p>
+<p>Direct segment–cylinder intersection is the preferred implementation for
+calibration. The previously proposed <code class="docutils literal notranslate"><span class="pre">calculate_core_rld</span></code> function performs
+this calculation, but it is <strong>not confirmed to exist in the repository</strong>.
+Whole-voxel RLD remains useful for visualisation and spatial summaries, but
+is not interchangeable with core RLD when the voxel is substantially larger
+than the observed core.</p>
+<p>There is also a provenance issue: field cores near the subject vine can
+intercept roots from neighbouring vines, but their parent vine cannot be
+identified from a washed core. The workbook proposes a representative vine
+and potentially a 3-by-3 neighbourhood. A single simulated vine should not
+be assumed to explain every observed core without testing this assumption.</p>
+</section>
+<section id="is-the-apple-calibration-input-and-run-script-available-as-a-template">
+<h2>4. Is the apple calibration input and run script available as a template?<a class="headerlink" href="#is-the-apple-calibration-input-and-run-script-available-as-a-template" title="Link to this heading"></a></h2>
+<p><strong>Not confirmed from the accessible public repository materials.</strong> DeepRootGen
+has a calibration framework, but no specific, verifiable public apple
+calibration input file and runnable apple calibration script could be
+identified for this FAQ. It would be misleading to claim a template is
+available at an unverified path.</p>
+<p>The expected observational structure for grapevine fitting is clearer from
+the workbook’s <code class="docutils literal notranslate"><span class="pre">RLD</span> <span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> worksheet than from a generic apple
+summary-statistics example. A reusable calibration example should demonstrate
+how to load that CSV, exclude unsampled increments, transform positive depth
+to model <code class="docutils literal notranslate"><span class="pre">z</span></code> bounds, select the &lt;=2.5 mm diameter class, calculate predicted
+core-volume RLD, and form an objective for each sampled increment. That
+spatial calibration integration is still to be provided and tested.</p>
+<p>The apple study mentioned in <code class="docutils literal notranslate"><span class="pre">possible</span> <span class="pre">model</span> <span class="pre">parameters</span></code> (for example,
+50 segments per root) is not evidence that its calibration files are present
+in the repository. If an apple project input and runner are supplied
+separately, they can serve as a workflow template, but their observation
+schema should not be assumed to support cylindrical core locations.</p>
+</section>
+<section id="what-does-a-secondary-root-represent-structural-branches-or-fine-roots">
+<h2>5. What does a secondary root represent: structural branches or fine roots?<a class="headerlink" href="#what-does-a-secondary-root-represent-structural-branches-or-fine-roots" title="Link to this heading"></a></h2>
+<p><strong>Secondary denotes branching order, not diameter or tissue class.</strong> In the
+supplied model, order 1 grows from the trunk/base, order 2 branches from
+order 1, and order 3 branches from order 2. A second-order root can be
+classified as either <code class="docutils literal notranslate"><span class="pre">structural</span></code> or <code class="docutils literal notranslate"><span class="pre">fine</span></code>. The classification is made
+from the organ’s <strong>mean simulated diameter</strong> relative to
+<code class="docutils literal notranslate"><span class="pre">fine_root_threshold</span></code>. This threshold is an absolute diameter in <strong>cm</strong>,
+not a ratio, despite the workbook’s description as ‘Fine root threshold
+ratio’. The workbook’s 2.5 mm criterion would correspond to a model
+threshold of <strong>0.25 cm</strong> if that observational definition is adopted.</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Which data can inform which parts of the model?</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 29.0%" />
+<col style="width: 37.0%" />
+<col style="width: 34.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Dataset</p></th>
+<th class="head"><p>Appropriate model target</p></th>
+<th class="head"><p>Caution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2: in-field first-order roots</p></td>
+<td><p>Counts, diameters, lengths and broad insertion directions of primary
+structural roots.</p></td>
+<td><p>Exposed lengths often end at a branch or excavation boundary, not the
+biological root tip.</p></td>
+</tr>
+<tr class="row-odd"><td><p>3: excavated partial roots</p></td>
+<td><p>Branching orders, structural order-2+ branches, branch counts,
+diameter by order and inter-branch distances.</p></td>
+<td><p>Only surviving structural pieces are traced; measured lengths are
+lower bounds. They do not describe the full fine-root population.</p></td>
+</tr>
+<tr class="row-even"><td><p>1: soil coring / WinRHIZO</p></td>
+<td><p>Spatial RLD target and length distribution by root diameter class for
+small roots.</p></td>
+<td><p>Does not provide parent–child topology or complete root-organ length.</p></td>
+</tr>
+<tr class="row-odd"><td><p>4: RootFly</p></td>
+<td><p>Cross-check diameter/length of coarser fragments, especially
+&gt;2.5 mm and 2.0–2.5 mm.</p></td>
+<td><p>Fragment lengths are limited by the core dimensions.</p></td>
+</tr>
+</tbody>
+</table>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">Root</span> <span class="pre">size</span> <span class="pre">summary</span> <span class="pre">example</span></code> reports Site 1 mean start
+diameters of <strong>23.0 mm</strong> for order 1 (n=53), <strong>14.3 mm</strong> for order 2
+(n=66), and <strong>10.8 mm</strong> for order 3 (n=29). It also shows some second-order
+structural roots as large as <strong>31.2 mm</strong>. Thus the large branches measured
+on the excavated partial samples are consistent with <strong>secondary structural
+roots</strong> in the model; secondary does not mean fine.</p>
+<p>A further implementation detail matters for fitting: <code class="docutils literal notranslate"><span class="pre">RootOrgan</span></code> currently
+classifies a whole generated organ using the mean of its segment diameters,
+while field analyses classify roots or root length using a <strong>diameter
+threshold per measured fragment/class</strong>. These produce different fine-root
+RLD quantities. To compare with WinRHIZO, filter simulated length by the
+segment diameter cutoff (and clarify boundary conventions), rather than
+relying only on the organ-level <code class="docutils literal notranslate"><span class="pre">root_type</span></code> flag. In addition, the
+<code class="docutils literal notranslate"><span class="pre">root_ratio</span></code> parameter is not used in the supplied root-generation methods,
+so a structural:fine ratio prior would not currently constrain simulation
+outputs without a corresponding model change.</p>
+</section>
+<section id="recommendation">
+<h2>Recommendation<a class="headerlink" href="#recommendation" title="Link to this heading"></a></h2>
+<p>Use dataset 1 (sampled core increments) as the <strong>spatial RLD fitting target</strong>;
+use datasets 2 and 3 chiefly to constrain the <strong>structural branching
+framework</strong>; and use WinRHIZO diameter classes together with dataset 4 to
+constrain the <strong>small-root diameter distribution</strong> and check the 2.0 versus
+2.5 mm cutoff. Before calibration, implement and validate the cylindrical
+core observation operator, coordinate alignment to vine row direction, and
+consistent diameter filtering. Treat measured excavated lengths as partial
+observations rather than exact complete-organ lengths.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage/standalone.html" class="btn btn-neutral float-left" title="Run the model independently" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api_reference/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, James Bristow.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Changelog &mdash; DeepRootGen 0.1.0 documentation</title>
+  <title>Changelog &mdash; DeepRootGen 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,13 +15,14 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Statistics" href="../api_reference/statistics.html" /> 
+    <link rel="next" title="Community" href="../community/index.html" />
+    <link rel="prev" title="Utils" href="../api_reference/utils.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,11 +47,27 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/project_guide.html">DeepRootGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/index.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faqs.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_reference/index.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">0.1.0 - 2024/08/17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1.0.0 - 2026/11/13</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#added">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#improved">Improved</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixed">Fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changed">Changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compatibility">Compatibility</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">0.1.0 - 2024/08/17</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Added</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses/license.html">License</a></li>
 </ul>
 
         </div>
@@ -80,10 +97,73 @@
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
 <section id="id1">
-<h2>0.1.0 - 2024/08/17<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h2>1.0.0 - 2026/11/13<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Stub</p></li>
+<li><p>Added root number and root length distribution statistics, including summaries by branching order.</p></li>
+<li><p>Added root diameter distributions, including length-weighted diameter classes.</p></li>
+<li><p>Added root branching frequency, branching order, and branching angle statistics.</p></li>
+<li><p>Added root elongation direction and orientation statistics, including inclination and azimuth.</p></li>
+<li><p>Added rooting depth and horizontal spread metrics.</p></li>
+<li><p>Added vertical and horizontal root length distributions.</p></li>
+<li><p>Added functionality for estimating radial root length distributions.</p></li>
+<li><p>Added support for stochastic lateral-root attachment using interbranch distances.</p></li>
+<li><p>Added attachment nodes along parent roots while preserving hierarchical graph connectivity.</p></li>
 </ul>
+</section>
+<section id="improved">
+<h3>Improved<a class="headerlink" href="#improved" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Improved three-dimensional root length density (RLD) calculations using geometric segment lengths and voxel intersections.</p></li>
+<li><p>Improved handling of root segments crossing soil voxel boundaries.</p></li>
+<li><p>Improved root length, diameter, volume, and mass calculations.</p></li>
+<li><p>Improved consistency between architectural statistics and voxel-based RLD aggregation.</p></li>
+<li><p>Improved handling of invalid root segments across summary statistics.</p></li>
+<li><p>Expanded the summary statistics registry to expose additional architectural metrics.</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Corrected average root diameter calculations to use length-weighted means.</p></li>
+<li><p>Corrected depth distributions to represent root length rather than node counts.</p></li>
+<li><p>Corrected radial distributions to use horizontal Euclidean distance from the root origin.</p></li>
+<li><p>Corrected specific root length calculations and associated units.</p></li>
+<li><p>Improved handling of empty and degenerate root systems in statistical calculations.</p></li>
+<li><p>Corrected inconsistencies arising from recorded versus geometric segment lengths.</p></li>
+</ul>
+</section>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Standardised architectural statistics around parent-child segment geometry.</p></li>
+<li><p>Updated selected summary statistics to require hierarchical root-node data.</p></li>
+<li><p>Updated depth and radial distribution comparison outputs to represent cumulative root-length fractions.</p></li>
+<li><p>Changed the default segment-length calculation for selected statistics to use geometric lengths.</p></li>
+</ul>
+</section>
+<section id="compatibility">
+<h3>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Retained existing summary statistic class names and primary calculation interfaces.</p></li>
+<li><p>Retained existing root length density aggregation methods.</p></li>
+<li><p>Some calculation defaults, input requirements, and comparison outputs have changed and may affect existing calibration workflows.</p></li>
+</ul>
+</section>
+</section>
+<section id="id2">
+<h2>0.1.0 - 2024/08/17<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id3">
+<h3>Added<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Initial project structure and implementation.</p></li>
+<li><p>Initial stochastic root system architecture simulation functionality.</p></li>
+<li><p>Initial root graph representation and data models.</p></li>
+<li><p>Initial root system summary statistics and visualisation utilities.</p></li>
+<li><p>Initial calibration and sensitivity analysis infrastructure.</p></li>
+</ul>
+</section>
 </section>
 </section>
 
@@ -91,7 +171,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../api_reference/statistics.html" class="btn btn-neutral float-left" title="Statistics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_reference/utils.html" class="btn btn-neutral float-left" title="Utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../community/index.html" class="btn btn-neutral float-right" title="Community" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

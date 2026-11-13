@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deeprootgen.pipeline.experiment &mdash; DeepRootGen 0.1.0 documentation</title>
+  <title>deeprootgen.pipeline.experiment &mdash; DeepRootGen 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
         <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -44,8 +44,13 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/project_guide.html">DeepRootGen</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage/index.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faqs.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_reference/index.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelogs/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../licenses/license.html">License</a></li>
 </ul>
 
         </div>
@@ -86,6 +91,10 @@
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
+<span class="kn">from</span> <span class="nn">deeprootgen.statistics.summary_statistics</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RootDryMassByDiameter</span><span class="p">,</span>
+    <span class="n">RootLengthDensity</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">import</span> <span class="nn">mlflow</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -99,6 +108,7 @@
 <span class="kn">from</span> <span class="nn">..data_model</span> <span class="kn">import</span> <span class="n">RootSimulationModel</span>
 <span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">RootSystemSimulation</span>
 <span class="kn">from</span> <span class="nn">..statistics</span> <span class="kn">import</span> <span class="n">get_summary_statistic_func</span><span class="p">,</span> <span class="n">get_summary_statistics</span>
+<span class="kn">from</span> <span class="nn">..statistics.root_grid_aggregation</span> <span class="kn">import</span> <span class="n">aggregate_root_grid</span>
 
 <span class="n">OUT_DIR</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/app&quot;</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">)</span>
 
@@ -277,6 +287,7 @@
     <span class="n">node_df</span><span class="p">,</span> <span class="n">edge_df</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_df</span><span class="p">()</span>
     <span class="n">G</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">as_networkx</span><span class="p">()</span>
     <span class="n">time_now</span> <span class="o">=</span> <span class="n">get_datetime_now</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_nodes.csv&quot;</span><span class="p">)</span>
     <span class="n">node_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -302,31 +313,159 @@
     <span class="n">profile</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
     <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
 
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">root_tissue_density</span><span class="o">=</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">root_tissue_density</span><span class="p">)</span>
+    <span class="c1"># Calculate and log summary statistics.</span>
     <span class="n">statistic_names</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">statistic_values</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">summary_statistics</span> <span class="o">=</span> <span class="n">get_summary_statistics</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">summary_statistic</span> <span class="ow">in</span> <span class="n">summary_statistics</span><span class="p">:</span>
-        <span class="n">statistic_name</span> <span class="o">=</span> <span class="n">summary_statistic</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
-        <span class="n">statistic_func</span> <span class="o">=</span> <span class="n">get_summary_statistic_func</span><span class="p">(</span><span class="n">statistic_name</span><span class="p">)</span>
-        <span class="n">statistic_instance</span> <span class="o">=</span> <span class="n">statistic_func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">statistic_value</span> <span class="o">=</span> <span class="n">statistic_instance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span>
 
-        <span class="c1"># @TODO calculate by depth and horizontal distance</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">statistic_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;average_</span><span class="si">{</span><span class="n">statistic_name</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">statistic_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="c1"># Check whether soil dimensions are available.</span>
+    <span class="n">soil_dimensions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_height</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_width</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_layers</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_cols</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">has_soil_grid</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">soil_dimensions</span><span class="p">)</span>
+
+    <span class="n">soil_df</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">has_soil_grid</span><span class="p">:</span>
+        <span class="n">soil_df</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">soil</span><span class="o">.</span><span class="n">create_soil_grid</span><span class="p">(</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_height</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_layers</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_width</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_cols</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Required for the original Soil implementation,</span>
+        <span class="c1"># which uses y as the vertical axis.</span>
+        <span class="c1"># Remove if you have already corrected Soil.</span>
+        <span class="n">soil_df</span> <span class="o">=</span> <span class="n">soil_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">statistic</span> <span class="ow">in</span> <span class="n">get_summary_statistics</span><span class="p">():</span>
+        <span class="n">statistic_name</span> <span class="o">=</span> <span class="n">statistic</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Spatial root length density.</span>
+        <span class="k">if</span> <span class="n">statistic_name</span> <span class="o">==</span> <span class="s2">&quot;root_length_density&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">soil_df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping RLD: soil dimensions not configured.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">rld</span> <span class="o">=</span> <span class="n">RootLengthDensity</span><span class="p">(</span><span class="n">soil_df</span><span class="o">=</span><span class="n">soil_df</span><span class="p">)</span>
+
+            <span class="c1"># Calculate voxel lengths once.</span>
+            <span class="n">voxels</span> <span class="o">=</span> <span class="n">rld</span><span class="o">.</span><span class="n">calculate_per_voxel</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span>
+
+            <span class="n">spatial_results</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;voxels&quot;</span><span class="p">:</span> <span class="n">voxels</span><span class="p">,</span>
+                <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="n">rld</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">voxels</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="n">rld</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">voxels</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;layers&quot;</span><span class="p">:</span> <span class="n">rld</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">voxels</span><span class="p">,</span> <span class="s2">&quot;layer&quot;</span><span class="p">),</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Log each spatial resolution as an artifact.</span>
+            <span class="k">for</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">spatial_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">OUT_DIR</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_rld_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+
+            <span class="c1"># Whole-grid RLD is a scalar MLflow metric.</span>
+            <span class="n">statistic_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">voxels</span><span class="p">[</span><span class="s2">&quot;root_length_cm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">voxels</span><span class="p">[</span><span class="s2">&quot;soil_volume_cm3&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Root dry mass distribution.</span>
+        <span class="k">elif</span> <span class="n">statistic_name</span> <span class="o">==</span> <span class="s2">&quot;root_dry_mass_by_diameter&quot;</span><span class="p">:</span>
+            <span class="n">mass_stat</span> <span class="o">=</span> <span class="n">RootDryMassByDiameter</span><span class="p">(</span>
+                <span class="n">diameter_bins_mm</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span>
+                <span class="n">root_tissue_density</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">mass_df</span> <span class="o">=</span> <span class="n">mass_stat</span><span class="o">.</span><span class="n">calculate_df</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span>
+
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">OUT_DIR</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_dry_mass_by_diameter.csv&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">mass_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+
+            <span class="c1"># The class distribution is not a scalar metric.</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Existing summary statistics.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">statistic_func</span> <span class="o">=</span> <span class="n">get_summary_statistic_func</span><span class="p">(</span><span class="n">statistic_name</span><span class="p">)</span>
+
+            <span class="n">statistic_instance</span> <span class="o">=</span> <span class="n">statistic_func</span><span class="p">(</span>
+                <span class="n">root_tissue_density</span><span class="o">=</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">root_tissue_density</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">statistic_value</span> <span class="o">=</span> <span class="n">statistic_instance</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">node_df</span><span class="p">)</span>
+
+            <span class="c1"># Preserve existing behaviour for tuple results.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">statistic_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;average_</span><span class="si">{</span><span class="n">statistic_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">statistic_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+        <span class="n">statistic_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">):</span>
+            <span class="k">continue</span>
 
         <span class="n">statistic_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic_name</span><span class="p">)</span>
         <span class="n">statistic_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">statistic_value</span><span class="p">)</span>
+
         <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="n">statistic_name</span><span class="p">,</span> <span class="n">statistic_value</span><span class="p">)</span>
 
     <span class="n">statistic_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="p">{</span><span class="s2">&quot;statistic_name&quot;</span><span class="p">:</span> <span class="n">statistic_names</span><span class="p">,</span> <span class="s2">&quot;statistic_value&quot;</span><span class="p">:</span> <span class="n">statistic_values</span><span class="p">}</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;statistic_name&quot;</span><span class="p">:</span> <span class="n">statistic_names</span><span class="p">,</span>
+            <span class="s2">&quot;statistic_value&quot;</span><span class="p">:</span> <span class="n">statistic_values</span><span class="p">,</span>
+        <span class="p">}</span>
     <span class="p">)</span>
-    <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_summary_statistics.csv&quot;</span><span class="p">)</span>
+
+    <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">OUT_DIR</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_summary_statistics.csv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">statistic_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+
+    <span class="c1"># Export aggregated root architecture by soil voxel.</span>
+    <span class="n">soil_dimensions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_height</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_width</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_layers</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_cols</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">soil_dimensions</span><span class="p">):</span>
+        <span class="n">soil_df</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">soil</span><span class="o">.</span><span class="n">create_soil_grid</span><span class="p">(</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_height</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_layers</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_layer_width</span><span class="p">,</span>
+            <span class="n">input_parameters</span><span class="o">.</span><span class="n">soil_n_cols</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Remove if the Soil coordinate convention</span>
+        <span class="c1"># has already been corrected.</span>
+        <span class="n">soil_df</span> <span class="o">=</span> <span class="n">soil_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">})</span>
+
+        <span class="n">grid_df</span><span class="p">,</span> <span class="n">totals_df</span> <span class="o">=</span> <span class="n">aggregate_root_grid</span><span class="p">(</span><span class="n">node_df</span><span class="p">,</span> <span class="n">soil_df</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="p">{</span>
+            <span class="s2">&quot;root_grid_aggregates&quot;</span><span class="p">:</span> <span class="n">grid_df</span><span class="p">,</span>
+            <span class="s2">&quot;root_biomass_totals&quot;</span><span class="p">:</span> <span class="n">totals_df</span><span class="p">,</span>
+        <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUT_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="load_form_parameters">
